@@ -1,6 +1,18 @@
-import React from 'react'
+import axios from 'axios'
+import React, { useEffect, useState } from 'react'
 
 const ProductTableComponent = () => {
+  const [products, setProducts] = useState()
+
+  useEffect(() => {
+
+    axios.get('http://127.0.0.1:3000/api/v1/product/')
+    .then((data) => setProducts(data.data.products))
+    .catch((err) => console.log(err))
+  }, [])
+  
+  console.log(products)
+  
   return (
     <table className="w-full text-center">
       <thead>

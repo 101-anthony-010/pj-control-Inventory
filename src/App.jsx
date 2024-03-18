@@ -7,7 +7,7 @@ function App() {
   const [data, setData] = useState();
 
 
-  axios.get('')
+  
 
   return (
     <>
