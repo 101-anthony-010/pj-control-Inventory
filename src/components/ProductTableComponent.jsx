@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react'
 const ProductTableComponent = () => {
   const [products, setProducts] = useState()
   const [modelProduct, setModelProduct] = useState()
+  const [marcas, setMarcas] = useState()
   const [users, setUsers] = useState()
   const [loading, setLoading] = useState(true)
 
@@ -21,7 +22,13 @@ const ProductTableComponent = () => {
       .then((data) => setModelProduct(data.data.modelsProducts))
       .catch((err) => console.log(err))
   }, [])
-  
+
+  useEffect(() => {
+    axios.get('http://127.0.0.1:3000/api/v1/product/marca')
+      .then((data) => setMarcas(data.data.marcas))
+      .catch((err) => console.log(err))
+  }, [])
+
   useEffect(() => {
     axios.get('http://127.0.0.1:3000/api/v1/user')
       .then((data) => setUsers(data.data.users))
@@ -40,6 +47,13 @@ const ProductTableComponent = () => {
 
     const user = users.find(user => user.id === userId);
     return user ? user.userName : "Usuario no encontrado"
+  }
+
+  const getMarca = (marcaId) => {
+    if (!marcas) return "Cargando...";
+
+    const marca = marcas.find(marca => marca.id === marcaId);
+    return marca ? marca.name : "Marca no encontrada"
   }
 
   if (loading) {
@@ -64,11 +78,14 @@ const ProductTableComponent = () => {
         {products?.map(product => (
           <tr key={product.id}>
             <td className="border px-4 py-2">{ product.id} </td>
-            <td className="border px-4 py-2">{ product.marca} </td>
-            <td className="border px-4 py-2">{ getModelName(product.modelId)} </td>
+            <td className="border px-4 py-2">{ getMarca(product.marcaId) } </td>
+            <td className="border px-4 py-2">{ getModelName(product.modelId) } </td>
             <td className="border px-4 py-2">{ product.numSerie} </td>
             <td className="border px-4 py-2">{ getUserName(product.userId) }</td>
-            <td className="border px-4 py-2">{ product.date }</td>
+            <td className="border px-4 py-2">{ 
+              new Date(product.date).toLocaleDateString('es-ES', { year: 'numeric', month: '2-digit', day: '2-digit' }) 
+            }
+            </td>
             <td className="border px-4 py-2">{ product.description }</td>
             <td className="border px-4 py-2">{ product.amount }</td>
           </tr>
