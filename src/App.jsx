@@ -5,12 +5,14 @@ import './App.css'
 import PageProduct from './pages/PageProduct';
 import PageAsignation from './pages/PageAsignation';
 import PageUser from './pages/PageUser';
+import Navbar from './components/layout/Navbar';
 
 //Slices
 
 function App() {
   return (
     <>
+      <Navbar/>
       <Routes>
         <Route path='/product' element={<PageProduct/>}/>
         <Route path='/asignation' element={<PageAsignation/>}/>
