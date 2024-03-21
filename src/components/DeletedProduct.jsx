@@ -15,12 +15,8 @@ const DeletedProduct = () => {
   }
 
   const submit = (data) => {
-    const clear = {
-      id: Number(data.id)
-    }
-    console.log(data, clear)
     axios
-      .delete('http://localhost:3000/api/v1/product',clear)
+      .delete(`http://localhost:3000/api/v1/product/${data.id}`)
       .then((res) => console.log(res))
       .catch((err) => console.error(err))
   }
