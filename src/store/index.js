@@ -1,12 +1,12 @@
 import { configureStore } from "@reduxjs/toolkit";
 
 //Slices imported 
-import createProductSlice from "./slices/createProduct.slice";
-import deletedProductSlice from "./slices/deletedProduct.slice";
+import userSlice from "./slices/user.slice";
+import productSlice from "./slices/product.Slice";
 
 export default configureStore({
     reducer: {
-        createProductSlice,
-        deletedProductSlice
+        userSlice,
+        productSlice
     }
 })

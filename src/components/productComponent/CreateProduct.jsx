@@ -3,7 +3,8 @@ import { useDispatch } from 'react-redux'
 import { useForm } from 'react-hook-form';
 import axios from 'axios';
 
-import { changeIsShowCreateProduct } from '../store/slices/createProduct.slice';
+//Slices
+import { changeIsShowCreateProduct } from '../../store/slices/product.Slice';
 
 const DEFAULT_VALUES = {
   marcaId: '',
@@ -38,21 +39,21 @@ const CreateProduct = () => {
   useEffect(() => {
     axios
       .get('http://localhost:3000/api/v1/product/marca')
-      .then((response) => setMarcas(response.data.marcas))
+      .then((res) => setMarcas(res.data.marcas))
       .catch((err) => console.log(err))
   }, [])
   
   useEffect(() => {
     axios
       .get('http://localhost:3000/api/v1/product/modelProduct')
-      .then((response) => setModelos(response.data.modelsProducts))
+      .then((res) => setModelos(res.data.modelsProducts))
       .catch((err) => console.log(err))
   }, [])
   
   useEffect(() => {
     axios
       .get('http://localhost:3000/api/v1/user')
-      .then((response) => setUsers(response.data.users))
+      .then((res) => setUsers(res.data.users))
       .catch((err) => console.log(err))
   }, [])
 
@@ -76,9 +77,12 @@ const CreateProduct = () => {
   
   return (
     <section className='bg-white max-w-2xl rounded-md p-12 relative'>
-      <button className='font-bold text-2xl absolute right-0 top-0 px-2 text-white bg-red-500 rounded-md m-2' onClick={handleClickChangeShowCreateProduct}>X</button>
-      <form onSubmit={handleSubmit(submit)} className='grid grid-cols-2 gap-5'>
+      <button className='font-bold text-2xl absolute right-0 top-0 px-2 rounded-md m-2' onClick={handleClickChangeShowCreateProduct}>
+        <box-icon color='red' name='x-circle' type='solid' ></box-icon>
+      </button>
       
+      <form onSubmit={handleSubmit(submit)} className='grid grid-cols-2 gap-5'>
+
         <label htmlFor="marca">Marca:</label>
         <select name="marca" {...register("marcaId")} id="marcaId" onChange={handleMarcaChange}>
           {marcas.map(marca => <option key={marca.id} value={marca.id}>{marca.name}</option>)}
@@ -106,7 +110,7 @@ const CreateProduct = () => {
         <label htmlFor="amount">Cantidad:</label>
         <input type="number" {...register("amount")} id="amount" name="amount" defaultValue={1} required />
         
-        <button className='bg-green-500 text-white rounded-md col-span-2 p-2 font-bold'>Crear Producto</button>
+        <button onClick={handleClickChangeShowCreateProduct} className='bg-green-500 text-white rounded-md col-span-2 p-2 font-bold'>Crear Producto</button>
       </form>
     </section>
   )
