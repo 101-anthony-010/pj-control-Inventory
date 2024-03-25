@@ -14,11 +14,18 @@ const productSlice = createSlice({
     },
     changeIsShowUpdatedProduct: (state) => {
       state.isShowUpdatedProduct = !state.isShowUpdatedProduct
+    },
+    setProduct: (state, action) => {
+      const newState = { ...state, ...action.payload }
+      localStorage.setItem('porductInfo', JSON.stringify(newState))
+      return newState
     }
   }
 })
 export const {
-    changeIsShowCreateProduct
+    changeIsShowCreateProduct,
+    changeIsShowUpdatedProduct,
+    setProduct,
 } = productSlice.actions
 
 export default productSlice.reducer

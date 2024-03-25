@@ -12,17 +12,20 @@ import { changeIsShowCreateProduct } from '../store/slices/product.Slice';
 const PageProduct = () => {
   const dispatch = useDispatch()
   const { isShowCreateProduct } = useSelector(store => store.productSlice);
+  const { isShowUpdatedProduct } = useSelector(store => store.productSlice);
 
   const handleClickChangeShowCreateProduct = () => {
     dispatch(changeIsShowCreateProduct())
   }
+
+  
   return (
     <>
       <section className={`bg-black/20 fixed w-full h-full flex items-center justify-center ${isShowCreateProduct ? "top-0" : "-top-full"}`}>
         <CreateProduct/>
       </section>
       
-      <section className={`bg-black/20 fixed w-full h-full flex items-center justify-center ${isShowCreateProduct ? "top-0" : "-top-full"}`}>
+      <section className={`bg-black/20 fixed w-full h-full flex items-center justify-center ${isShowUpdatedProduct ? "top-0" : "-top-full"}`}>
         <EditProduct/>
       </section>
 

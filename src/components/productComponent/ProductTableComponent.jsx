@@ -1,5 +1,9 @@
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
+import { useDispatch } from 'react-redux'
+
+//Slices
+import { changeIsShowUpdatedProduct, setProduct } from '../../store/slices/product.Slice'
 
 const ProductTableComponent = () => {
   const [products, setProducts] = useState()
@@ -7,6 +11,12 @@ const ProductTableComponent = () => {
   const [marcas, setMarcas] = useState()
   const [users, setUsers] = useState()
   const [loading, setLoading] = useState(true)
+  const dispatch = useDispatch()
+
+  const handleClickUpdatedProduct = (data) => {
+    dispatch(setProduct(data))
+    dispatch(changeIsShowUpdatedProduct())
+  }
 
   useEffect(() => {
     axios.get('http://127.0.0.1:3000/api/v1/product/')
@@ -104,7 +114,7 @@ const ProductTableComponent = () => {
             <td className="border px-4 py-2">{ product.amount }</td>
 
             <td className="w-32 border px-4 py-2 grid grid-cols-2 justify-between">
-              <button  className='grid items-center justify-center m-auto text-2xl bg-yellow-500 hover:bg-yellow-600 w-10 h-10 rounded-md'>
+              <button onClick={() => handleClickUpdatedProduct(product)} className='grid items-center justify-center m-auto text-2xl bg-yellow-500 hover:bg-yellow-600 w-10 h-10 rounded-md'>
                 <box-icon color="white" name='edit-alt'></box-icon>
               </button>
               <button  onClick={() => handleClickDeletedProduct(product.id)} className='grid items-center justify-center m-auto text-2xl bg-blue-500 hover:bg-blue-600 w-10 h-10 rounded-md'>
