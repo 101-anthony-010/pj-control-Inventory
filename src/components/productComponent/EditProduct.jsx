@@ -17,9 +17,9 @@ const DEFAULT_VALUES = {
 }
 
 const EditProduct = () => {
-  const [marcas, setMarcas] = useState([])
-  const [modelos, setModelos] = useState([])
-  const [users, setUsers] = useState([])
+  const [ marcas, setMarcas ] = useState([])
+  const [ modelos, setModelos ] = useState([])
+  const [ users, setUsers ] = useState([])
   const { register, handleSubmit, reset, setValue } = useForm()
   const { id, numSerie, description } = useSelector(store => store.productSlice)
   const dispatch = useDispatch()
@@ -30,14 +30,14 @@ const EditProduct = () => {
 
   useEffect(() => {
     axios
-      .get('http://127.0.0.1:3000/api/v1/product/modelProduct')
+      .get('http://127.0.0.1:3000/api/v1/modelProduct')
       .then((data) => setModelos(data.data.modelsProducts))
       .catch((err) => console.log(err))
   }, [])
 
   useEffect(() => {
     axios
-      .get('http://127.0.0.1:3000/api/v1/product/marca')
+      .get('http://127.0.0.1:3000/api/v1/marca')
       .then((data) => setMarcas(data.data.marcas))
       .catch((err) => console.log(err))
   }, [])
@@ -50,7 +50,6 @@ const EditProduct = () => {
   }, [])
 
   const submit = (data) => {
-    console.log(data)
     axios
       .patch(`http://localhost:3000/api/v1/product/${id}`, data)
       .then((res) => console.log(res))
@@ -68,12 +67,12 @@ const EditProduct = () => {
 
         <label htmlFor="marca">Marca:</label>
         <select name="marca" {...register("marcaId")} id="marcaId" >
-          {marcas.map(marca => <option key={marca.id} value={marca.id}>{marca.name}</option>)}
+          {marcas?.map(marca => <option key={marca.id} value={marca.id}>{marca.name}</option>)}
         </select>
 
         <label htmlFor="modelId">Modelo del Producto:</label>
         <select name="modelId" {...register("modelId")} id="modelId">
-          {modelos.map(modelo => <option key={modelo.id} value={modelo.id}>{modelo.name}</option>)}
+          {modelos?.map(modelo => <option key={modelo.id} value={modelo.id}>{modelo.name}</option>)}
         </select>
         
         <label htmlFor="numSerie">Número de Serie:</label>
@@ -81,7 +80,7 @@ const EditProduct = () => {
         
         <label htmlFor="userId">Nombre de Usuario:</label>
         <select name="userId" {...register("userId")} id="userId">
-          {users.map(user => <option key={user.id} value={user.id}>{user.userName}</option>)}
+          {users?.map(user => <option key={user.id} value={user.id}>{user.userName}</option>)}
         </select>
         
         <label htmlFor="date">Fecha:</label>

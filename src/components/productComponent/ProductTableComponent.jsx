@@ -29,14 +29,14 @@ const ProductTableComponent = () => {
   
   useEffect(() => {
     axios
-      .get('http://127.0.0.1:3000/api/v1/product/modelProduct')
+      .get('http://127.0.0.1:3000/api/v1/modelProduct')
       .then((data) => setModelProduct(data.data.modelsProducts))
       .catch((err) => console.log(err))
   }, [])
 
   useEffect(() => {
     axios
-      .get('http://127.0.0.1:3000/api/v1/product/marca')
+      .get('http://127.0.0.1:3000/api/v1/marca')
       .then((data) => setMarcas(data.data.marcas))
       .catch((err) => console.log(err))
   }, [])
@@ -107,7 +107,7 @@ const ProductTableComponent = () => {
             <td className="border px-4 py-2">{ product.numSerie} </td>
             <td className="border px-4 py-2">{ getUserName(product.userId) }</td>
             <td className="border px-4 py-2">{ 
-              new Date(product.date).toLocaleDateString('es-ES', { year: 'numeric', month: '2-digit', day: '2-digit' }) 
+              new Date(product.dateInitial).toLocaleDateString('es-ES', { year: 'numeric', month: '2-digit', day: '2-digit' }) 
             }
             </td>
             <td className="border px-4 py-2">{ product.description }</td>

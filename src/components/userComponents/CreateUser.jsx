@@ -10,21 +10,21 @@ const CreateUser = ({ handleChangeIsShowCreateUser }) => {
 
   useEffect(() => {
     axios
-      .get('http://localhost:3000/api/v1/user/sede')
+      .get('http://localhost:3000/api/v1/sede')
       .then((res) => setSedes(res.data.sedes))
       .catch((err) => console.log(err))
   }, [])
   
   useEffect(() => {
     axios
-      .get('http://localhost:3000/api/v1/user/dependencia')
+      .get('http://localhost:3000/api/v1/dependencia')
       .then((res) => setDependencias(res.data.dependencias))
       .catch((err) => console.log(err))
   }, [])
 
   useEffect(() => {
     axios
-      .get('http://localhost:3000/api/v1/user/cargo')
+      .get('http://localhost:3000/api/v1/cargo')
       .then((res) => setCargos(res.data.cargos))
       .catch((err) => console.log(err))
   }, [])
@@ -50,6 +50,9 @@ const CreateUser = ({ handleChangeIsShowCreateUser }) => {
         
         <label htmlFor="name">Apellidos:</label>
         <input type="text"{...register("lastName")} id="lastName" name="lastName" required />
+
+        <label htmlFor="name">Telefono:</label>
+        <input type="number"{...register("phone")} id="phone" name="phone" required />
         
         <label htmlFor="name">Correo:</label>
         <input type="email"{...register("email")} id="email" name="email" required />

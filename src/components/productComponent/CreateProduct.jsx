@@ -85,12 +85,12 @@ const CreateProduct = () => {
 
         <label htmlFor="marca">Marca:</label>
         <select name="marca" {...register("marcaId")} id="marcaId" onChange={handleMarcaChange}>
-          {marcas.map(marca => <option key={marca.id} value={marca.id}>{marca.name}</option>)}
+          {marcas?.map(marca => <option key={marca.id} value={marca.id}>{marca.name}</option>)}
         </select>
 
         <label htmlFor="modelId">Modelo del Producto:</label>
         <select name="modelId" {...register("modelId")} id="modelId">
-          {modelos.map(modelo => <option key={modelo.id} value={modelo.id}>{modelo.name}</option>)}
+          {modelos?.map(modelo => <option key={modelo.id} value={modelo.id}>{modelo.name}</option>)}
         </select>
         
         <label htmlFor="numSerie">Número de Serie:</label>
@@ -98,7 +98,7 @@ const CreateProduct = () => {
         
         <label htmlFor="userId">Nombre de Usuario:</label>
         <select name="userId" {...register("userId")} id="userId">
-          {users.map(user => <option key={user.id} value={user.id}>{user.userName}</option>)}
+          {users?.map(user => <option key={user.id} value={user.id}>{user.userName}</option>)}
         </select>
         
         <label htmlFor="date">Fecha:</label>
