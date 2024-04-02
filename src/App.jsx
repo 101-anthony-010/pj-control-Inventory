@@ -6,6 +6,7 @@ import PageProduct from './pages/PageProduct';
 import PageAsignation from './pages/PageAsignation';
 import PageUser from './pages/PageUser';
 import Navbar from './components/layout/Navbar';
+import PageLogin from './pages/PageLogin';
 
 //Slices
 
@@ -17,6 +18,7 @@ function App() {
         <Route path='/product' element={<PageProduct/>}/>
         <Route path='/asignation' element={<PageAsignation/>}/>
         <Route path='/user' element={<PageUser/>}/>
+        <Route path='/' element={<PageLogin/>}/>
         {/* <Route path='/*' element={<NotFound/>}/> */}
       </Routes>
     </>
