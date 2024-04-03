@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { useForm } from 'react-hook-form';
-import axios from 'axios';
+import { axiosPoderJudicial } from '../../utils/configAxios'
 
 //Slices
 import { changeIsShowCreateProduct } from '../../store/slices/product.Slice';
@@ -28,8 +28,8 @@ const CreateProduct = () => {
   }
 
   const submit = (data) => {
-    axios
-      .post('http://localhost:3000/api/v1/product', data)
+    axiosPoderJudicial
+      .post('/product', data)
       .then((res) => console.log(res))
       .catch((err) => console.log(err))    
 
@@ -37,22 +37,18 @@ const CreateProduct = () => {
   }
   
   useEffect(() => {
-    axios
-      .get('http://localhost:3000/api/v1/product/marca')
+    axiosPoderJudicial
+      .get('/marca')
       .then((res) => setMarcas(res.data.marcas))
       .catch((err) => console.log(err))
-  }, [])
-  
-  useEffect(() => {
-    axios
-      .get('http://localhost:3000/api/v1/product/modelProduct')
+
+    axiosPoderJudicial
+      .get('/modelProduct')
       .then((res) => setModelos(res.data.modelsProducts))
       .catch((err) => console.log(err))
-  }, [])
-  
-  useEffect(() => {
-    axios
-      .get('http://localhost:3000/api/v1/user')
+
+    axiosPoderJudicial
+      .get('/user')
       .then((res) => setUsers(res.data.users))
       .catch((err) => console.log(err))
   }, [])
@@ -61,7 +57,7 @@ const CreateProduct = () => {
     const marcaId = event.target.value;
     try {
       // Obtener todos los modelos
-      const response = await axios.get('http://localhost:3000/api/v1/product/modelProduct');
+      const response = await axiosPoderJudicial.get('/modelProduct');
       const allModelos = response.data.modelsProducts;
       // Filtrar los modelos por la marca seleccionada
       const modelosFiltrados = allModelos.filter(modelo => modelo.marcaId === Number(marcaId));

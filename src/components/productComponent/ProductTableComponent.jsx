@@ -1,6 +1,7 @@
-import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
+import { axiosPoderJudicial } from '../../utils/configAxios'
+import { formatDateDDMMYYYY } from "../../utils/date"
 
 //Slices
 import { changeIsShowUpdatedProduct, setProduct } from '../../store/slices/product.Slice'
@@ -19,7 +20,8 @@ const ProductTableComponent = () => {
   }
 
   useEffect(() => {
-    axios.get('http://127.0.0.1:3000/api/v1/product/')
+    axiosPoderJudicial
+      .get('/product')
       .then((data) => {
         setProducts(data.data.products)
         setLoading(false)
@@ -28,29 +30,25 @@ const ProductTableComponent = () => {
   }, [])
   
   useEffect(() => {
-    axios
-      .get('http://127.0.0.1:3000/api/v1/modelProduct')
+    axiosPoderJudicial
+      .get('/modelProduct')
       .then((data) => setModelProduct(data.data.modelsProducts))
       .catch((err) => console.log(err))
-  }, [])
-
-  useEffect(() => {
-    axios
-      .get('http://127.0.0.1:3000/api/v1/marca')
+    
+    axiosPoderJudicial
+      .get('/marca')
       .then((data) => setMarcas(data.data.marcas))
       .catch((err) => console.log(err))
-  }, [])
-
-  useEffect(() => {
-    axios
-      .get('http://127.0.0.1:3000/api/v1/user')
+    
+    axiosPoderJudicial
+      .get('/user')
       .then((data) => setUsers(data.data.users))
       .catch((err) => console.log(err))
   }, [])
 
   const handleClickDeletedProduct = async (id) => { 
     try {
-      await axios.delete(`http://127.0.0.1:3000/api/v1/product/${id}`);
+      await axiosPoderJudicial.delete(`/product/${id}`);
       const updatedProduct = products.filter(product => product.id !== id);
       setProducts(updatedProduct);
       console.log(`Producto con ID ${id} eliminado exitosamente.`);
@@ -106,10 +104,7 @@ const ProductTableComponent = () => {
             <td className="border px-4 py-2">{ getModelName(product.modelId) } </td>
             <td className="border px-4 py-2">{ product.numSerie} </td>
             <td className="border px-4 py-2">{ getUserName(product.userId) }</td>
-            <td className="border px-4 py-2">{ 
-              new Date(product.dateInitial).toLocaleDateString('es-ES', { year: 'numeric', month: '2-digit', day: '2-digit' }) 
-            }
-            </td>
+            <td className="border px-4 py-2">{ formatDateDDMMYYYY(product.dateInitial)}</td>
             <td className="border px-4 py-2">{ product.description }</td>
             <td className="border px-4 py-2">{ product.amount }</td>
 
