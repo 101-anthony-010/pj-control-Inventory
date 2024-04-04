@@ -1,6 +1,6 @@
-import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
+import { axiosPoderJudicial } from '../../utils/configAxios'
 
 const CreateUser = ({ handleChangeIsShowCreateUser }) => {
   const [sedes, setSedes] = useState()
@@ -9,30 +9,29 @@ const CreateUser = ({ handleChangeIsShowCreateUser }) => {
   const { register, handleSubmit, reset, setValue } = useForm()
 
   useEffect(() => {
-    axios
-      .get('http://localhost:3000/api/v1/sede')
+    axiosPoderJudicial
+      .get('/sede')
       .then((res) => setSedes(res.data.sedes))
       .catch((err) => console.log(err))
   }, [])
   
   useEffect(() => {
-    axios
-      .get('http://localhost:3000/api/v1/dependencia')
+    axiosPoderJudicial
+      .get('/dependencia')
       .then((res) => setDependencias(res.data.dependencias))
       .catch((err) => console.log(err))
   }, [])
 
   useEffect(() => {
-    axios
-      .get('http://localhost:3000/api/v1/cargo')
+    axiosPoderJudicial
+      .get('/cargo')
       .then((res) => setCargos(res.data.cargos))
       .catch((err) => console.log(err))
   }, [])
 
   const submit = (data) => {
-    console.log(data)
-    axios
-      .post('http://127.0.0.1:3000/api/v1/user/',data)
+    axiosPoderJudicial
+      .post('/user/',data)
       .then((res) => console.log(res))
       .catch((err) => console.log(err))
   }
@@ -51,6 +50,9 @@ const CreateUser = ({ handleChangeIsShowCreateUser }) => {
         <label htmlFor="name">Apellidos:</label>
         <input type="text"{...register("lastName")} id="lastName" name="lastName" required />
 
+        <label htmlFor="name">DNI:</label>
+        <input type="dni"{...register("dni")} id="dni" name="dni" required />
+  
         <label htmlFor="name">Telefono:</label>
         <input type="number"{...register("phone")} id="phone" name="phone" required />
         

@@ -69,7 +69,6 @@ const CreateProduct = () => {
       console.log(error);
     }
   };
-
   
   return (
     <section className='bg-white max-w-2xl rounded-md p-12 relative'>
@@ -97,8 +96,8 @@ const CreateProduct = () => {
           {users?.map(user => <option key={user.id} value={user.id}>{user.userName}</option>)}
         </select>
         
-        <label htmlFor="date">Fecha:</label>
-        <input type="date" {...register("date")} id="date" name="date" required />
+        <label htmlFor="dateInitial">Fecha de Ingreso:</label>
+        <input type="date" {...register("dateInitial")} id="dateInitial" name="dateInitial" required />
         
         <label htmlFor="description">Descripción:</label>
         <textarea type="text" {...register("description")} id="description" name="description" required ></textarea>

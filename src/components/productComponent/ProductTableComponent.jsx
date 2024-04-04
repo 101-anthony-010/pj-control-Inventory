@@ -6,8 +6,8 @@ import { formatDateDDMMYYYY } from "../../utils/date"
 //Slices
 import { changeIsShowUpdatedProduct, setProduct } from '../../store/slices/product.Slice'
 
-const ProductTableComponent = () => {
-  const [products, setProducts] = useState()
+const ProductTableComponent = ({products}) => {
+  const [product, setProduct] = useState()
   const [modelProduct, setModelProduct] = useState()
   const [marcas, setMarcas] = useState()
   const [users, setUsers] = useState()
@@ -21,18 +21,11 @@ const ProductTableComponent = () => {
 
   useEffect(() => {
     axiosPoderJudicial
-      .get('/product')
-      .then((data) => {
-        setProducts(data.data.products)
-        setLoading(false)
-      })
-      .catch((err) => console.log(err))
-  }, [])
-  
-  useEffect(() => {
-    axiosPoderJudicial
       .get('/modelProduct')
-      .then((data) => setModelProduct(data.data.modelsProducts))
+      .then((data) => {
+        setModelProduct(data.data.modelsProducts)
+        setProduct(products)
+      })
       .catch((err) => console.log(err))
     
     axiosPoderJudicial
@@ -44,13 +37,13 @@ const ProductTableComponent = () => {
       .get('/user')
       .then((data) => setUsers(data.data.users))
       .catch((err) => console.log(err))
-  }, [])
+  }, [products])
 
   const handleClickDeletedProduct = async (id) => { 
     try {
       await axiosPoderJudicial.delete(`/product/${id}`);
       const updatedProduct = products.filter(product => product.id !== id);
-      setProducts(updatedProduct);
+      setProduct(updatedProduct);
       console.log(`Producto con ID ${id} eliminado exitosamente.`);
     } catch (error) {
       console.error(`Error al eliminar el producto con ID ${id}:`, error);
@@ -78,9 +71,17 @@ const ProductTableComponent = () => {
     return marca ? marca.name : "Marca no encontrada"
   }
 
-  if (loading) {
-    return <p>Cargando...</p>; 
-  }
+  const handleClickDisableProduct = async (id) => {
+    const nowDate = new Date()
+    const date = {
+      dateFinal: nowDate.toLocaleDateString()
+    }
+
+    await axiosPoderJudicial
+      .patch(`product/used/${id}`,{ dateFinal: nowDate.toLocaleDateString() })
+      .then(res => console.log(res.data))
+      .catch(err => console.log(err))
+  } 
 
   return (
     <table className="w-full text-center">
@@ -88,16 +89,16 @@ const ProductTableComponent = () => {
         <tr className="bg-gray-800 text-white">
           <th className="px-4 py-2">ID</th>
           <th className="px-4 py-2">Marca</th>
-          <th className="px-4 py-2">Modelo ID</th>
+          <th className="px-4 py-2">Modelo</th>
           <th className="px-4 py-2">Número de Serie</th>
-          <th className="px-4 py-2">Usuario ID</th>
-          <th className="px-4 py-2">Fecha</th>
+          <th className="px-4 py-2">Usuario</th>
+          <th className="px-4 py-2">Fecha de entrada</th>
           <th className="px-4 py-2">Descripción</th>
           <th className="px-4 py-2">Cantidad</th>
         </tr>
       </thead>
       <tbody>
-        {products?.map(product => (
+        {product?.map(product => (
           <tr key={product.id}>
             <td className="border px-4 py-2">{ product.id} </td>
             <td className="border px-4 py-2">{ getMarca(product.marcaId) } </td>
@@ -108,12 +109,15 @@ const ProductTableComponent = () => {
             <td className="border px-4 py-2">{ product.description }</td>
             <td className="border px-4 py-2">{ product.amount }</td>
 
-            <td className="w-32 border px-4 py-2 grid grid-cols-2 justify-between">
+            <td className="w-32 border px-4 py-2 gap-2 grid grid-cols-2 justify-between">
               <button onClick={() => handleClickUpdatedProduct(product)} className='grid items-center justify-center m-auto text-2xl bg-yellow-500 hover:bg-yellow-600 w-10 h-10 rounded-md'>
                 <box-icon color="white" name='edit-alt'></box-icon>
               </button>
-              <button  onClick={() => handleClickDeletedProduct(product.id)} className='grid items-center justify-center m-auto text-2xl bg-blue-500 hover:bg-blue-600 w-10 h-10 rounded-md'>
+              <button onClick={() => handleClickDeletedProduct(product.id)} className='grid items-center justify-center m-auto text-2xl bg-blue-500 hover:bg-blue-600 w-10 h-10 rounded-md'>
                 <box-icon color="white" name='trash'></box-icon>
+              </button>
+              <button onClick={() => handleClickDisableProduct(product.id)} className='rounded-md bg-purple-500 col-span-2'>
+                <box-icon color='white' name='cloud-download'></box-icon>
               </button>
             </td>
 
