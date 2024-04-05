@@ -55,19 +55,12 @@ const CreateProduct = () => {
 
   const handleMarcaChange = async (event) => {
     const marcaId = event.target.value;
-    try {
-      // Obtener todos los modelos
-      const response = await axiosPoderJudicial.get('/modelProduct');
-      const allModelos = response.data.modelsProducts;
-      // Filtrar los modelos por la marca seleccionada
-      const modelosFiltrados = allModelos.filter(modelo => modelo.marcaId === Number(marcaId));
-      // Actualizar el estado de los modelos con los modelos filtrados
-      setModelos(modelosFiltrados);
-      // Limpiar el valor seleccionado para el modelo
-      setValue("modelId", "");
-    } catch (error) {
-      console.log(error);
-    }
+    
+    const response = await axiosPoderJudicial.get('/modelProduct');
+    const allModelos = response.data.modelsProducts;
+    const modelosFiltrados = allModelos.filter(modelo => modelo.marcaId === Number(marcaId));    
+    setModelos(modelosFiltrados);
+    setValue("modelId", "");
   };
   
   return (
@@ -78,8 +71,8 @@ const CreateProduct = () => {
       
       <form onSubmit={handleSubmit(submit)} className='grid grid-cols-2 gap-5'>
 
-        <label htmlFor="marca">Marca:</label>
-        <select name="marca" {...register("marcaId")} id="marcaId" onChange={handleMarcaChange}>
+        <label htmlFor="marcaId">Marca:</label>
+        <select name="marcaId" {...register("marcaId")} id="marcaId" onChange={handleMarcaChange}>
           {marcas?.map(marca => <option key={marca.id} value={marca.id}>{marca.name}</option>)}
         </select>
 

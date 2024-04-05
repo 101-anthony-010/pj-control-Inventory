@@ -116,9 +116,9 @@ const ProductTableComponent = ({products}) => {
               <button onClick={() => handleClickDeletedProduct(product.id)} className='grid items-center justify-center m-auto text-2xl bg-blue-500 hover:bg-blue-600 w-10 h-10 rounded-md'>
                 <box-icon color="white" name='trash'></box-icon>
               </button>
-              <button onClick={() => handleClickDisableProduct(product.id)} className='rounded-md bg-purple-500 col-span-2'>
+              {/* <button onClick={() => handleClickDisableProduct(product.id)} className='rounded-md bg-purple-500 col-span-2'>
                 <box-icon color='white' name='cloud-download'></box-icon>
-              </button>
+              </button> */}
             </td>
 
           </tr>

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
+import { axiosPoderJudicial } from '../utils/configAxios';
 
 //Components
 import CreateProduct from '../components/productComponent/CreateProduct';
@@ -8,12 +9,11 @@ import EditProduct from '../components/productComponent/EditProduct';
 
 //Slices
 import { changeIsShowCreateProduct } from '../store/slices/product.Slice';
-import { axiosPoderJudicial } from '../utils/configAxios';
 
 const PageProduct = () => {
   const [products, setProducts] = useState()
-  const [entrada, setEntrada] = useState()
-  const [salida, setSalida] = useState()
+  const [entrada, setEntrada] = useState({state: "enable"})
+  const [salida, setSalida] = useState({state: "disable"})
   const { isShowCreateProduct } = useSelector(store => store.productSlice);
   const { isShowUpdatedProduct } = useSelector(store => store.productSlice);
   const dispatch = useDispatch()
@@ -65,7 +65,7 @@ const PageProduct = () => {
       </section>
 
       <section className='grid items-center justify-center'>
-        <ProductTableComponent products={entrada} />
+        <ProductTableComponent products={products} />
       </section>
     </>
   )

@@ -9,8 +9,8 @@ const Navbar = () => {
       <Link to={'/product'}>Producto</Link>
       <Link to={'/user'}>Usuario</Link>
 
-      <div className='absolute right-10 top-1/2 -translate-y-1/2'>
-        o
+      <div className='absolute w-10 h-10 bg-slate-200 rounded-full hover:cursor-pointer right-10 top-1/2 -translate-y-1/2 '>
+        
       </div>
     </nav>
   )

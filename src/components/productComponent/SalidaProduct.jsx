@@ -4,8 +4,8 @@ import { axiosPoderJudicial } from '../../utils/configAxios'
 const SalidaProduct = () => {
 
   useEffect(() => {
-    axiosPoderJudicial
-      .patch(`/used/${id}`)
+  axiosPoderJudicial
+  .patch(`/used/${id}`)
       .then(res => console.log(res))
       .catch(err => console.log(err))
   }, [])
