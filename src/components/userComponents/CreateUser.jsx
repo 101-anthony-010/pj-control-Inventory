@@ -67,16 +67,19 @@ const CreateUser = ({ handleChangeIsShowCreateUser }) => {
         
         <label htmlFor="sedeId">Sede:</label>
         <select name="sedeId" {...register("sedeId")} id="sedeId">
+          <option value="">Seleccione una sede</option>
           {sedes?.map(sede => <option key={sede.id} value={sede.id}>{sede.name}</option>)}
         </select>       
 
         <label htmlFor="dependenciaId">Dependencia:</label>
         <select name="Id" {...register("dependenciaId")} id="dependenciaId">
+          <option value="">Selecciona una dependencia</option>
           {dependencias?.map(dependencia => <option key={dependencia.id} value={dependencia.id}>{dependencia.name}</option>)}
         </select>
 
         <label htmlFor="modelId">Cargo:</label>
         <select name="cargoId" {...register("cargoId")} id="cargoId">
+          <option value="">Seleccione un cargo</option>
           {cargos?.map(cargo => <option key={cargo.id} value={cargo.id}>{cargo.name}</option>)}
         </select>
 

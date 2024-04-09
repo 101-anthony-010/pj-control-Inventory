@@ -1,73 +1,75 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+
+// Utils
 import { axiosPoderJudicial } from '../utils/configAxios';
-import { formatDateDDMMYYYY } from '../utils/date';
-import AsignationComponent from '../components/asignationComponent/AsignationComponent';
+
+// Components
+import CreateAsignation from '../components/asignationComponent/CreateAsignation';
+import AsignationTableComponent from '../components/asignationComponent/AsignationTableComponent';
+
+// Slice
+import { changeIsShowCreateAsignation } from '../store/slices/asignation.slice';
 
 const PageAsignation = () => {
-  const [asignations, setAsignations] = useState()
-  const [entrance, setEntrance ] = useState("enable")
-  const [exit, setExit] = useState("disabled")
+  const [asignations, setAsignations] = useState([]);
+  const [filteredAsignations, setFilteredAsignations] = useState([]);
+  const [isInUseSelected, setIsInUseSelected] = useState(true); // Estado para el botón "En uso"
+  const { isShowCreateAsignation } = useSelector(store => store.asignationSlice); // Accede a isShowCreateAsignation desde el estado global
+  const dispatch = useDispatch();
+
+  const handleClickChangeShowCreateAsignation = () => {
+    dispatch(changeIsShowCreateAsignation());
+  }
 
   useEffect(() => {
-    axiosPoderJudicial
-      .get('/asignation')
-      .then((res) => {
-        setAsignations(res.data.asignations)
-      })
-      .catch((err) => console.log(err))
+    const fetchData = async () => {
+      try {
+        const productResponse = await axiosPoderJudicial.get('/product');
+        const enableProductIds = productResponse.data.products.filter(product => product.state === 'enable').map(product => product.id);
+        const disableProductIds = productResponse.data.products.filter(product => product.state === 'disable').map(product => product.id);
 
-    axiosPoderJudicial
-      .get('product')
-      .then((res) => console.log(res.data.products.filter(asignation => asignation.state === entrance)))
-      .catch((err) => console.log(err))
-  }, [])
+        const asignationResponse = await axiosPoderJudicial.get('/asignation');
+        const filteredByState = isInUseSelected ? asignationResponse.data.asignations.filter(asignation => enableProductIds.includes(asignation.productId)) : asignationResponse.data.asignations.filter(asignation => disableProductIds.includes(asignation.productId));
+        
+        setAsignations(asignationResponse.data.asignations);
+        setFilteredAsignations(filteredByState);
+      } catch (error) {
+        console.log(error);
+      }
+    };
 
-  console.log(asignations)
+    fetchData();
+  }, [isInUseSelected]);
+
   return (
     <>
-    <section className='flex gap-4 justify-between p-2'>
-      <div className='flex gap-4'>
-        <button>En uso</button>
-        <button>De baja</button>
-      </div>
+      <section className={`bg-black/20 fixed w-full h-full flex items-center justify-center ${isShowCreateAsignation ? "top-0" : "-top-full"}`}>
+        <CreateAsignation handleClickChangeShowCreateAsignation={handleClickChangeShowCreateAsignation} />
+      </section>
 
-      <div className='grid grid-cols-[auto_1fr_1fr] gap-4'>
-        <input type="text" />
-        <button>b</button>
-        <button>c</button>
-      </div>
-    </section>
+      <section className='flex gap-4 justify-between p-2'>
+        <div className='flex gap-4'>
+          <button onClick={() => setIsInUseSelected(true)} className={`rounded-md ${isInUseSelected ? 'bg-blue-500 text-white' : 'bg-slate-200'} px-4`}>En uso</button>
+          <button onClick={() => setIsInUseSelected(false)} className={`rounded-md ${!isInUseSelected ? 'bg-blue-500 text-white' : 'bg-slate-200'} px-4`}>De baja</button>
+        </div>
 
-    <table className="m-auto text-center">
-      <thead>
-        <tr className="bg-gray-800 text-white">
-          <th className="px-4 py-2">ID</th>
-          <th className="px-4 py-2">Usuario</th>
-          <th className="px-4 py-2">Producto</th>
-          <th className="px-4 py-2">Fecha Asignada</th>
-        </tr>
-      </thead>
-      <tbody>
-        {
-         asignations?.map((asignation) => (
-          <tr key={asignation.id}>
-          <td className="border px-4 py-2">{ asignation.id} </td>
-          <td className="border px-4 py-2">{ asignation.userId} </td>
-          <td className="border px-4 py-2">{ asignation.productId} </td>
-          <td className="border px-4 py-2">{ formatDateDDMMYYYY(asignation.date) } </td>
-        </tr>
-         ))
+        <section className='grid grid-cols-[1fr_auto_auto] gap-2'>
+          <input type="text" className='bg-gray-100 rounded-md p-2'/>
+          <button className='p-2 flex items-center justify-center bg-green-500 rounded-md'>
+            <box-icon color="white" name='search-alt-2' ></box-icon>
+          </button>
+          <button onClick={handleClickChangeShowCreateAsignation}  className='flex items-center justify-center bg-green-500 rounded-md p-2'>
+            <box-icon color='white' type='solid' name='user-plus'></box-icon>
+          </button>
+        </section>
+      </section>
 
-        }
-      </tbody>
-      <tbody>
-        
-      </tbody>
-    </table>
-
-    <AsignationComponent/>
+      <section className='grid items-center justify-center'>
+        <AsignationTableComponent asignations={filteredAsignations} />
+      </section>
     </>
   )
 }
 
-export default PageAsignation
+export default PageAsignation;

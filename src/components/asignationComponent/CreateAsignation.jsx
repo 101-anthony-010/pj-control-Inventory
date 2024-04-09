@@ -3,7 +3,7 @@ import { axiosPoderJudicial } from '../../utils/configAxios'
 import { useForm } from 'react-hook-form'
 import axios from 'axios'
 
-const AsignationComponent = () => {
+const CreateAsignation = ({ handleClickChangeShowCreateAsignation }) => {
   const [users, setUsers] = useState()
   const [products, setProducts] = useState()
   const { register, handleSubmit, reset, setValue } = useForm()
@@ -45,8 +45,13 @@ const AsignationComponent = () => {
   }
 
   return (
-    <section className='relative w-screen h-screen bg-slate-200'>
-      <form onSubmit={handleSubmit(submit)} className='grid grid-cols-2 absolute top-1/2 -translate-x-1/2 left-1/2 -translate-y-1/2 bg-white max-w-2xl gap-4 rounded-md p-4'>
+    <section className='bg-white max-w-2xl rounded-md p-12 relative'>
+      
+      <button className='font-bold text-2xl absolute right-0 top-0 px-2 rounded-md m-2' onClick={handleClickChangeShowCreateAsignation}>
+        <box-icon color='red' name='x-circle' type='solid' ></box-icon>
+      </button>
+      
+      <form onSubmit={handleSubmit(submit)} className='grid grid-cols-2 gap-5'>
 
         <label htmlFor="userId">Nombre de Usuario:</label>
         <select name="userId" {...register("userId")} id="userId" onChange={handleProductChange}>
@@ -65,4 +70,4 @@ const AsignationComponent = () => {
   )
 }
 
-export default AsignationComponent
+export default CreateAsignation

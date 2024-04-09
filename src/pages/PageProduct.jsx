@@ -1,40 +1,42 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { axiosPoderJudicial } from '../utils/configAxios';
-
-//Components
 import CreateProduct from '../components/productComponent/CreateProduct';
 import ProductTableComponent from '../components/productComponent/ProductTableComponent';
 import EditProduct from '../components/productComponent/EditProduct';
-
-//Slices
 import { changeIsShowCreateProduct } from '../store/slices/product.Slice';
 
 const PageProduct = () => {
-  const [products, setProducts] = useState()
-  const [entrada, setEntrada] = useState({state: "enable"})
-  const [salida, setSalida] = useState({state: "disable"})
+  const [products, setProducts] = useState([]);
+  const [filteredProducts, setFilteredProducts] = useState([]);
+  const [isEntradaSelected, setIsEntradaSelected] = useState(true); // Estado para el botón de Entrada
   const { isShowCreateProduct } = useSelector(store => store.productSlice);
   const { isShowUpdatedProduct } = useSelector(store => store.productSlice);
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   const handleClickChangeShowCreateProduct = () => {
-    dispatch(changeIsShowCreateProduct())
+    dispatch(changeIsShowCreateProduct());
   }
 
   useEffect(() => {
     axiosPoderJudicial
       .get('/product')
-      .then((data) => {
-        setProducts(data.data.products)
-        // setLoading(false)
+      .then((response) => {
+        const allProducts = response.data.products;
+        setProducts(allProducts);
+        setFilteredProducts(allProducts.filter(product => product.state === 'enable'));
       })
-      .catch((err) => console.log(err))
-  }, [])
+      .catch((err) => console.log(err));
+  }, []);
 
-  const handleClickEntradaProducts = () => {
-    setEntrada(products.filter(product => product.state === "enable"))
-    console.log(entrada)
+  const handleFilterByState = (state) => {
+    const filteredByState = products.filter(product => product.state === state);
+    setFilteredProducts(filteredByState);
+    if (state === 'enable') {
+      setIsEntradaSelected(true);
+    } else {
+      setIsEntradaSelected(false);
+    }
   }
 
   return (
@@ -49,8 +51,8 @@ const PageProduct = () => {
 
       <section className='m-4  flex justify-between'>
         <div className='grid grid-cols-2 gap-4'>
-          <button onClick={() => handleClickEntradaProducts()} className='rounded-md bg-slate-200 px-4'>Entrada</button>
-          <button className='rounded-md bg-slate-200 px-4'>Salida</button>
+          <button onClick={() => handleFilterByState('enable')} className={`rounded-md ${isEntradaSelected ? 'bg-blue-500 text-white' : 'bg-slate-200'} px-4`}>Entrada</button>
+          <button onClick={() => handleFilterByState('disable')} className={`rounded-md ${!isEntradaSelected ? 'bg-blue-500 text-white' : 'bg-slate-200'} px-4`}>Salida</button>
         </div>
         
         <section className='grid grid-cols-[1fr_auto_auto] gap-2'>
@@ -65,10 +67,10 @@ const PageProduct = () => {
       </section>
 
       <section className='grid items-center justify-center'>
-        <ProductTableComponent products={products} />
+        <ProductTableComponent products={filteredProducts} />
       </section>
     </>
-  )
+  );
 }
 
-export default PageProduct
+export default PageProduct;
