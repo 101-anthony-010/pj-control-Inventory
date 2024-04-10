@@ -2,39 +2,49 @@ import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { axiosPoderJudicial } from '../../utils/configAxios'
 
-const CreateUser = ({ handleChangeIsShowCreateUser }) => {
-  const [sedes, setSedes] = useState()
-  const [dependencias, setDependencias] = useState()
-  const [cargos, setCargos] = useState()
-  const { register, handleSubmit, reset, setValue } = useForm()
+const CreateUser = ({ handleChangeIsShowCreateUser, setUsers }) => {
+  const [sedes, setSedes] = useState([]);
+  const [dependencias, setDependencias] = useState([]);
+  const [cargos, setCargos] = useState([]);
+  const { register, handleSubmit, reset } = useForm();
 
   useEffect(() => {
-    axiosPoderJudicial
-      .get('/sede')
-      .then((res) => setSedes(res.data.sedes))
-      .catch((err) => console.log(err))
-  }, [])
-  
-  useEffect(() => {
-    axiosPoderJudicial
-      .get('/dependencia')
-      .then((res) => setDependencias(res.data.dependencias))
-      .catch((err) => console.log(err))
-  }, [])
+    const fetchData = async () => {
+      try {
+        const [sedesResponse, dependenciasResponse, cargosResponse] = await Promise.all([
+          axiosPoderJudicial.get('/sede'),
+          axiosPoderJudicial.get('/dependencia'),
+          axiosPoderJudicial.get('/cargo')
+        ]);
 
-  useEffect(() => {
-    axiosPoderJudicial
-      .get('/cargo')
-      .then((res) => setCargos(res.data.cargos))
-      .catch((err) => console.log(err))
-  }, [])
+        setSedes(sedesResponse.data.sedes);
+        setDependencias(dependenciasResponse.data.dependencias);
+        setCargos(cargosResponse.data.cargos);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
 
-  const submit = (data) => {
-    axiosPoderJudicial
-      .post('/user/',data)
-      .then((res) => console.log(res))
-      .catch((err) => console.log(err))
-  }
+    fetchData();
+  }, []);
+
+  const submit = async (data) => {
+    try {
+      const response = await axiosPoderJudicial.post('/user/', data);
+      console.log('Usuario creado:', response.data);
+
+      // En lugar de hacer un check de Array.isArray(prevUsers), podemos utilizar un ternario
+      setUsers(prevUsers => (Array.isArray(prevUsers) ? [...prevUsers, response.data] : [response.data]));
+
+
+      // Resetear el formulario después de la creación exitosa
+      // reset();
+
+    } catch (error) {
+      console.error('Error al crear usuario:', error);
+    }
+  };
+
 
   return (
     <section className='bg-white max-w-2xl rounded-md p-12 relative'>

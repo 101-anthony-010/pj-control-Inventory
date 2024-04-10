@@ -26,8 +26,8 @@ const PageAsignation = () => {
     const fetchData = async () => {
       try {
         const productResponse = await axiosPoderJudicial.get('/product');
-        const enableProductIds = productResponse.data.products.filter(product => product.state === 'enable').map(product => product.id);
-        const disableProductIds = productResponse.data.products.filter(product => product.state === 'disable').map(product => product.id);
+        const enableProductIds = productResponse.data.products.filter(product => product.state === 'disable').map(product => product.id);
+        const disableProductIds = productResponse.data.products.filter(product => product.state === 'enable').map(product => product.id);
 
         const asignationResponse = await axiosPoderJudicial.get('/asignation');
         const filteredByState = isInUseSelected ? asignationResponse.data.asignations.filter(asignation => enableProductIds.includes(asignation.productId)) : asignationResponse.data.asignations.filter(asignation => disableProductIds.includes(asignation.productId));

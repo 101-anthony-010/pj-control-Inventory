@@ -39,8 +39,8 @@ const CreateAsignation = ({ handleClickChangeShowCreateAsignation }) => {
       .catch(err => console.log(err))
 
     axiosPoderJudicial
-      .patch(`product/used/${send.productId}`,send.date)
-      .then(res => console.log(res))
+      .patch(`product/used/${send.productId}`,{ dateFinal: send.date })
+      .then(res => console.log(res.data))
       .catch(err => console.log(err))
   }
 
@@ -59,12 +59,13 @@ const CreateAsignation = ({ handleClickChangeShowCreateAsignation }) => {
           {users?.map(user => <option key={user.id} value={user.id}>{user.userName}</option>)}
         </select>
       
-        <label htmlFor="productId">Nombre de Usuario:</label>
+        <label htmlFor="productId">Id del producto:</label>
         <select name="productId" {...register("productId")} id="productId">
+          <option value="">Seleccionar Id</option>
           {products?.map(product => <option key={product.id} value={product.id}>{product.id}</option>)}
         </select>
 
-        <button className='col-span-2'>Agregar</button>
+        <button onClick={handleClickChangeShowCreateAsignation} className='p-2 rounded-md text-white font-bold col-span-2 bg-green-500 '>Agregar</button>
       </form>
     </section>
   )

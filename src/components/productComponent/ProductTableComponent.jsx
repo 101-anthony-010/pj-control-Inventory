@@ -1,43 +1,23 @@
-import React, { useEffect, useState } from 'react'
-import { useDispatch } from 'react-redux'
-import { axiosPoderJudicial } from '../../utils/configAxios'
-import { formatDateDDMMYYYY } from "../../utils/date"
+import React, { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
 
-//Slices
-import { changeIsShowUpdatedProduct, setProduct } from '../../store/slices/product.Slice'
+//Utils
+import { axiosPoderJudicial } from '../../utils/configAxios';
+import { formatDateDDMMYYYY } from '../../utils/date';
 
-const ProductTableComponent = ({products}) => {
-  const [product, setProduct] = useState()
-  const [modelProduct, setModelProduct] = useState()
-  const [marcas, setMarcas] = useState()
-  const [users, setUsers] = useState()
-  const [loading, setLoading] = useState(true)
-  const dispatch = useDispatch()
+// Slices
+import { changeIsShowUpdatedProduct, setProduct } from '../../store/slices/product.Slice';
+
+const ProductTableComponent = ({ products, showDateSalida }) => {
+  const [modelProduct, setModelProduct] = useState();
+  const [marcas, setMarcas] = useState();
+  const [users, setUsers] = useState();
+  const dispatch = useDispatch();
 
   const handleClickUpdatedProduct = (data) => {
-    dispatch(setProduct(data))
-    dispatch(changeIsShowUpdatedProduct())
-  }
-
-  useEffect(() => {
-    axiosPoderJudicial
-      .get('/modelProduct')
-      .then((data) => {
-        setModelProduct(data.data.modelsProducts)
-        setProduct(products)
-      })
-      .catch((err) => console.log(err))
-    
-    axiosPoderJudicial
-      .get('/marca')
-      .then((data) => setMarcas(data.data.marcas))
-      .catch((err) => console.log(err))
-    
-    axiosPoderJudicial
-      .get('/user')
-      .then((data) => setUsers(data.data.users))
-      .catch((err) => console.log(err))
-  }, [products])
+    dispatch(setProduct(data));
+    dispatch(changeIsShowUpdatedProduct());
+  };
 
   const handleClickDeletedProduct = async (id) => { 
     try {
@@ -49,6 +29,23 @@ const ProductTableComponent = ({products}) => {
       console.error(`Error al eliminar el producto con ID ${id}:`, error);
     }
   }
+
+  useEffect(() => {
+    axiosPoderJudicial
+      .get('/modelProduct')
+      .then((data) => setModelProduct(data.data.modelsProducts))
+      .catch((err) => console.log(err));
+    
+    axiosPoderJudicial
+      .get('/marca')
+      .then((data) => setMarcas(data.data.marcas))
+      .catch((err) => console.log(err));
+    
+    axiosPoderJudicial
+      .get('/user')
+      .then((data) => setUsers(data.data.users))
+      .catch((err) => console.log(err));
+  }, []);
 
   const getModelName = (modelId) => {
     if (!modelProduct) return "Cargando..."; 
@@ -62,27 +59,14 @@ const ProductTableComponent = ({products}) => {
 
     const user = users.find(user => user.id === userId);
     return user ? user.userName : "Usuario no encontrado"
-  }
+  };
 
   const getMarca = (marcaId) => {
     if (!marcas) return "Cargando...";
 
     const marca = marcas.find(marca => marca.id === marcaId);
     return marca ? marca.name : "Marca no encontrada"
-  }
-
-  const handleClickDisableProduct = async (id) => {
-    const nowDate = new Date()
-    const date = {
-      dateFinal: nowDate.toLocaleDateString()
-    }
-
-    await axiosPoderJudicial
-      .patch(`product/used/${id}`,{ dateFinal: nowDate.toLocaleDateString() })
-      .then(res => console.log(res.data))
-      .catch(err => console.log(err))
-  } 
-
+  };
   return (
     <table className="w-full text-center">
       <thead>
@@ -93,39 +77,42 @@ const ProductTableComponent = ({products}) => {
           <th className="px-4 py-2">Número de Serie</th>
           <th className="px-4 py-2">Usuario</th>
           <th className="px-4 py-2">Fecha de entrada</th>
+          {showDateSalida && <th className="px-4 py-2">Fecha de salida</th>}
           <th className="px-4 py-2">Descripción</th>
           <th className="px-4 py-2">Cantidad</th>
+          <th className="px-4 py-2">Acciones</th>
         </tr>
       </thead>
       <tbody>
-        {product?.map(product => (
+        {products?.map(product => (
           <tr key={product.id}>
-            <td className="border px-4 py-2">{ product.id} </td>
-            <td className="border px-4 py-2">{ getMarca(product.marcaId) } </td>
-            <td className="border px-4 py-2">{ getModelName(product.modelId) } </td>
-            <td className="border px-4 py-2">{ product.numSerie} </td>
-            <td className="border px-4 py-2">{ getUserName(product.userId) }</td>
-            <td className="border px-4 py-2">{ formatDateDDMMYYYY(product.dateInitial)}</td>
-            <td className="border px-4 py-2">{ product.description }</td>
-            <td className="border px-4 py-2">{ product.amount }</td>
-
-            <td className="w-32 border px-4 py-2 gap-2 grid grid-cols-2 justify-between">
+            <td className="border px-4 py-2">{product.id}</td>
+            <td className="border px-4 py-2">{getMarca(product.marcaId)}</td>
+            <td className="border px-4 py-2">{getModelName(product.modelId)}</td>
+            <td className="border px-4 py-2">{product.numSerie}</td>
+            <td className="border px-4 py-2">{getUserName(product.userId)}</td>
+            <td className="border px-4 py-2">{formatDateDDMMYYYY(product.dateInitial)}</td>
+            {showDateSalida && <td className="border px-4 py-2">{formatDateDDMMYYYY(product.dateFinal)}</td>}
+            <td className="border px-4 py-2">{product.description}</td>
+            <td className="border px-4 py-2">{product.amount}</td>
+            
+            <td className="border px-4 py-2 gap-2 grid grid-cols-2 justify-between">
               <button onClick={() => handleClickUpdatedProduct(product)} className='grid items-center justify-center m-auto text-2xl bg-yellow-500 hover:bg-yellow-600 w-10 h-10 rounded-md'>
                 <box-icon color="white" name='edit-alt'></box-icon>
               </button>
-              <button onClick={() => handleClickDeletedProduct(product.id)} className='grid items-center justify-center m-auto text-2xl bg-blue-500 hover:bg-blue-600 w-10 h-10 rounded-md'>
+
+              <button onClick={() => {
+                handleClickDeletedProduct(product.id);
+              }} className='grid items-center justify-center m-auto text-2xl bg-blue-500 hover:bg-blue-600 w-10 h-10 rounded-md'>
                 <box-icon color="white" name='trash'></box-icon>
               </button>
-              {/* <button onClick={() => handleClickDisableProduct(product.id)} className='rounded-md bg-purple-500 col-span-2'>
-                <box-icon color='white' name='cloud-download'></box-icon>
-              </button> */}
-            </td>
 
+            </td>
           </tr>
         ))}
       </tbody>
     </table>
-  )
+  );
 }
 
-export default ProductTableComponent
+export default ProductTableComponent;

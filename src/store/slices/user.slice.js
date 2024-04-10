@@ -14,11 +14,18 @@ const userSlice = createSlice({
     },
     changeIsShowUpdatedUser: (state) => {
       state.isShowUpdatedUser = !state.isShowUpdatedUser
+    },
+    setUser: (state, action) => {
+      const newState = { ...state, ...action.payload }
+      localStorage.setItem('userInfo', JSON.stringify(newState))
+      return newState
     }
   }
 })
 export const {
-    changeIsShowCreateUser
+    changeIsShowCreateUser,
+    changeIsShowUpdatedUser,
+    setUser
 } = userSlice.actions
 
 export default userSlice.reducer

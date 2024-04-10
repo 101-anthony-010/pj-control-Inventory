@@ -56,10 +56,10 @@ const PageProduct = () => {
         </div>
         
         <section className='grid grid-cols-[1fr_auto_auto] gap-2'>
-          <input type="text" className='bg-gray-100 rounded-md p-2'/>
+          {/* <input type="text" className='bg-gray-100 rounded-md p-2'/>
           <button className='p-2 flex items-center justify-center bg-green-500 rounded-md'>
             <box-icon color="white" name='search-alt-2' ></box-icon>
-          </button>
+          </button> */}
           <button onClick={handleClickChangeShowCreateProduct} className='flex items-center justify-center bg-green-500 rounded-md p-2'>
             <box-icon color='white' type='solid' name='user-plus'></box-icon>
           </button>
@@ -67,7 +67,7 @@ const PageProduct = () => {
       </section>
 
       <section className='grid items-center justify-center'>
-        <ProductTableComponent products={filteredProducts} />
+        <ProductTableComponent products={filteredProducts} showDateSalida={!isEntradaSelected} />
       </section>
     </>
   );
