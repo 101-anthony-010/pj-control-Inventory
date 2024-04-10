@@ -37,7 +37,7 @@ const EditUser = ({ handleChangeIsShowUpdatedUser }) => {
 
   const submit = async (data) => {
     axiosPoderJudicial
-      .post(`/user/${}`, data)
+      .post(`/user/${data}`, data)
       .then(res => console.log(res))
       .catch(err => console.log(err))
     

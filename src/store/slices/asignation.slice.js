@@ -3,6 +3,8 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   isShowCreateAsignation: false,
   isShowUpdatedAsignation: false,
+  isShowInfoAsignation: false,
+  isShowAmountAsignation: false,
 }
 
 const asignationSlice = createSlice({
@@ -15,6 +17,12 @@ const asignationSlice = createSlice({
     changeIsShowUpdatedAsignation: (state) => {
       state.isShowUpdatedAsignation = !state.isShowUpdatedAsignation
     },
+    changeIsShowInfoAsignation: (state) => {
+      state.isShowInfoAsignation = !state.isShowInfoAsignation
+    },
+    changeIsShowAmountAsignation: (state) => {
+      state.isShowAmountAsignation = !state.isShowAmountAsignation
+    },
     setAsignation: (state, action) => {
       const newState = { ...state, ...action.payload }
       localStorage.setItem('asignationInfo', JSON.stringify(newState))
@@ -25,6 +33,8 @@ const asignationSlice = createSlice({
 export const {
     changeIsShowCreateAsignation,
     changeIsShowUpdatedAsignation,
+    changeIsShowInfoAsignation,
+    changeIsShowAmountAsignation,
     setAsignation,
 } = asignationSlice.actions
 
