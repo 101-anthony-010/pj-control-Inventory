@@ -23,10 +23,6 @@ const PageAsignation = () => {
     dispatch(changeIsShowCreateAsignation());
   }
 
-  const handleClickChangeShowAmountAsignation = () => {
-    dispatch(changeIsShowAmountAsignation())
-  }
-
   const handleClickChangeShowInfoAsignation = () => {
     dispatch(changeIsShowInfoAsignation())
   }
@@ -56,9 +52,7 @@ const PageAsignation = () => {
         <CreateAsignation handleClickChangeShowCreateAsignation={handleClickChangeShowCreateAsignation} />
       </section>
 
-      <section className={`bg-black/20 fixed w-full h-full flex items-center justify-center ${isShowAmountAsignation ? "top-0" : "-top-full"}`}>
-        <AmountAsignation handleClickChangeShowAmountAsignation={handleClickChangeShowAmountAsignation} />
-      </section>
+      
 
       
 
@@ -80,7 +74,7 @@ const PageAsignation = () => {
       </section>
 
       <section className='grid items-center justify-center'>
-        <AsignationTableComponent handleClickChangeShowInfoAsignation={handleClickChangeShowInfoAsignation} handleClickChangeShowAmountAsignation={handleClickChangeShowAmountAsignation} asignations={filteredAsignations} isInUseSelected={isInUseSelected} />
+        <AsignationTableComponent handleClickChangeShowInfoAsignation={handleClickChangeShowInfoAsignation} asignations={filteredAsignations} isInUseSelected={isInUseSelected} />
       </section>
     </>
   )

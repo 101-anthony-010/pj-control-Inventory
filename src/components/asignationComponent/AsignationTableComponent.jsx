@@ -6,16 +6,17 @@ import { formatDateDDMMYYYY } from '../../utils/date';
 import { axiosPoderJudicial } from '../../utils/configAxios';
 
 //Slices
-import { changeIsShowInfoAsignation } from '../../store/slices/asignation.slice';
+import { changeIsShowAmountAsignation, changeIsShowInfoAsignation } from '../../store/slices/asignation.slice';
 
 //Components
 import InfoAsignation from './InfoAsignation';
+import AmountAsignation from './AmountAsignation';
 
-function AsignationTableComponent({ asignations, isInUseSelected, handleClickChangeShowAmountAsignation }) {
+function AsignationTableComponent({ asignations, isInUseSelected }) {
   const [users, setUsers] = useState();
   const [amountPages, setAmountPages] = useState({});
   const [infoAsignation, setInfoAsignation] = useState({})
-  const { isShowInfoAsignation } = useSelector(store => store.asignationSlice); // Accede a isShowCreateAsignation desde el estado global
+  const { isShowInfoAsignation, isShowAmountAsignation } = useSelector(store => store.asignationSlice); // Accede a isShowCreateAsignation desde el estado global
   const dispatch = useDispatch()
 
   const getUserName = (userId) => {
@@ -54,10 +55,21 @@ function AsignationTableComponent({ asignations, isInUseSelected, handleClickCha
     setInfoAsignation(asignation)
   }
   
+  const handleClickChangeShowAmountAsignation = (asignation) => {
+    dispatch(changeIsShowAmountAsignation())
+    setInfoAsignation(asignation)
+    // console.log(infoAsignation)
+    // console.log(asignation)
+  }
+
   return (
     <>
       <section className={`bg-black/20 fixed w-full h-full flex items-center justify-center ${isShowInfoAsignation ? "top-0" : "-top-full"}`}>
         <InfoAsignation infoAsignation={infoAsignation} handleClickChangeShowInfoAsignation={handleClickChangeShowInfoAsignation} />
+      </section>
+
+      <section className={`bg-black/20 fixed w-full h-full flex items-center justify-center ${isShowAmountAsignation ? "top-0" : "-top-full"}`}>
+        <AmountAsignation infoAsignation={infoAsignation} handleClickChangeShowAmountAsignation={handleClickChangeShowAmountAsignation} />
       </section>
 
       <table className="m-auto text-center">
@@ -79,7 +91,7 @@ function AsignationTableComponent({ asignations, isInUseSelected, handleClickCha
                   <td onClick={() => handleClickChangeShowInfoAsignation(asignation)} className="border px-4 py-2">{ getUserName(asignation.userId) }</td>
                   <td onClick={() => handleClickChangeShowInfoAsignation(asignation)} className="border px-4 py-2">{ asignation.productId}</td>
                   <td onClick={() => handleClickChangeShowInfoAsignation(asignation)} className="border px-4 py-2">{ formatDateDDMMYYYY(asignation.date)}</td>
-                  {isInUseSelected && <td className="border px-4 py-2"><button onClick={() => handleClickChangeShowAmountAsignation()} className='bg-green-500 p-2 rounded-md grid justify-center m-auto'><box-icon type='solid' color='white' name='book-add'></box-icon></button></td>}
+                  {isInUseSelected && <td className="border px-4 py-2"><button onClick={() => handleClickChangeShowAmountAsignation(asignation)} className='bg-green-500 p-2 rounded-md grid justify-center m-auto'><box-icon type='solid' color='white' name='book-add'></box-icon></button></td>}
                   {!isInUseSelected && <td className="border px-4 py-2">{ amountPages[asignation.productId] }</td>}
                 </tr>
               ))

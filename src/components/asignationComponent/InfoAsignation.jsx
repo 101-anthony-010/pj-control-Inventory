@@ -21,76 +21,126 @@ const InfoAsignation = ({ handleClickChangeShowInfoAsignation, infoAsignation })
       .get(`/product/${infoAsignation.productId}`)
       .then(res => setProduct(res.data.product))
       .catch(err => console.log(err))
+
+    axiosPoderJudicial
+      .get(`/sede`)
+      .then(res => setUserSede(res.data.sedes))
+      .catch(err => console.log(err))
+    
+    axiosPoderJudicial
+      .get(`/dependencia`)
+      .then(res => setUserDependencia(res.data.dependencias))
+      .catch(err => console.log(err))
+
+    axiosPoderJudicial
+      .get(`/cargo`)
+      .then(res => setUserCargo(res.data.cargos))
+      .catch(err => console.log(err))
+
+    axiosPoderJudicial
+      .get(`/modelProduct`)
+      .then(res => setProductModel(res.data.modelsProducts))
+      .catch(err => console.log(err))
+
+    axiosPoderJudicial
+      .get(`/marca`)
+      .then(res => setProductMarca(res.data.marcas))
+      .catch(err => console.log(err))
   }, [infoAsignation])
   
 
 
-  // const getUserSede = (userSedeId) => {
-  //   if (!userSede) return "Cargando...";
-
-  //   const userS = users.find(user => user.id === userId);
-  //   return user ? user.userName : "Usuario no encontrado";
-  // }
+  const getItemName = (itemsArray, itemId) => {
+    if (!itemsArray) return "Cargando...";
+    const item = itemsArray.find(item => item.id === itemId);
+    return item ? item.name : "No encontrado";
+  };
 
   return (
-    <section className='bg-white/85 rounded-md p-10 relative grid grid-cols-2 gap-4'>
-      <button onClick={() => handleClickChangeShowInfoAsignation({})} className='font-bold text-2xl absolute right-0 top-0 px-2 rounded-md m-2' >
-        <box-icon color='red' name='x-circle' type='solid' ></box-icon>
+    <section className='bg-white rounded-md p-10 relative grid grid-cols-2 gap-4'>
+      <button onClick={() => handleClickChangeShowInfoAsignation({})} className='font-bold text-2xl absolute right-0 top-0 px-2 rounded-md m-2'>
+        <box-icon color='red' name='x-circle' type='solid'></box-icon>
       </button>
-      
-      <section className='p-4 gap-4 grid grid-cols-2 rounded-md shadow bg-white'>
-        <h5 htmlFor="">Nombre:</h5>
-        <p htmlFor="">{user?.name}</p>
 
-        <h5 htmlFor="">Apellidos:</h5>
-        <p htmlFor="">{user?.lastName}</p>
-        
-        <h5 htmlFor="">DNI:</h5>
-        <p htmlFor="">{user?.dni}</p>
-        
-        <h5 htmlFor="">Correo:</h5>
-        <p htmlFor="">{user?.email}</p>
-        
-        <h5 htmlFor="">Telefono:</h5>
-        <p htmlFor="">{user?.phone}</p>
-        
-        <h5 htmlFor="">Usuario:</h5>
-        <p htmlFor="">{user?.userName}</p>
-
-        <h5 htmlFor="">Sede:</h5>
-        <p htmlFor="">{user?.sedeId}</p>
-
-        <h5 htmlFor="">Dependecia:</h5>
-        <p htmlFor="">{user?.dependenciaId}</p>
-
-        <h5 htmlFor="">Cargo:</h5>
-        <p htmlFor="">{user?.cargoId}</p>
+      <section className='p-4 gap-4 grid rounded-md shadow bg-white'>
+        <h3 className='mx-auto font-semibold text-xl'>Informacion del usuario</h3>
+        <table className="m-auto text-center border border-collapse">
+          <tbody>
+            <tr>
+              <th className="px-4 py-2 bg-gray-800 text-white border border-gray-700">Nombre</th>
+              <td className="px-4 py-2 border border-gray-700">{ user?.name }</td>
+            </tr>
+            <tr>
+              <th className="px-4 py-2 bg-gray-800 text-white border border-gray-700">Apellido</th>
+              <td className="px-4 py-2 border border-gray-700">{ user?.lastName }</td>
+            </tr>
+            <tr>
+              <th className="px-4 py-2 bg-gray-800 text-white border border-gray-700">DNI</th>
+              <td className="px-4 py-2 border border-gray-700">{ user?.dni }</td>
+            </tr>
+            <tr>
+              <th className="px-4 py-2 bg-gray-800 text-white border border-gray-700">Correo</th>
+              <td className="px-4 py-2 border border-gray-700">{ user?.email }</td>
+            </tr>
+            <tr>
+              <th className="px-4 py-2 bg-gray-800 text-white border border-gray-700">Telefono</th>
+              <td className="px-4 py-2 border border-gray-700">{ user?.phone }</td>
+            </tr>
+            <tr>
+              <th className="px-4 py-2 bg-gray-800 text-white border border-gray-700">Usuario</th>
+              <td className="px-4 py-2 border border-gray-700">{ user?.userName }</td>
+            </tr>
+            <tr>
+              <th className="px-4 py-2 bg-gray-800 text-white border border-gray-700">Sede</th>
+              <td className="px-4 py-2 border border-gray-700">{ user?.sedeId }</td>
+            </tr>
+            <tr>
+              <th className="px-4 py-2 bg-gray-800 text-white border border-gray-700">Dependencia</th>
+              <td className="px-4 py-2 border border-gray-700">{ user?.dependenciaId }</td>
+            </tr>
+            <tr>
+              <th className="px-4 py-2 bg-gray-800 text-white border border-gray-700">Cargo</th>
+              <td className="px-4 py-2 border border-gray-700">{ user?.cargoId }</td>
+            </tr>
+          </tbody>
+        </table>
       </section>
-      
-      <section className='p-4 gap-4 grid grid-cols-2 rounded-md shadow bg-white'>
-        <h5 htmlFor="">Marca:</h5>
-        <p htmlFor="">{product?.marcaId}</p>
 
-        <h5 htmlFor="">Modelo:</h5>
-        <p htmlFor="">{product?.modelId}</p>
-
-        <h5 htmlFor="">Numero de Serie:</h5>
-        <p htmlFor="">{product?.numSerie}</p>
-
-        <h5 htmlFor="">Fecha de Ingreso:</h5>
-        <p htmlFor="">{ formatDateDDMMYYYY(product?.dateInitial) }</p>
-
-        <h5 htmlFor="">Fecha de salida:</h5>
-        <p htmlFor="">{ formatDateDDMMYYYY(product?.dateFinal) }</p>
-
-        <h5 htmlFor="">Descriccion:</h5>
-        <p htmlFor="">{product?.description}</p>
-
-        <h5 htmlFor="">Cantidad:</h5>
-        <p htmlFor="">{product?.amount}</p>
-
+      <section className='p-4 gap-4 grid rounded-md shadow bg-white'>
+        <h3 className='mx-auto font-semibold text-xl'>Informacion del Producto</h3>
+        <table className="m-auto text-center border border-collapse">
+          <tbody>
+            <tr>
+              <th className="px-4 py-2 bg-gray-800 text-white border border-gray-700">Marca</th>
+              <td className="px-4 py-2 border border-gray-700">{ getItemName(productMarca, product?.marcaId) }</td>
+            </tr>
+            <tr>
+              <th className="px-4 py-2 bg-gray-800 text-white border border-gray-700">Modelo</th>
+              <td className="px-4 py-2 border border-gray-700">{ getItemName(productModel, product?.modelId) }</td>
+            </tr>
+            <tr>
+              <th className="px-4 py-2 bg-gray-800 text-white border border-gray-700">Numero de Serie</th>
+              <td className="px-4 py-2 border border-gray-700">{ product?.numSerie }</td>
+            </tr>
+            <tr>
+              <th className="px-4 py-2 bg-gray-800 text-white border border-gray-700">Fecha de Ingreso</th>
+              <td className="px-4 py-2 border border-gray-700">{ formatDateDDMMYYYY(product?.dateInitial) }</td>
+            </tr>
+            <tr>
+              <th className="px-4 py-2 bg-gray-800 text-white border border-gray-700">Fecha de Salida</th>
+              <td className="px-4 py-2 border border-gray-700">{ formatDateDDMMYYYY(product?.dateFinal) }</td>
+            </tr>
+            <tr>
+              <th className="px-4 py-2 bg-gray-800 text-white border border-gray-700">Descripción</th>
+              <td className="px-4 py-2 border border-gray-700">{ product?.description }</td>
+            </tr>
+            <tr>
+              <th className="px-4 py-2 bg-gray-800 text-white border border-gray-700">Cantidad</th>
+              <td className="px-4 py-2 border border-gray-700">{ product?.amount }</td>
+            </tr>
+          </tbody>
+        </table>
       </section>
-     
     </section>
   )
 }

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 
-//Utils
+// Utils
 import { axiosPoderJudicial } from '../../utils/configAxios';
 import { formatDateDDMMYYYY } from '../../utils/date';
 
@@ -67,6 +67,7 @@ const ProductTableComponent = ({ products, showDateSalida }) => {
     const marca = marcas.find(marca => marca.id === marcaId);
     return marca ? marca.name : "Marca no encontrada"
   };
+
   return (
     <table className="w-full text-center">
       <thead>
@@ -78,9 +79,7 @@ const ProductTableComponent = ({ products, showDateSalida }) => {
           <th className="px-4 py-2">Usuario</th>
           <th className="px-4 py-2">Fecha de entrada</th>
           {showDateSalida && <th className="px-4 py-2">Fecha de salida</th>}
-          <th className="px-4 py-2">Descripción</th>
-          <th className="px-4 py-2">Cantidad</th>
-          <th className="px-4 py-2">Acciones</th>
+          {!showDateSalida && <th className="px-4 py-2">Acciones</th>}
         </tr>
       </thead>
       <tbody>
@@ -93,21 +92,19 @@ const ProductTableComponent = ({ products, showDateSalida }) => {
             <td className="border px-4 py-2">{getUserName(product.userId)}</td>
             <td className="border px-4 py-2">{formatDateDDMMYYYY(product.dateInitial)}</td>
             {showDateSalida && <td className="border px-4 py-2">{formatDateDDMMYYYY(product.dateFinal)}</td>}
-            <td className="border px-4 py-2">{product.description}</td>
-            <td className="border px-4 py-2">{product.amount}</td>
-            
-            <td className="border px-4 py-2 gap-2 grid grid-cols-2 justify-between">
-              <button onClick={() => handleClickUpdatedProduct(product)} className='grid items-center justify-center m-auto text-2xl bg-yellow-500 hover:bg-yellow-600 w-10 h-10 rounded-md'>
-                <box-icon color="white" name='edit-alt'></box-icon>
-              </button>
+            {!showDateSalida && (
+              <td className="border px-4 py-2 gap-2 grid grid-cols-2 justify-between">
+                <button onClick={() => handleClickUpdatedProduct(product)} className='grid items-center justify-center m-auto text-2xl bg-yellow-500 hover:bg-yellow-600 w-10 h-10 rounded-md'>
+                  <box-icon color="white" name='edit-alt'></box-icon>
+                </button>
 
-              <button onClick={() => {
-                handleClickDeletedProduct(product.id);
-              }} className='grid items-center justify-center m-auto text-2xl bg-blue-500 hover:bg-blue-600 w-10 h-10 rounded-md'>
-                <box-icon color="white" name='trash'></box-icon>
-              </button>
-
-            </td>
+                <button onClick={() => {
+                  handleClickDeletedProduct(product.id);
+                }} className='grid items-center justify-center m-auto text-2xl bg-blue-500 hover:bg-blue-600 w-10 h-10 rounded-md'>
+                  <box-icon color="white" name='trash'></box-icon>
+                </button>
+              </td>
+            )}
           </tr>
         ))}
       </tbody>
