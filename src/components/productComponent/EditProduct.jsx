@@ -77,34 +77,34 @@ const EditProduct = () => {
       <form onSubmit={handleSubmit(submit)} className='grid grid-cols-2 gap-5'>
 
         <label htmlFor='marca'>Marca:</label>
-        <select name='marca' {...register('marcaId')} id='marcaId' onChange={handleMarcaChange} value={selectedMarca}>
+        <select className='bg-slate-100 rounded-md p-2' name='marca' {...register('marcaId')} id='marcaId' onChange={handleMarcaChange} value={selectedMarca}>
           <option value=''>Seleccione una Marca</option>
           {marcas?.map(marca => <option key={marca.id} value={marca.id}>{marca.name}</option>)}
         </select>
 
         <label htmlFor='modelId'>Modelo del Producto:</label>
-        <select name='modelId' {...register('modelId')} id='modelId'>
+        <select className='bg-slate-100 rounded-md p-2' name='modelId' {...register('modelId')} id='modelId'>
           <option value=''>Seleccione un modelo</option>
           {modelos?.map(modelo => <option key={modelo.id} value={modelo.id}>{modelo.name}</option>)}
         </select>
 
         <label htmlFor='numSerie'>Número de Serie:</label>
-        <input type='text' defaultValue={numSerie} {...register('numSerie')} id='numSerie' name='numSerie' required />
+        <input className='rounded-md bg-slate-100 p-2' type='text' defaultValue={numSerie} {...register('numSerie')} id='numSerie' name='numSerie' required />
 
         <label htmlFor='userId'>Nombre de Usuario:</label>
-        <select name='userId' {...register('userId')} id='userId'>
+        <select className='bg-slate-100 rounded-md p-2' name='userId' {...register('userId')} id='userId'>
           <option value=''>Seleccione un Usuario</option>
           {users?.map(user => <option key={user.id} value={user.id}>{user.userName}</option>)}
         </select>
 
         <label htmlFor='date'>Fecha:</label>
-        <input type='date' {...register('date')} id='date' name='date' required />
+        <input className='rounded-md bg-slate-100 p-2' type='date' {...register('date')} id='date' name='date' required />
 
         <label htmlFor='description'>Descripción:</label>
-        <textarea type='text' defaultValue={description} {...register('description')} id='description' name='description' required></textarea>
+        <textarea className='rounded-md p-2 bg-slate-100' type='text' defaultValue={description} {...register('description')} id='description' name='description' required></textarea>
 
         <label htmlFor='amount'>Cantidad:</label>
-        <input type='number' {...register('amount')} id='amount' name='amount' defaultValue={1} required />
+        <input className='rounded-md bg-slate-100 p-2' type='number' {...register('amount')} id='amount' name='amount' defaultValue={1} required />
 
         <button onClick={handleClickReset} className='bg-yellow-500 text-white rounded-md col-span-2 p-2 font-bold'>Editar Producto</button>
       </form>

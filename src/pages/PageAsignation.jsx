@@ -11,6 +11,7 @@ import AmountAsignation from '../components/asignationComponent/AmountAsignation
 
 // Slice
 import { changeIsShowAmountAsignation, changeIsShowCreateAsignation, changeIsShowInfoAsignation } from '../store/slices/asignation.slice';
+import ExportPDFButton from '../components/Export/ExportPDFButton';
 
 const PageAsignation = () => {
   const [asignations, setAsignations] = useState([]);
@@ -52,10 +53,6 @@ const PageAsignation = () => {
         <CreateAsignation handleClickChangeShowCreateAsignation={handleClickChangeShowCreateAsignation} />
       </section>
 
-      
-
-      
-
       <section className='flex gap-4 justify-between p-2'>
         <div className='flex gap-4'>
           <button onClick={() => setIsInUseSelected(true)} className={`rounded-md ${isInUseSelected ? 'bg-blue-500 text-white' : 'bg-slate-200'} px-4`}>En uso</button>
@@ -76,6 +73,8 @@ const PageAsignation = () => {
       <section className='grid items-center justify-center'>
         <AsignationTableComponent handleClickChangeShowInfoAsignation={handleClickChangeShowInfoAsignation} asignations={filteredAsignations} isInUseSelected={isInUseSelected} />
       </section>
+
+      <ExportPDFButton/>
     </>
   )
 }

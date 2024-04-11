@@ -26,7 +26,7 @@ const AmountAsignation = ({ handleClickChangeShowAmountAsignation, infoAsignatio
       
       <form onSubmit={handleSubmit(submit)} className='grid gap-4'>
         <label htmlFor="">Cantidad de Hojas de Toner</label>
-        <input type="number" {...register('amountPages')} id='amountPages' name='amountPages' className='p-2 bg-slate-100' />
+        <input type="number" {...register('amountPages')} id='amountPages' name='amountPages' className='p-2 bg-slate-100 rounded-md' />
 
         <button className='bg-green-500 text-white font-bold p-2 rounded-md'>Agregar</button>
       </form>

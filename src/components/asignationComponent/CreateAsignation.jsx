@@ -54,13 +54,13 @@ const CreateAsignation = ({ handleClickChangeShowCreateAsignation }) => {
       <form onSubmit={handleSubmit(submit)} className='grid grid-cols-2 gap-5'>
 
         <label htmlFor="userId">Nombre de Usuario:</label>
-        <select name="userId" {...register("userId")} id="userId" onChange={handleProductChange}>
+        <select className='rounded-md p-2 bg-slate-100' name="userId" {...register("userId")} id="userId" onChange={handleProductChange}>
           <option value="">Seleccionar Usuario</option>
           {users?.map(user => <option key={user.id} value={user.id}>{user.userName}</option>)}
         </select>
       
         <label htmlFor="productId">Id del producto:</label>
-        <select name="productId" {...register("productId")} id="productId">
+        <select className='rounded-md p-2 bg-slate-100' name="productId" {...register("productId")} id="productId">
           <option value="">Seleccionar Id</option>
           {products?.map(product => <option key={product.id} value={product.id}>{product.id}</option>)}
         </select>

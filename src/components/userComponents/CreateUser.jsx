@@ -52,43 +52,43 @@ const CreateUser = ({ handleChangeIsShowCreateUser, setUsers }) => {
         <box-icon color='red' name='x-circle' type='solid' ></box-icon>
       </button>
 
-      <form className='grid grid-cols-2 gap-5' onSubmit={handleSubmit(submit)} action="">
+      <form className='grid grid-cols-2 gap-2' onSubmit={handleSubmit(submit)} action="">
         
         <label htmlFor="name">Nombre:</label>
-        <input type="text"{...register("name")} id="name" name="name" required />
+        <input className='rounded-md p-2 bg-slate-100' type="text"{...register("name")} id="name" name="name" required />
         
         <label htmlFor="name">Apellidos:</label>
-        <input type="text"{...register("lastName")} id="lastName" name="lastName" required />
+        <input className='rounded-md p-2 bg-slate-100' type="text"{...register("lastName")} id="lastName" name="lastName" required />
 
         <label htmlFor="name">DNI:</label>
-        <input type="dni"{...register("dni")} id="dni" name="dni" required />
+        <input className='rounded-md p-2 bg-slate-100' type="dni"{...register("dni")} id="dni" name="dni" required />
   
         <label htmlFor="name">Telefono:</label>
-        <input type="number"{...register("phone")} id="phone" name="phone" required />
+        <input className='rounded-md p-2 bg-slate-100' type="number"{...register("phone")} id="phone" name="phone" required />
         
         <label htmlFor="name">Correo:</label>
-        <input type="email"{...register("email")} id="email" name="email" required />
+        <input className='rounded-md p-2 bg-slate-100' type="email"{...register("email")} id="email" name="email" required />
         
         <label htmlFor="name">Contraseña:</label>
-        <input type="password"{...register("password")} id="password" name="password" required />
+        <input className='rounded-md p-2 bg-slate-100' type="password"{...register("password")} id="password" name="password" required />
         
         <label htmlFor="name">Usuario:</label>
-        <input type="text"{...register("userName")} id="userName" name="userName" required />
+        <input className='rounded-md p-2 bg-slate-100' type="text"{...register("userName")} id="userName" name="userName" required />
         
         <label htmlFor="sedeId">Sede:</label>
-        <select name="sedeId" {...register("sedeId")} id="sedeId">
+        <select className='rounded-md bg-slate-100 p-2' name="sedeId" {...register("sedeId")} id="sedeId">
           <option value="">Seleccione una sede</option>
           {sedes?.map(sede => <option key={sede.id} value={sede.id}>{sede.name}</option>)}
         </select>       
 
         <label htmlFor="dependenciaId">Dependencia:</label>
-        <select name="Id" {...register("dependenciaId")} id="dependenciaId">
+        <select className='rounded-md bg-slate-100 p-2' name="Id" {...register("dependenciaId")} id="dependenciaId">
           <option value="">Selecciona una dependencia</option>
           {dependencias?.map(dependencia => <option key={dependencia.id} value={dependencia.id}>{dependencia.name}</option>)}
         </select>
 
         <label htmlFor="modelId">Cargo:</label>
-        <select name="cargoId" {...register("cargoId")} id="cargoId">
+        <select className='rounded-md bg-slate-100 p-2' name="cargoId" {...register("cargoId")} id="cargoId">
           <option value="">Seleccione un cargo</option>
           {cargos?.map(cargo => <option key={cargo.id} value={cargo.id}>{cargo.name}</option>)}
         </select>

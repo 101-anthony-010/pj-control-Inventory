@@ -7,6 +7,9 @@ import PageAsignation from './pages/PageAsignation';
 import PageUser from './pages/PageUser';
 import Navbar from './components/layout/Navbar';
 import PageLogin from './pages/PageLogin';
+import PageEmployee from './pages/PageEmployee';
+import PageNotFound from './pages/PageNotFound';
+import ProtectedUser from './components/auth/ProtectedUser';
 
 //Slices
 
@@ -15,11 +18,16 @@ function App() {
     <>
       <Navbar/>
       <Routes>
-        <Route path='/product' element={<PageProduct/>}/>
-        <Route path='/asignation' element={<PageAsignation/>}/>
-        <Route path='/user' element={<PageUser/>}/>
+        
+        <Route element={<ProtectedUser/>}>
+          <Route path='/product' element={<PageProduct/>}/>
+          <Route path='/asignation' element={<PageAsignation/>}/>
+          <Route path='/user' element={<PageUser/>}/>
+        </Route>
+
         <Route path='/' element={<PageLogin/>}/>
-        {/* <Route path='/*' element={<NotFound/>}/> */}
+        <Route path='/employee' element={<PageEmployee/>}/>
+        <Route path='/*' element={<PageNotFound/>}/>
       </Routes>
     </>
   )

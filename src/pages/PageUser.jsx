@@ -29,7 +29,7 @@ const PageUser = () => {
       </section>
 
       <section className={`bg-black/20 fixed w-full h-full flex items-center justify-center ${isShowUpdatedUser ? "top-0" : "-top-full"}`}>
-        <EditUser />
+        <EditUser handleChangeIsShowUpdatedUser={handleChangeIsShowUpdatedUser} />
       </section>
 
       <section className='m-4  flex justify-between'>
