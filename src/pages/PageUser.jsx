@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import UserTableComponent from '../components/userComponents/UserTableComponent'
 import CreateUser from '../components/userComponents/CreateUser'
 import EditUser from '../components/userComponents/EditUser'
+import Navbar from '../components/layout/Navbar'
 
 //Slices
 import userSlice, { changeIsShowCreateUser, changeIsShowUpdatedUser } from '../store/slices/user.slice'
@@ -24,6 +25,7 @@ const PageUser = () => {
 
   return (
     <>
+      <Navbar/>
       <section className={`bg-black/20 fixed w-full h-full flex items-center justify-center ${isShowCreateUser ? "top-0" : "-top-full"}`}>
         <CreateUser handleChangeIsShowCreateUser={handleChangeIsShowCreateUser} setUsers={setUsers} />
       </section>

@@ -16,7 +16,7 @@ import ProtectedUser from './components/auth/ProtectedUser';
 function App() {
   return (
     <>
-      <Navbar/>
+      {/* <Navbar/> */}
       <Routes>
         
         <Route element={<ProtectedUser/>}>

@@ -8,6 +8,7 @@ import { axiosPoderJudicial } from '../utils/configAxios';
 import CreateAsignation from '../components/asignationComponent/CreateAsignation';
 import AsignationTableComponent from '../components/asignationComponent/AsignationTableComponent';
 import AmountAsignation from '../components/asignationComponent/AmountAsignation';
+import Navbar from '../components/layout/Navbar';
 
 // Slice
 import { changeIsShowAmountAsignation, changeIsShowCreateAsignation, changeIsShowInfoAsignation } from '../store/slices/asignation.slice';
@@ -49,6 +50,7 @@ const PageAsignation = () => {
   }, [isInUseSelected]);
   return (
     <>
+      <Navbar/>
       <section className={`bg-black/20 fixed w-full h-full flex items-center justify-center ${isShowCreateAsignation ? "top-0" : "-top-full"}`}>
         <CreateAsignation handleClickChangeShowCreateAsignation={handleClickChangeShowCreateAsignation} />
       </section>

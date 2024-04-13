@@ -1,9 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+
+//Utils
 import { axiosPoderJudicial } from '../utils/configAxios';
+
+//Components
 import CreateProduct from '../components/productComponent/CreateProduct';
 import ProductTableComponent from '../components/productComponent/ProductTableComponent';
 import EditProduct from '../components/productComponent/EditProduct';
+import Navbar from '../components/layout/Navbar';
+
+//Slices
 import { changeIsShowCreateProduct } from '../store/slices/product.Slice';
 
 const PageProduct = () => {
@@ -41,6 +48,8 @@ const PageProduct = () => {
 
   return (
     <>
+      <Navbar/>
+
       <section className={`bg-black/20 fixed w-full h-full flex items-center justify-center ${isShowCreateProduct ? "top-0" : "-top-full"}`}>
         <CreateProduct/>
       </section>
