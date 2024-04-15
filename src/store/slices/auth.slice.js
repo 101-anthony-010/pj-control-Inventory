@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { axiosPoderJudicial } from "../../utils/configAxios";
+import axios from "axios";
 
 const initialState = {
   token: null,
@@ -28,7 +29,7 @@ export const {
 } = authSlice.actions
 
 export const loginAuth = (data) => (dispacth) => {
-  axiosPoderJudicial.post("/auth", data)
+  axiosPoderJudicial.post("/auth/login", data)
     .then((res) => dispacth(setAuthInfo(res.data)))
     .catch((err) => console.log(err))
 }

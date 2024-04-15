@@ -13,16 +13,16 @@ const PageLogin = () => {
   const dispatch = useDispatch()
 
   const submit = (data) => {
-    console.log(data)
-    axios.get('http://localhost:3000/api/v1/product')
-      .then(res => console.log(res.data))
-      .catch(err => console.log(err))
+    // console.log(data)
+    // axios.get('http://localhost:3000/api/v1/product')
+    //   .then(res => console.log(res.data))
+    //   .catch(err => console.log(err))
 
-    axios.post('http://localhost:3000/api/v1/auth/login',data)
-      .then(res => console.log(res.data))
-      .catch(err => console.log(err))
+    // axios.post('http://localhost:3000/api/v1/auth/login',data)
+    //   .then(res => console.log(res.data))
+    //   .catch(err => console.log(err))
 
-    // dispatch(loginAuth(data))
+    dispatch(loginAuth(data))
   }
 
   return (
