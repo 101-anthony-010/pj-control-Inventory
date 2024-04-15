@@ -2,6 +2,8 @@ import React from 'react'
 import { useForm } from 'react-hook-form'
 import { useDispatch, useSelector } from "react-redux";
 import { logOut, loginAuth } from '../store/slices/auth.slice';
+import { axiosPoderJudicial } from '../utils/configAxios';
+import axios from 'axios';
 
 const PageLogin = () => {
   const { register, handleSubmit, reset, setValue } = useForm()
@@ -11,8 +13,16 @@ const PageLogin = () => {
   const dispatch = useDispatch()
 
   const submit = (data) => {
-    console.log(first)
-    dispatch(loginAuth(data))
+    console.log(data)
+    axios.get('http://localhost:3000/api/v1/product')
+      .then(res => console.log(res.data))
+      .catch(err => console.log(err))
+
+    axios.post('http://localhost:3000/api/v1/auth/login',data)
+      .then(res => console.log(res.data))
+      .catch(err => console.log(err))
+
+    // dispatch(loginAuth(data))
   }
 
   return (
