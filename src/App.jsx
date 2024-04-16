@@ -5,11 +5,12 @@ import './App.css'
 import PageProduct from './pages/PageProduct';
 import PageAsignation from './pages/PageAsignation';
 import PageUser from './pages/PageUser';
-import Navbar from './components/layout/Navbar';
+// import Navbar from './components/layout/Navbar';
 import PageLogin from './pages/PageLogin';
 import PageEmployee from './pages/PageEmployee';
 import PageNotFound from './pages/PageNotFound';
 import ProtectedUser from './components/auth/ProtectedUser';
+import PageAdd from './pages/PageAdd';
 
 //Slices
 
@@ -23,6 +24,7 @@ function App() {
           <Route path='/product' element={<PageProduct/>}/>
           <Route path='/asignation' element={<PageAsignation/>}/>
           <Route path='/user' element={<PageUser/>}/>
+          <Route path='/add' element={<PageAdd/>}/>
         </Route>
 
         <Route path='/' element={<PageLogin/>}/>
