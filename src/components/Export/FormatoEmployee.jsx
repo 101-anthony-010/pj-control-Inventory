@@ -4,8 +4,8 @@ const FormatoEmployee = () => {
   return (
     <div>
       <section className='flex justify-around'>
-        <div className='flex items-center justify-center'>
-          <box-icon type='logo' name='react'></box-icon>
+        <div className='flex items-center justify-center w-36 h-36'>
+          <img src="/public/img/logoPJ.png" className='object-contain w-full h-full' alt="" />
         </div>
 
         <div className='text-center grid gap-1'>

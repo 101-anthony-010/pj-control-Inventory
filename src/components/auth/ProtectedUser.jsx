@@ -3,9 +3,9 @@ import { useSelector } from 'react-redux'
 import { Navigate, Outlet } from 'react-router-dom'
 
 const ProtectedUser = () => {
-    const { token } = useSelector((store) => store.authSlice)
-    console.log(token)
-    if (token) {
+    const { token, user } = useSelector((store) => store.authSlice)
+    // console.log(user.rol)
+    if (token && (user.rol === 'admin')) {
         return <Outlet/>
     } else {
         return <Navigate to="/"/>       

@@ -2,24 +2,24 @@ import React from 'react'
 import { useForm } from 'react-hook-form'
 import { useDispatch, useSelector } from "react-redux";
 import { loginAuth } from '../store/slices/auth.slice';
+import { Navigate } from 'react-router-dom'
 
 const PageLogin = () => {
   const { register, handleSubmit, reset, setValue } = useForm()
-  const { token } = useSelector(store => store.authSlice)
+  const { token, user } = useSelector(store => store.authSlice)
   const dispatch = useDispatch()
 
   const submit = (data) => {
     dispatch(loginAuth(data))
-    // history.push('/asignation'); 
   }
 
-  return (
-    <>
-      {
-        token ? (
-          <section>ya paso</section>
-        ) : (
-          <section className="flex justify-center items-center h-screen">
+  if (token && (user.rol === 'admin')) {
+    return <Navigate to="/asignation"/>
+  } else {
+    if (token) {
+      return <Navigate to="/employee"/>
+    } else {
+      return <section className="flex justify-center items-center h-screen">
             <div className="w-full top-0 h-full absolute bg-cover bg-[url('/img/PJ.jpg')]">
               <div className='w-full h-full bg-white/30'></div>
             </div>
@@ -38,10 +38,8 @@ const PageLogin = () => {
               <button className='m-2 rounded-md p-2 bg-blue-500 text-white font-bold'>Ingresar</button>
             </form>
           </section>
-        )
-      }
-    </>
-  )
+    }
+  }
 }
 
 export default PageLogin
