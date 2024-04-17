@@ -16,7 +16,7 @@ const PageLogin = () => {
   if (token && (user.rol === 'admin')) {
     return <Navigate to="/asignation"/>
   } else {
-    if (token) {
+    if (token && (user.rol === 'employee')) {
       return <Navigate to="/employee"/>
     } else {
       return <section className="flex justify-center items-center h-screen">

@@ -11,7 +11,9 @@ const Navbar = () => {
   }
   return (
     <nav className='relative flex justify-center items-center gap-10 p-4 shadow-md'>
-      <box-icon type='logo' name='react'></box-icon>
+      <div className='w-12 h-12 absolute left-6 top-1/2 -translate-y-1/2'>
+        <img src="/img/logoPJ.png" className='w-full h-full object-contain' alt="" />
+      </div>
       <Link to={'/asignation'}>Asignacion</Link>
       <Link to={'/product'}>Producto</Link>
       <Link to={'/user'}>Usuario</Link>
