@@ -86,12 +86,12 @@ function AsignationTableComponent({ asignations, isInUseSelected }) {
           <tbody>
             {
               asignations?.map((asignation) => (
-                <tr className='hover:bg-slate-300 cursor-pointer' key={asignation.id}>
+                <tr className='hover:bg-slate-200/75 cursor-pointer' key={asignation.id}>
                   <td onClick={() => handleClickChangeShowInfoAsignation(asignation)} className="border px-4 py-2">{ asignation.id}</td>
                   <td onClick={() => handleClickChangeShowInfoAsignation(asignation)} className="border px-4 py-2">{ getUserName(asignation.userId) }</td>
                   <td onClick={() => handleClickChangeShowInfoAsignation(asignation)} className="border px-4 py-2">{ asignation.productId}</td>
                   <td onClick={() => handleClickChangeShowInfoAsignation(asignation)} className="border px-4 py-2">{ formatDateDDMMYYYY(asignation.date)}</td>
-                  {isInUseSelected && <td className="border px-4 py-2"><button onClick={() => handleClickChangeShowAmountAsignation(asignation)} className='bg-green-500 p-2 rounded-md grid justify-center m-auto'><box-icon type='solid' color='white' name='book-add'></box-icon></button></td>}
+                  {isInUseSelected && <td className="border px-4 py-2"><button onClick={() => handleClickChangeShowAmountAsignation(asignation)} className='w-[40px] h-[40px] rounded-md bg-green-500/90 hover:bg-green-500/50 p-2'><img src="/icons/amount.png" className='w-full h-full object-contain' alt="" /></button></td>}
                   {!isInUseSelected && <td className="border px-4 py-2">{ amountPages[asignation.productId] }</td>}
                 </tr>
               ))

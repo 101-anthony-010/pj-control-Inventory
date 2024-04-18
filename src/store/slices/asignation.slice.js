@@ -5,6 +5,7 @@ const initialState = {
   isShowUpdatedAsignation: false,
   isShowInfoAsignation: false,
   isShowAmountAsignation: false,
+  isShowExportPdf: false
 }
 
 const asignationSlice = createSlice({
@@ -23,6 +24,9 @@ const asignationSlice = createSlice({
     changeIsShowAmountAsignation: (state) => {
       state.isShowAmountAsignation = !state.isShowAmountAsignation
     },
+    changeIsShowExportPdf: (state) => {
+      state.isShowExportPdf = !state.isShowExportPdf
+    },
     setAsignation: (state, action) => {
       const newState = { ...state, ...action.payload }
       localStorage.setItem('asignationInfo', JSON.stringify(newState))
@@ -35,6 +39,7 @@ export const {
     changeIsShowUpdatedAsignation,
     changeIsShowInfoAsignation,
     changeIsShowAmountAsignation,
+    changeIsShowExportPdf,
     setAsignation,
 } = asignationSlice.actions
 

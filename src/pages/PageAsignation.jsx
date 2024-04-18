@@ -7,18 +7,17 @@ import { axiosPoderJudicial } from '../utils/configAxios';
 // Components
 import CreateAsignation from '../components/asignationComponent/CreateAsignation';
 import AsignationTableComponent from '../components/asignationComponent/AsignationTableComponent';
-import AmountAsignation from '../components/asignationComponent/AmountAsignation';
 import Navbar from '../components/layout/Navbar';
+import ExportPDFButton from '../components/Export/ExportPDFButton';
 
 // Slice
-import { changeIsShowAmountAsignation, changeIsShowCreateAsignation, changeIsShowInfoAsignation } from '../store/slices/asignation.slice';
-import ExportPDFButton from '../components/Export/ExportPDFButton';
+import { changeIsShowCreateAsignation, changeIsShowExportPdf, changeIsShowInfoAsignation } from '../store/slices/asignation.slice';
 
 const PageAsignation = () => {
   const [asignations, setAsignations] = useState([]);
   const [filteredAsignations, setFilteredAsignations] = useState([]);
-  const [isInUseSelected, setIsInUseSelected] = useState(true); // Estado para el botón "En uso"
-  const { isShowCreateAsignation, isShowAmountAsignation } = useSelector(store => store.asignationSlice); // Accede a isShowCreateAsignation desde el estado global
+  const [isInUseSelected, setIsInUseSelected] = useState(true); 
+  const { isShowCreateAsignation, isShowExportPdf } = useSelector(store => store.asignationSlice);
   const dispatch = useDispatch();
 
   const handleClickChangeShowCreateAsignation = () => {
@@ -27,6 +26,10 @@ const PageAsignation = () => {
 
   const handleClickChangeShowInfoAsignation = () => {
     dispatch(changeIsShowInfoAsignation())
+  }
+
+  const handleClickChangeShowExportPdf = () => {
+    dispatch(changeIsShowExportPdf())
   }
 
   useEffect(() => {
@@ -55,6 +58,10 @@ const PageAsignation = () => {
         <CreateAsignation handleClickChangeShowCreateAsignation={handleClickChangeShowCreateAsignation} />
       </section>
 
+      <section className={`bg-black/20 fixed w-full h-full flex items-center justify-center ${isShowExportPdf ? "top-0" : "-top-full"}`}>
+        <ExportPDFButton handleClickChangeShowExportPdf={handleClickChangeShowExportPdf} />
+      </section>
+
       <section className='flex gap-4 justify-between p-2'>
         <div className='flex gap-4'>
           <button onClick={() => setIsInUseSelected(true)} className={`rounded-md ${isInUseSelected ? 'bg-blue-500 text-white' : 'bg-slate-200'} px-4`}>En uso</button>
@@ -66,8 +73,11 @@ const PageAsignation = () => {
           <button className='p-2 flex items-center justify-center bg-green-500 rounded-md'>
             <box-icon color="white" name='search-alt-2' ></box-icon>
           </button> */}
-          <button onClick={handleClickChangeShowCreateAsignation}  className='flex items-center justify-center bg-green-500 rounded-md p-2'>
-            <box-icon color='white' type='solid' name='user-plus'></box-icon>
+          <button onClick={handleClickChangeShowCreateAsignation}  className='rounded-md p-2 w-[45px] h-[45px] shadow bg-green-500/90 hover:bg-green-500/60'>
+            <img src="/icons/add_user.png" alt="" />
+          </button>
+          <button onClick={handleClickChangeShowExportPdf} className='rounded-md p-2 w-[45px] h-[45px] shadow bg-red-500/90 hover:bg-red-500/60'>
+            <img src="/icons/download.png" className='w-full h-full object-contain ' alt="" />
           </button>
         </section>
       </section>
@@ -76,7 +86,6 @@ const PageAsignation = () => {
         <AsignationTableComponent handleClickChangeShowInfoAsignation={handleClickChangeShowInfoAsignation} asignations={filteredAsignations} isInUseSelected={isInUseSelected} />
       </section>
 
-      <ExportPDFButton/>
     </>
   )
 }

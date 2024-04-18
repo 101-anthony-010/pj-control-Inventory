@@ -1,8 +1,10 @@
 import React from 'react'
 import { useForm } from 'react-hook-form'
 import { useDispatch, useSelector } from "react-redux";
-import { loginAuth } from '../store/slices/auth.slice';
 import { Navigate } from 'react-router-dom'
+
+//Slices
+import { loginAuth } from '../store/slices/auth.slice';
 
 const PageLogin = () => {
   const { register, handleSubmit, reset, setValue } = useForm()
