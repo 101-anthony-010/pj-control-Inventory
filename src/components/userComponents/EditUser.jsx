@@ -48,8 +48,8 @@ const EditUser = ({ handleChangeIsShowUpdatedUser }) => {
 
   return (
     <section className='bg-white max-w-2xl rounded-md p-12 relative'>
-      <button className='font-bold text-2xl absolute right-0 top-0 px-2 rounded-md m-2' onClick={() => handleChangeIsShowUpdatedUser()}>
-        <box-icon color='red' name='x-circle' type='solid'></box-icon>
+      <button className='font-bold text-2xl absolute right-0 top-0 px-2 rounded-md m-2 w-[35px] h-[35px]' onClick={() => handleChangeIsShowUpdatedUser()}>
+        <img className='w-full h-full object-contain' src="/icons/close.png" alt="" />
       </button>
 
       <form className='grid grid-cols-2 gap-2' onSubmit={handleSubmit(submit)}>

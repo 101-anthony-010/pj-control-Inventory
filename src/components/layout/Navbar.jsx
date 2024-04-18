@@ -10,7 +10,7 @@ const Navbar = () => {
     dispatch(logOut())
   }
   return (
-    <nav className='relative flex justify-center items-center gap-10 p-4 shadow-md'>
+    <nav className='relative flex justify-center items-center gap-10 p-4 shadow-md text-lg'>
       <div className='w-12 h-12 absolute left-6 top-1/2 -translate-y-1/2'>
         <img src="/img/logoPJ.png" className='w-full h-full object-contain' alt="" />
       </div>

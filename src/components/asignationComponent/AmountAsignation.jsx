@@ -20,8 +20,8 @@ const AmountAsignation = ({ handleClickChangeShowAmountAsignation, infoAsignatio
 
   return (
     <section className='bg-white max-w-2xl rounded-md p-10 relative'>
-      <button onClick={() => handleClickChangeShowAmountAsignation({})} className='font-bold text-2xl absolute right-0 top-0 px-2 rounded-md m-2' >
-        <box-icon color='red' name='x-circle' type='solid' ></box-icon>
+      <button onClick={() => handleClickChangeShowAmountAsignation({})} className='font-bold text-2xl absolute right-0 top-0 p-2 w-[35px] h-[35px] rounded-md m-2' >
+        <img className='w-full h-full object-contain' src="/icons/close.png" alt="" />
       </button>
       
       <form onSubmit={handleSubmit(submit)} className='grid gap-4'>

@@ -73,16 +73,20 @@ const PageAsignation = () => {
           <button className='p-2 flex items-center justify-center bg-green-500 rounded-md'>
             <box-icon color="white" name='search-alt-2' ></box-icon>
           </button> */}
-          <button onClick={handleClickChangeShowCreateAsignation}  className='rounded-md p-2 w-[45px] h-[45px] shadow bg-green-500/90 hover:bg-green-500/60'>
+          <button onClick={handleClickChangeShowCreateAsignation}  className='rounded-md p-2 w-[35px] h-[35px] shadow bg-green-500/90 hover:bg-green-500/60'>
             <img src="/icons/add_user.png" alt="" />
           </button>
-          <button onClick={handleClickChangeShowExportPdf} className='rounded-md p-2 w-[45px] h-[45px] shadow bg-red-500/90 hover:bg-red-500/60'>
+          <button onClick={handleClickChangeShowExportPdf} className='rounded-md p-2 w-[35px] h-[35px] shadow bg-red-500/90 hover:bg-red-500/60'>
             <img src="/icons/download.png" className='w-full h-full object-contain ' alt="" />
           </button>
         </section>
       </section>
+      
+      <section className='text-center'>
+        <h2 className='font-bold text-2xl my-4'>Tabla de asignacion de Tonner</h2>
+      </section>
 
-      <section className='grid items-center justify-center'>
+      <section className='m-auto w-[80%]'>
         <AsignationTableComponent handleClickChangeShowInfoAsignation={handleClickChangeShowInfoAsignation} asignations={filteredAsignations} isInUseSelected={isInUseSelected} />
       </section>
 

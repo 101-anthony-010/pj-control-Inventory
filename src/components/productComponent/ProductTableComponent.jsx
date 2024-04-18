@@ -72,37 +72,36 @@ const ProductTableComponent = ({ products, showDateSalida }) => {
     <table className="w-full text-center">
       <thead>
         <tr className="bg-gray-800 text-white">
-          <th className="px-4 py-2">ID</th>
-          <th className="px-4 py-2">Marca</th>
-          <th className="px-4 py-2">Modelo</th>
-          <th className="px-4 py-2">Número de Serie</th>
-          <th className="px-4 py-2">Usuario</th>
-          <th className="px-4 py-2">Fecha de entrada</th>
-          {showDateSalida && <th className="px-4 py-2">Fecha de salida</th>}
-          {!showDateSalida && <th className="px-4 py-2">Acciones</th>}
+          <th className="px-4 py-2 border border-white">ID</th>
+          <th className="px-4 py-2 border border-white">Marca</th>
+          <th className="px-4 py-2 border border-white">Modelo</th>
+          <th className="px-4 py-2 border border-white">Número de Serie</th>
+          <th className="px-4 py-2 border border-white">Usuario</th>
+          <th className="px-4 py-2 border border-white">Fecha de entrada</th>
+          {showDateSalida && <th className="px-4 py-2 border border-white">Fecha de salida</th>}
+          {!showDateSalida && <th className="px-4 py-2 border border-white">Acciones</th>}
         </tr>
       </thead>
       <tbody>
-        {products?.map(product => (
+        {products?.map((product) => (
           <tr key={product.id}>
-            <td className="border px-4 py-2">{product.id}</td>
-            <td className="border px-4 py-2">{getMarca(product.marcaId)}</td>
-            <td className="border px-4 py-2">{getModelName(product.modelId)}</td>
-            <td className="border px-4 py-2">{product.numSerie}</td>
-            <td className="border px-4 py-2">{getUserName(product.userId)}</td>
-            <td className="border px-4 py-2">{formatDateDDMMYYYY(product.dateInitial)}</td>
-            {showDateSalida && <td className="border px-4 py-2">{formatDateDDMMYYYY(product.dateFinal)}</td>}
+            <td className="border border-black">{product.id}</td>
+            <td className="border border-black">{getMarca(product.marcaId)}</td>
+            <td className="border border-black">{getModelName(product.modelId)}</td>
+            <td className="border border-black">{product.numSerie}</td>
+            <td className="border border-black">{getUserName(product.userId)}</td>
+            <td className="border border-black">{formatDateDDMMYYYY(product.dateInitial)}</td>
+            {showDateSalida && <td className="border border-black">{formatDateDDMMYYYY(product.dateFinal)}</td>}
             {!showDateSalida && (
-              <td className="border px-4 py-2 gap-2 grid grid-cols-2 justify-between">
-                <button onClick={() => handleClickUpdatedProduct(product)} className='grid items-center justify-center m-auto text-2xl bg-yellow-500 hover:bg-yellow-600 w-10 h-10 rounded-md'>
-                  <box-icon color="white" name='edit-alt'></box-icon>
-                </button>
-
-                <button onClick={() => {
-                  handleClickDeletedProduct(product.id);
-                }} className='grid items-center justify-center m-auto text-2xl bg-blue-500 hover:bg-blue-600 w-10 h-10 rounded-md'>
-                  <box-icon color="white" name='trash'></box-icon>
-                </button>
+              <td className="border m-auto border-black">
+                <div className="grid grid-cols-2 justify-center items-center my-1 mx-4">
+                  <div className='w-[25px] h-[25px] inline-block bg-yellow-500 p-[3px] rounded-md hover:bg-yellow-500/75 hover:cursor-pointer m-auto' onClick={() => handleClickUpdatedProduct(product)}>
+                    <img className='w-full h-full object-contain' src="/icons/edit.png" alt="" />
+                  </div>
+                  <div className='w-[25px] h-[25px] inline-block text-center bg-blue-500 p-[3px] rounded-md hover:bg-blue-500/75 hover:cursor-pointer m-auto' onClick={() => handleClickDeletedProduct(product.id)}>
+                    <img className='w-full h-full object-contain' src="/icons/trash.png" alt="" />
+                  </div>
+                </div>
               </td>
             )}
           </tr>

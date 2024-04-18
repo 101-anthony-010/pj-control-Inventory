@@ -58,41 +58,47 @@ function AsignationTableComponent({ asignations, isInUseSelected }) {
   const handleClickChangeShowAmountAsignation = (asignation) => {
     dispatch(changeIsShowAmountAsignation())
     setInfoAsignation(asignation)
-    // console.log(infoAsignation)
-    // console.log(asignation)
   }
 
   return (
     <>
-      <section className={`bg-black/20 fixed w-full h-full flex items-center justify-center ${isShowInfoAsignation ? "top-0" : "-top-full"}`}>
+      <section className={`bg-black/20 fixed left-0 w-full h-full flex items-center justify-center ${isShowInfoAsignation ? "top-0" : "-top-full"}`}>
         <InfoAsignation infoAsignation={infoAsignation} handleClickChangeShowInfoAsignation={handleClickChangeShowInfoAsignation} />
       </section>
 
-      <section className={`bg-black/20 fixed w-full h-full flex items-center justify-center ${isShowAmountAsignation ? "top-0" : "-top-full"}`}>
+      <section className={`bg-black/20 fixed left-0 w-full h-full flex items-center justify-center ${isShowAmountAsignation ? "top-0" : "-top-full"}`}>
         <AmountAsignation infoAsignation={infoAsignation} handleClickChangeShowAmountAsignation={handleClickChangeShowAmountAsignation} />
       </section>
 
-      <table className="m-auto text-center">
+      <table className="m-auto text-center w-full">
           <thead>
             <tr className="bg-gray-800 text-white">
-              <th className="px-4 py-2">ID</th>
-              <th className="px-4 py-2">Usuario</th>
-              <th className="px-4 py-2">Producto Id</th>
-              <th className="px-4 py-2">Fecha Asignada</th>
-              {isInUseSelected && <th className="px-4 py-2">Agregar Hojas</th>}
-              {!isInUseSelected && <th className="px-4 py-2">Cantidad</th>}
+              <th className="px-4 py-2 border border-white">ID</th>
+              <th className="px-4 py-2 border border-white">Usuario</th>
+              <th className="px-4 py-2 border border-white">Producto Id</th>
+              <th className="px-4 py-2 border border-white">Fecha Asignada</th>
+              {isInUseSelected && <th className="px-4 py-2 border border-white">Agregar Hojas</th>}
+              {!isInUseSelected && <th className="px-4 py-2 border border-white">Cantidad</th>}
             </tr>
           </thead>
           <tbody>
             {
               asignations?.map((asignation) => (
                 <tr className='hover:bg-slate-200/75 cursor-pointer' key={asignation.id}>
-                  <td onClick={() => handleClickChangeShowInfoAsignation(asignation)} className="border px-4 py-2">{ asignation.id}</td>
-                  <td onClick={() => handleClickChangeShowInfoAsignation(asignation)} className="border px-4 py-2">{ getUserName(asignation.userId) }</td>
-                  <td onClick={() => handleClickChangeShowInfoAsignation(asignation)} className="border px-4 py-2">{ asignation.productId}</td>
-                  <td onClick={() => handleClickChangeShowInfoAsignation(asignation)} className="border px-4 py-2">{ formatDateDDMMYYYY(asignation.date)}</td>
-                  {isInUseSelected && <td className="border px-4 py-2"><button onClick={() => handleClickChangeShowAmountAsignation(asignation)} className='w-[40px] h-[40px] rounded-md bg-green-500/90 hover:bg-green-500/50 p-2'><img src="/icons/amount.png" className='w-full h-full object-contain' alt="" /></button></td>}
-                  {!isInUseSelected && <td className="border px-4 py-2">{ amountPages[asignation.productId] }</td>}
+                  <td onClick={() => handleClickChangeShowInfoAsignation(asignation)} className="border border-black">{ asignation.id}</td>
+                  <td onClick={() => handleClickChangeShowInfoAsignation(asignation)} className="border border-black">{ getUserName(asignation.userId) }</td>
+                  <td onClick={() => handleClickChangeShowInfoAsignation(asignation)} className="border border-black">{ asignation.productId}</td>
+                  <td onClick={() => handleClickChangeShowInfoAsignation(asignation)} className="border border-black">{ formatDateDDMMYYYY(asignation.date)}</td>
+                  {isInUseSelected && 
+                    <td className="border border-black py-1">
+                      <div className='grid justify-center items-center'>
+                        <button onClick={() => handleClickChangeShowAmountAsignation(asignation)} className='p-[3px] w-[25px] h-[25px] rounded-md bg-green-500/90 hover:bg-green-500/50 p'>
+                          <img src="/icons/amount.png" className='w-full h-full object-contain' alt="" />
+                        </button>
+                      </div>
+                    </td>}
+                  {!isInUseSelected && 
+                    <td className="border border-black">{ amountPages[asignation.productId] }</td>}
                 </tr>
               ))
             }
