@@ -1,15 +1,15 @@
+const os = require('os');
+
 const getLocalIp = () => {
-  return new Promise((resolve, reject) => {
-    const ifaces = navigator.socketTcpConnection.getAllInterfaceAddresses();
-    const ipAddresses = ifaces
-      .filter((iface) => iface.address.startsWith('192.168.'))
-      .map((iface) => iface.address);
-    if (ipAddresses.length > 0) {
-      resolve(ipAddresses[0]);
-    } else {
-      reject(new Error('Could not find local IP address'));
+  const interfaces = os.networkInterfaces();
+  for (const name of Object.keys(interfaces)) {
+    for (const { address, family, internal } of interfaces[name]) {
+      if (family === 'IPv4' &&!internal && address.startsWith('192.168.233.')) {
+        return address;
+      }
     }
-  });
+  }
+  return null;
 };
 
-export default getLocalIp;
+console.log(getLocalIp());

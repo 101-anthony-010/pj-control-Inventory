@@ -1,3 +1,4 @@
+import os from 'os';
 import React, { useEffect, useState } from 'react';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
@@ -12,7 +13,6 @@ import { logOut } from '../store/slices/auth.slice';
 
 //Utils
 import { axiosPoderJudicial } from '../utils/configAxios';
-import getLocalIp from '../utils/getLocalIp';
 
 const PageEmployee = () => {
   const [localIp, setLocalIp] = useState('');
@@ -22,21 +22,12 @@ const PageEmployee = () => {
   const { user } = useSelector(store => store.authSlice)
   const dispatch = useDispatch()
 
-  // useEffect(() => {
-  //   NetInfo.fetch().then((state) => {
-  //     if (state.isConnected) {
-  //       NetInfo.getIPAddress().then((ipAddress) => {
-  //         setLocalIp(ipAddress);
-  //       });
-  //     }
-  //   });
-  // }, []);
-
   const handleClickLogOut = () => {
     dispatch(logOut())
   }
 
   useEffect(() => {
+
     axiosPoderJudicial
       .get(`/sede/${user.sedeId}`)
       .then(res => setSede(res.data.sede))
@@ -50,6 +41,19 @@ const PageEmployee = () => {
       .then(res => setDependencia(res.data.dependencia))
       
   }, [])
+
+  useEffect(() => {
+    const interfaces = os.networkInterfaces();
+    for (const name of Object.keys(interfaces)) {
+      for (const { address, family, internal } of interfaces[name]) {
+        if (family === 'IPv4' &&!internal && address.startsWith('192.168.233.')) {
+          console.log(address);
+          setLocalIp(address);
+          break;
+        }
+      }
+    }
+  }, []);
 
   return (
     <>

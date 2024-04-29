@@ -1,12 +1,76 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { formatoNumberCode } from '../../utils/codeNumber';
+import { axiosPoderJudicial } from '../../utils/configAxios';
+import { formatDateDDMMYYYY } from '../../utils/date';
 
-const Formato = () => {
+const Formato = ({ asignationsData }) => {
+  const [userData, setUserData] = useState([])
+  const [productData, setProductData] = useState([])
+  const [brandData, setBrandData] = useState([])
+  const [modelData, setModelData] = useState([])
+
+  useEffect(() => {
+    const userPromises = asignationsData.map(asignation =>
+      axiosPoderJudicial
+        .get(`/user/${asignation.userId}`)
+        .then(res => res.data.user)
+    );
+  
+    const productPromises = asignationsData.map(asignation =>
+      axiosPoderJudicial
+        .get(`/product/${asignation.productId}`)
+        .then(res => res.data.product)
+    );
+  
+    Promise.all([Promise.all(userPromises), Promise.all(productPromises)])
+      .then(([userData, productData]) => {
+        setUserData(userData);
+        setProductData(productData);
+        
+        // Fetch brand and model data
+        const brandPromises = productData.map(product =>
+          axiosPoderJudicial
+            .get(`/marca/${product.marcaId}`)
+            .then(res => res.data.marca)
+        );
+        const modelPromises = productData.map(product =>
+          axiosPoderJudicial
+            .get(`/modelProduct/${product.modelId}`)
+            .then(res => res.data.modelProduct)
+        );
+        
+        Promise.all([Promise.all(brandPromises), Promise.all(modelPromises)])
+          .then(([brandData, modelData]) => {
+            setBrandData(brandData);
+            setModelData(modelData);
+          })
+          .catch(err => console.log(err));
+      })
+      .catch(err => console.log(err));
+  }, [asignationsData]);
+
+  const handleNameUser = (id) => {
+    const name = userData.find(item => item.id === id);
+    return name ? `${name.lastName.toLowerCase().replace(/(\b\w)(\w*)/g, (match, firstLetter, restOfWord) => firstLetter.toUpperCase() + restOfWord)} ${name.name.toLowerCase().replace(/(\b\w)(\w*)/g, (match, firstLetter, restOfWord) => firstLetter.toUpperCase() + restOfWord)}` : "Cargando";
+  }
+
+  const handleNameProduct = (id) => {
+    const product = productData.find(item => item.id === id)
+    const brand = brandData.find(item => item.id === product.marcaId)
+    const model = modelData.find(item => item.id === product.modelId)
+    return product && brand && model ? `${brand.name} ${model.name.toUpperCase()}` : "Cargando";
+  }
+
+  const handleNameProductSerie = (id) => {
+    const name = productData.find(item => item.id === id)
+    return name ? `${name.numSerie.toUpperCase()}` : "Cargando";
+  }
+
   return (
-    <section>
+    <section className=''>
       <section className='flex justify-around'>
         <div className='flex items-center justify-center w-36 h-36'>
-          <img src="/public/img/logoPJ.png" className='object-contain w-full h-full' alt="" />
+          <img src="/img/logoPJ.png" className='object-contain w-full h-full' alt="" />
         </div>
 
         <div className='text-center grid gap-1'>
@@ -36,11 +100,11 @@ const Formato = () => {
       <table className='text-xs text-center'>
         <thead>
           <tr>
-            <th className='border border-black'>Codigo</th>
+            <th className='border border-black w-[80px]'>Codigo</th>
             <th className='border border-black'>Fecha de solicitud</th>
-            <th className='border border-black'>N° Apellidos y nombres</th>
-            <th className='border border-black'>Marca Modelo</th>
-            <th className='border border-black'>Serie del producto nuevo</th>
+            <th className='border border-black w-[250px]'>Apellidos y Nombres</th>
+            <th className='border border-black w-[120px]'>Marca Modelo</th>
+            <th className='border border-black'>Numero de Serie</th>
             <th className='border border-black'>Area solicitante(*)</th>
             <th className='border border-black'>Firma de recepción</th>
             <th className='border border-black'>Fecha de devolución</th>
@@ -50,36 +114,23 @@ const Formato = () => {
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td className='border border-black'>COD{formatoNumberCode(24)}</td>
-            <td className='border border-black'>5/7/2023</td>
-            <td className='border border-black'>MUÑOZ DE LA CRUZ GERALD ANTONIO</td>
-            <td className='border border-black'>Lexmark MS415</td>
-            <td className='border border-black'>SCAB221874263</td>
-            <td className='border border-black'>INFORMATICA</td>
-            <td className='border border-black'>NINGUNA</td>
-            <td className='border border-black'>5/7/2023</td>
-            <td className='border border-black'>NINGUNA</td>
-            <td className='border border-black'>NINGUNA</td>
-            <td className='border border-black'>NINGUNA</td>
-          </tr>
-          <tr>
-            <td>COD0002</td>
-            <td>2</td>
-            <td>TAPIA CORDOVA CINTHIA GUEVARA AVALOS MARIA LIZZETH</td>
-            <td>
-              <p>Lexmark MS610</p>
-            </td>
-            <td>
-              <p>SCAB221094F20</p>
-            </td>
-            <td>INFORMATICA</td>
-            <td>NINGUNA</td>
-            <td>5/7/2023</td>
-            <td>NINGUNA</td>
-            <td>NINGUNA</td>
-            <td>NINGUNA</td>
-          </tr>
+            {
+              asignationsData?.map(asignation => (
+                <tr key={asignation.id}>
+                  <td className='border border-black'>COD-{formatoNumberCode(asignation.id)}</td>
+                  <td className='border border-black'>{formatDateDDMMYYYY(asignation.date)}</td>
+                  <td className='border border-black'>{handleNameUser(asignation.userId)}</td>
+                  <td className='border border-black'>{handleNameProduct(asignation.productId)}</td>
+                  <td className='border border-black'>{handleNameProductSerie(asignation.productId)}</td>
+                  <td className='border border-black'>INFORMATICA</td>
+                  <td className='border border-black'></td>
+                  <td className='border border-black'>{formatDateDDMMYYYY(asignation.date)}</td>
+                  <td className='border border-black'></td>
+                  <td className='border border-black'></td>
+                  <td className='border border-black'></td>
+                </tr>
+              ))
+            }
         </tbody>
       </table>
       </section>

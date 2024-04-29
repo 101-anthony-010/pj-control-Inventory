@@ -12,6 +12,7 @@ import ExportPDFButton from '../components/Export/ExportPDFButton';
 
 // Slice
 import { changeIsShowCreateAsignation, changeIsShowExportPdf, changeIsShowInfoAsignation } from '../store/slices/asignation.slice';
+import { Link } from 'react-router-dom';
 
 const PageAsignation = () => {
   const [asignations, setAsignations] = useState([]);
@@ -51,6 +52,7 @@ const PageAsignation = () => {
 
     fetchData();
   }, [isInUseSelected]);
+
   return (
     <>
       <Navbar/>
@@ -58,9 +60,9 @@ const PageAsignation = () => {
         <CreateAsignation handleClickChangeShowCreateAsignation={handleClickChangeShowCreateAsignation} />
       </section>
 
-      <section className={`bg-black/20 fixed w-full h-full flex items-center justify-center ${isShowExportPdf ? "top-0" : "-top-full"}`}>
-        <ExportPDFButton handleClickChangeShowExportPdf={handleClickChangeShowExportPdf} />
-      </section>
+      {/* <section className={`bg-black/20 fixed w-full h-full flex items-center justify-center ${isShowExportPdf ? "top-0 right-0" : "-right-full"}`}>
+        <ExportPDFButton handleClickChangeShowExportPdf={handleClickChangeShowExportPdf} asignations={asignations} />
+      </section> */}
 
       <section className='flex gap-4 justify-between p-2'>
         <div className='flex gap-4'>
@@ -76,9 +78,9 @@ const PageAsignation = () => {
           <button onClick={handleClickChangeShowCreateAsignation}  className='rounded-md p-2 w-[35px] h-[35px] shadow bg-green-500/90 hover:bg-green-500/60'>
             <img src="/icons/add_user.png" alt="" />
           </button>
-          <button onClick={handleClickChangeShowExportPdf} className='rounded-md p-2 w-[35px] h-[35px] shadow bg-red-500/90 hover:bg-red-500/60'>
+          <Link to={'/export'} className='rounded-md p-2 w-[35px] h-[35px] shadow bg-red-500/90 hover:bg-red-500/60'>
             <img src="/icons/download.png" className='w-full h-full object-contain ' alt="" />
-          </button>
+          </Link>
         </section>
       </section>
       
