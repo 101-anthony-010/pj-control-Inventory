@@ -30,7 +30,7 @@ const CreateUser = ({ handleChangeIsShowCreateUser, setUsers }) => {
 
   const submit = async (data) => {
     try {
-      const response = await axiosPoderJudicial.post('/user/', data);
+      const response = await axiosPoderJudicial.post('/user', data);
       console.log('Usuario creado:', response.data);
 
       // En lugar de hacer un check de Array.isArray(prevUsers), podemos utilizar un ternario

@@ -13,6 +13,7 @@ import { logOut } from '../store/slices/auth.slice';
 
 //Utils
 import { axiosPoderJudicial } from '../utils/configAxios';
+import FormatoEmployee from '../components/Export/FormatoEmployee';
 
 const PageEmployee = () => {
   const [localIp, setLocalIp] = useState('');
@@ -40,20 +41,9 @@ const PageEmployee = () => {
       .get(`/dependencia/${user.dependenciaId}`)
       .then(res => setDependencia(res.data.dependencia))
       
-  }, [])
+  }, [])  
 
-  useEffect(() => {
-    const interfaces = os.networkInterfaces();
-    for (const name of Object.keys(interfaces)) {
-      for (const { address, family, internal } of interfaces[name]) {
-        if (family === 'IPv4' &&!internal && address.startsWith('192.168.233.')) {
-          console.log(address);
-          setLocalIp(address);
-          break;
-        }
-      }
-    }
-  }, []);
+  console.log(user)
 
   return (
     <>
@@ -64,8 +54,7 @@ const PageEmployee = () => {
         <h2 className='text-2xl font-bold m-auto'>Solicitud de Tonner</h2>
         <Link className='bg-red-500 hover:bg-red-500/75 rounded-md shadow grid items-center justify-center w-[80px] h-[30px]' to={'/'} onClick={() => handleClickLogOut()}><p className='font-semibold text-white'>Salir</p></Link>
       </section>
-      {/* <p>Local IP: {localIp}</p> */}
-      <section className='grid'>
+      {/* <section className='grid'>
         <section className='m-auto w-[400px] grid gap-2 grid-cols-2'>
           <h5>Nombre</h5>
           <p>{ user?.name }</p>
@@ -87,11 +76,11 @@ const PageEmployee = () => {
 
           <h5>Sede</h5>
           <p>{ sede?.name }</p>
-        </section>
+        </section> */}
+
         <section className='grid gap-6 text-center'>
           <button>Solicitar</button>
-          
-        </section>
+          <FormatoEmployee/>
       </section>
     </>
   );
