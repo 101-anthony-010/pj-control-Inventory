@@ -3,6 +3,8 @@ import { formatoNumberCode } from '../../utils/codeNumber';
 import { axiosPoderJudicial } from '../../utils/configAxios';
 import { formatDateDDMMYYYY } from '../../utils/date';
 import { lowerUpperCase } from '../../utils/lowerUpperCase';
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
 
 const Formato = ({ asignationsData }) => {
   const [userData, setUserData] = useState([])
@@ -41,15 +43,63 @@ const Formato = ({ asignationsData }) => {
     return `${brand.name.toUpperCase()} ${model.name.toUpperCase()}`
   };
   
-  
 
   const handleNameProductSerie = (id) => {
     const name = productData.find(item => item.id === id);
     return `${name.numSerie.toUpperCase()}`
   }
 
+console.log(asignationsData)
+  const generatePDF = () => {
+    const doc = new jsPDF({
+      orientation: 'landscape', // Cambia la orientación a apaisado
+      unit: 'mm',
+      format: 'a4',
+      putOnlyUsedFonts: true,
+      compress: true
+    });
+  
+    doc.autoTable({
+      head: [['Codigo', 'Fecha de solicitud', 'Apellidos y Nombres', 'Marca - Modelo', 'Numero de Serie', 'Area Solicitante', 'Firma recepción', 'Fecha devolución', 'Firma del personal de entrega', 'Sello y Firma del Administrador', 'Observaciones']],
+      body: asignationsData.map(data => {
+        return [
+          formatoNumberCode(data.id),
+          formatDateDDMMYYYY(data.dateInitial),
+          `${data.lastName} ${data.name}`
+        ]
+      }),
+      startY: 20,
+      theme: 'grid',
+      tableWidth: 'auto',
+      columnWidth: 'wrap',
+      styles: {
+        fontSize: 10,
+        cellPadding: 1,
+        lineWidth: 0.1,
+        lineColor: 0,
+      },
+      didParseCell: (data) => {
+        if (data.column.index === 0) {
+          data.cell.styles.fontStyle = 'bold';
+        }
+      },
+      margin: {
+        top: 20,
+        bottom: 20,
+        left: 20,
+        right: 20
+      },
+      scale: 0.8 // Ajusta la escala de la tabla
+    });
+  
+    doc.save('table.pdf');
+  };
+
+
   return (
-    <section className=''>
+    <section className='my-table'>
+
+    <button onClick={generatePDF}>Generate PDF</button>
       <section className='flex justify-around'>
         <div className='flex items-center justify-center w-36 h-36'>
           <img src="/img/logoPJ.png" className='object-contain w-full h-full' alt="" />
