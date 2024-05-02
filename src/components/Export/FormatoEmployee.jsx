@@ -1,25 +1,112 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+import { axiosPoderJudicial } from '../../utils/configAxios'
+import { useSelector } from 'react-redux'
+import { jsPDF } from 'jspdf'; // Asegúrate de importar jsPDF aquí
+import 'jspdf-autotable';
+import html2canvas from 'html2canvas';
+
 
 const FormatoEmployee = () => {
-  return (
-    <div className='text-xs'>
+  const [cargo, setCargo] = useState()
+  const [dependencia, setDependencia] = useState()
+  const [sede, setSede] = useState()
+  const { user } = useSelector(store => store.authSlice)
+  
+  useEffect(() => {
+    axiosPoderJudicial
+      .get(`/sede/${user.sedeId}`)
+      .then(res => setSede(res.data.sede))
+    axiosPoderJudicial
+      .get(`/cargo/${user.cargoId}`)
+      .then(res => setCargo(res.data.cargo))
+    axiosPoderJudicial
+      .get(`/dependencia/${user.dependenciaId}`)
+      .then(res => setDependencia(res.data.dependencia))  
+  }, [])  
 
-        {/* Diseño con flexbox y alineación centrada */}
+  const exportToPdf = (ref) => {
+    const doc = new jsPDF();
+    doc.setTextColor('#000000'); // Set text color to black
+  
+    // Add header
+    doc.setFontSize(16);
+    doc.text('CORTE SUPERIOR DE JUSTICIA DE ICA', 105, 20, { align: 'center' });
+    doc.setFontSize(12);
+    doc.text('Area de Informatica y Sistemas', 105, 30, { align: 'center' });
+    doc.text('FICHA DE REQUERIMIENTOS', 105, 40, { align: 'center' });
+  
+    // Datos del Usuario
+    doc.setFontSize(12);
+    doc.text('DATOS DEL USUARIO', 20, 60);
+    doc.setFontSize(10);
+    doc.text(`NOMBRE: ${(user.name).toUpperCase()} ${(user.lastName).toUpperCase()}`, 20, 70);
+    doc.text(`SEDE: ${sede?.name.toUpperCase()}`, 20, 80);
+    doc.text(`DEPENDENCIA: ${dependencia?.name.toUpperCase()}`, 20, 90);
+    doc.text(`CARGO: ${cargo?.name.toUpperCase()}`, 20, 100);
+  
+    // Configuración Actual de Hardware
+    doc.addPage(); // Add a new page for hardware configuration
+    doc.setFontSize(12);
+    doc.text('CONFIGURACION ACTUAL DE HARDWARE', 105, 20, { align: 'center' });
+    // Add more hardware configuration details as needed...
+  
+    // Configuración de la Red
+    doc.addPage(); // Add a new page for network configuration
+    doc.setFontSize(12);
+    doc.text('CONFIGURACION DE LA RED', 105, 20, { align: 'center' });
+    // Add network configuration details as needed...
+  
+    // Tipo de Servicio
+    doc.addPage(); // Add a new page for service type
+    doc.setFontSize(12);
+    doc.text('TIPO DE SERVICIO', 105, 20, { align: 'center' });
+    // Add service type details as needed...
+  
+    // Estado Final
+    doc.addPage(); // Add a new page for final state
+    doc.setFontSize(12);
+    doc.text('ESTADO FINAL', 105, 20, { align: 'center' });
+    // Add final state details as needed...
+  
+    // Observaciones
+    doc.addPage(); // Add a new page for observations
+    doc.setFontSize(12);
+    doc.text('OBSERVACIONES', 105, 20, { align: 'center' });
+    doc.setFontSize(10);
+    doc.text('REQUIERE CAMBIO DE TONNER ---------', 20, 30);
+  
+    // Nota
+    doc.addPage(); // Add a new page for note
+    doc.setFontSize(12);
+    doc.text('NOTA: Devolver ficha de atencion tecnica firmada a la brevedad posible, bajo responsabilidad.', 20, 20);
+    doc.text('Firma y sello - Soporte Tecnico', 20, 50);
+    doc.text('Firma y Sello del Usuario', 105, 50);
+  
+    // Save the PDF
+    doc.save('formato_employee.pdf');
+  
+    // Convert the FormatoEmployee component to an image using html2canvas
+    html2canvas(ref.current).then((canvas) => {
+      const imgData = canvas.toDataURL('image/png');
+      doc.addImage(imgData, 'PNG', 15, 15, 180, 160); // Add the image to the PDF
+      doc.save('formato_employee.pdf');
+    });
+  };
+
+  return (
+    <div className='text-xs w-[21cm] h-[29.7cm] my-0 mx-auto'>
+
       <section className='flex justify-around'>
-        <div className='flex items-center justify-center'>
-          <box-icon type='logo' name='react'></box-icon>
+        <div className='flex items-center justify-center w-[100px] h-[100px]'>
+          <img className='w-full h-full object-contain' src="/img/logoPJ.png" alt="" />
         </div>
 
-        {/* -------------------------------------------------------------------------------------------------------------------- */}
-
-        {/* ENCABEZADO DE LA HOJA */}
         <div className='text-center grid gap-1'>
           <h1 className='font-bold text-lg'>CORTE SUPERIOR DE JUSTICIA DE ICA</h1>
           <h3 className='text-sm'>Area de Informatica y Sistemas</h3>
           <h2 className='font-medium'>FICHA DE REQUERIMIENTOS</h2>
         </div>
 
-        {/* FECHA */}
         <div className='grid grid-cols-2 justify-center items-center'>
           <p>Nº</p>
           <p>CODATE0016</p>
@@ -28,324 +115,289 @@ const FormatoEmployee = () => {
         </div>
       </section>
 
-        {/* -------------------------------------------------------------------------------------------------------------------- */}
+        <section className="p-4 text-xs">
+              <table className="w-full border-collapse border-black border text-center">
+                <tbody>
+                  <tr>
+                    <td className="border-black border p-1 font-semibold" colSpan={2}>DATOS DEL USUARIO</td>
+                    <td className="border-black border p-1 font-semibold" colSpan={2}>MOTIVO DE LA ATENCIÓN</td>
+                  </tr>
+                  <tr>
+                    <td className="text-start" colSpan={1}>NOMBRE:</td>
+                    <td className="text-start" colSpan={1}>{`${(user.name).toUpperCase()} ${(user.lastName).toUpperCase()}`}</td>
+                    <td className="text-start" colSpan={1}>EQUIPO:</td>
+                    <td className="text-start" colSpan={1}></td>
+                  </tr>
+                  <tr>
+                    <td className="text-start" colSpan={1}>SEDE:</td>
+                    <td className="text-start" colSpan={1}>{sede?.name.toUpperCase()}</td>
+                    <td className="text-start" colSpan={1}>MARCA:</td>
+                    <td className="text-start" colSpan={1}></td>
+                  </tr>
+                  <tr>
+                    <td className="text-start" colSpan={1}>DEPENDENCIA:</td>
+                    <td className="text-start" colSpan={1}>{dependencia?.name.toUpperCase()}</td>
+                    <td className="text-start" colSpan={1}>MODELO:</td>
+                    <td className="text-start" colSpan={1}></td>
+                  </tr>
+                  <tr>
+                    <td className="text-start" colSpan={1}>CARGO:</td>
+                    <td className="text-start" colSpan={1}>{cargo?.name.toUpperCase()}</td>
+                    <td className="text-start" colSpan={1}>N° SERIE:</td>
+                    <td className="text-start" colSpan={1}></td>
+                  </tr>
+                </tbody>
+              </table>
+        </section>
 
-        {/* Cuadrícula flexible y ordenada - CUADRO DE DATOS DE USUARIO Y MOTIVO DE ATENCION*/}
-      <section className='grid grid-cols-2 m-4 border-black'>
+        <section className="p-4 text-xs">
+          <h2 className="font-bold mb-2">1.- </h2>
+              <table className="w-full border-collapse border-black border text-center">
+                <tbody>
+                  <tr>
+                    <td className="border-black border p-1" colSpan={2}>Falla reportada:</td>
+                    <td className="border-black border p-1" colSpan={6}>IMPRESIÓN TENUE</td>
+                  </tr>
+                </tbody>
+              </table>
+        </section>
 
-        {/* COLUMNA DE LA IZQUIERDA */}
-        <section className='p-2 border-2 border-black'>
-          <h3 className='font-semibold'>DATOS DEL USUARIO</h3>
-          <div className='grid grid-cols-2'>
-            <p>NOMBRE:</p>
-            <p>NOMBRE:</p>
-            <p>SEDE:</p>
-            <p>SEDE:</p>
-            <p>DEPENDENCIA:</p>
-            <p>DEPENDENCIA:</p>
-            <p>CARGO:</p>
-            <p>CARGO:</p>
-          </div>
+        <section className="p-4 text-xs">
+          <h2 className="font-bold mb-2">2.- CONFIGURACION ACTUAL DE HARDWARE</h2>
+              <table className="w-full border-collapse border-black border text-center">
+                <tbody>
+                  <tr>
+                    <td className="border-black border p-1" colSpan={1}>Código de inventario</td>
+                    <td className="border-black border p-1" colSpan={3}></td>
+                    <td className="border-black border p-1 text-start" colSpan={2}>Marca Monitor</td>
+                    <td className="border-black border p-1" colSpan={2}></td>
+                  </tr>
+                  <tr>
+                    <td className="border-black border p-1" colSpan={1}>Modelo de CPU</td>
+                    <td className="border-black border p-1" colSpan={3}></td>
+                    <td className="border-black border p-1 text-start" colSpan={2}>Modelo</td>
+                    <td className="border-black border p-1" colSpan={2}></td>
+                  </tr>
+                  <tr>
+                    <td className="border-black border p-1" colSpan={1}>Serie</td>
+                    <td className="border-black border p-1" colSpan={3}></td>
+                    <td className="border-black border p-1 text-start" colSpan={2}>Serie</td>
+                    <td className="border-black border p-1" colSpan={2}></td>
+                  </tr>
+                  <tr>
+                    <td className="border-black border p-1" colSpan={1}>Procesador</td>
+                    <td className="border-black border p-1" colSpan={1}></td>
+                    <td className="border-black border p-1" colSpan={1}>Velocidad</td>
+                    <td className="border-black border p-1" colSpan={1}></td>
+                    <td className="border-black border p-1 text-start" colSpan={2}>Teclado</td>
+                    <td className="border-black border p-1" colSpan={2}></td>
+                  </tr>
+                  <tr>
+                    <td className="border-black border p-1" colSpan={1}>Memoria RAM</td>
+                    <td className="border-black border p-1" colSpan={1}></td>
+                    <td className="border-black border p-1 w-[100px]" colSpan={1}>Velocidad</td>
+                    <td className="border-black border p-1" colSpan={1}></td>
+                    <td className="border-black border p-1 w-[200px] text-start" colSpan={2}>Contometro</td>
+                    <td className="border-black border p-1" colSpan={2}></td>
+                  </tr>
+                  <tr>
+                    <td className="border-black border p-1" colSpan={1} rowSpan={2}>Disco Duro / Capacidad</td>
+                    <td className="border-black border p-1" colSpan={1}>Capacidad</td>
+                    <td className="border-black border p-1" colSpan={1}></td>
+                    <td className="border-black border p-1" colSpan={1}>Tecnologia</td>
+                    <td className="border-black border p-1 text-start" colSpan={2} rowSpan={2}>Impresora / Multifuncional</td>
+                    <td className="border-black border p-1" colSpan={2} rowSpan={2}></td>
+                  </tr>
+                  <tr>
+                    <td className="border-black border p-1"></td>
+                    <td className="border-black border p-1"></td>
+                    <td className="border-black border p-1">IDE <input type="radio" name='tecnologia'/> SATA <input type="radio" defaultChecked={true} name='tecnologia'/></td>
+                  </tr>
+                  <tr>
+                    <td className="border-black border p-1" colSpan={1}>Tarjeta de Video</td>
+                    <td className="border-black border p-1" colSpan={3}></td>
+                    <td className="border-black border p-1 text-start" colSpan={2}>Modelo</td>
+                    <td className="border-black border p-1" colSpan={2}></td>
+                  </tr>
+                  <tr>
+                    <td className="border-black border p-1" colSpan={1}>CDROM</td>
+                    <td className="border-black border p-1" colSpan={3}></td>
+                    <td className="border-black border p-1 text-start" colSpan={2}>Serie</td>
+                    <td className="border-black border p-1" colSpan={2}>text</td>
+                  </tr>
+                </tbody>
+              </table>
         </section>
         
-        {/* COLUMNA DE LA DERECHA*/}
-        <section className='border-2 border-black p-2'>
-          <h3 className='font-semibold'>MOTIVO DE LA ATENCION</h3>
-          <div className='grid grid-cols-2'>
-            <p>EQUIPO:</p>
-            <p>EQUIPO:</p>
-            <p>MARCA:</p>
-            <p>MARCA:</p>
-            <p>MODELO:</p>
-            <p>MODELO:</p>
-            <p>Nº SERIE:</p>
-            <p>Nº SERIE:</p>
-          </div>
+        <section className="p-4 text-xs">
+          <h2 className="font-bold mb-2">3.- CONFIGURACION DE LA RED</h2>
+              <table className="w-full border-collapse border-black border text-center">
+                <tbody>
+                  <tr>
+                    <td className="border-black border p-1" colSpan={2}>Modelo</td>
+                    <td className="border-black border p-1" colSpan={1}>En Red</td>
+                    <td className="border-black border p-1" colSpan={1}>Direccion IP</td>
+                    <td className="border-black border p-1" colSpan={2}>Direccion MAC</td>
+                    <td className="border-black border p-1" colSpan={1}>Contador</td>
+                    <td className="border-black border p-1" colSpan={1}>Contador Firware</td>
+                  </tr>
+                  <tr>
+                    <td className="border-black border p-1" colSpan={2}></td>
+                    <td className="border-black border p-1" colSpan={1}>SI <input type="radio" name='red' defaultChecked={true} /> NO <input type="radio" name='red' /></td>
+                    <td className="border-black border p-1" colSpan={1}></td>
+                    <td className="border-black border p-1" colSpan={2}></td>
+                    <td className="border-black border p-1" colSpan={1}></td>
+                    <td className="border-black border p-1" colSpan={1}></td>
+                  </tr>
+                </tbody>
+              </table>
         </section>
-        
-      </section>
 
-         {/* -------------------------------------------------------------------------------------------------------------------- */}
+        <section className="p-4 text-xs">
+          <h2 className="font-bold mb-2">4.- TIPO DE SERVICIO</h2>
+              <table className="w-full border-collapse border-black border text-center">
+                <tbody>
+                  <tr>
+                    <td className="border-black border p-1 font-semibold" colSpan={4}>Mantenimiento</td>
+                    <td className="border-black border p-1 font-semibold" colSpan={4}>Partes Instaladas</td>
+                  </tr>
+                  <tr>
+                    <td className="border-black border p-1" colSpan={2}>Tipo de Mantenimiento</td>
+                    <td className="border-black border p-1" colSpan={1}>Preventivo</td>
+                    <td className="border-black border p-1" colSpan={1}><input type='radio' name='mantenimiento' defaultChecked={true}></input></td>
+                    <td className="border-black border p-1" colSpan={1}>N°</td>
+                    <td className="border-black border p-1" colSpan={1}></td>
+                    <td className="border-black border p-1" colSpan={1}>Nuevo</td>
+                    <td className="border-black border p-1" colSpan={1}>Usado</td>
+                  </tr>
+                  <tr>
+                    <td className="border-black border p-1" colSpan={2}>Fecha</td>
+                    <td className="border-black border p-1" colSpan={1}>Correctivo</td>
+                    <td className="border-black border p-1" colSpan={1}><input type='radio' name='mantenimiento'></input></td>
+                    <td className="border-black border p-1" colSpan={1}>1.-</td>
+                    <td className="border-black border p-1 text-start" colSpan={1}>Kit de Mantenimiento</td>
+                    <td className="border-black border p-1" colSpan={1}><input type='radio' name='kitMantenimiento'></input></td>
+                    <td className="border-black border p-1" colSpan={1}><input type='radio' name='kitMantenimiento'></input></td>
+                  </tr>
+                  <tr>
+                    <td className="border-black border p-1 font-semibold" colSpan={4}>Observaciones</td>
+                    <td className="border-black border p-1" colSpan={1}>2.-</td>
+                    <td className="border-black border p-1 text-start" colSpan={1}>Fusor</td>
+                    <td className="border-black border p-1" colSpan={1}><input type='radio' name='fusor'></input></td>
+                    <td className="border-black border p-1" colSpan={1}><input type='radio' name='fusor'></input></td>
+                  </tr>
+                  <tr>
+                    <td className="border-black border p-1" colSpan={4} rowSpan={2}></td>
+                    <td className="border-black border p-1" colSpan={1}>3.-</td>
+                    <td className="border-black border p-1 text-start" colSpan={1}>Roller</td>
+                    <td className="border-black border p-1" colSpan={1}><input type='radio' name='roller'></input></td>
+                    <td className="border-black border p-1" colSpan={1}><input type='radio' name='roller'></input></td>
+                  </tr>
+                  <tr>
+                    <td className="border-black border p-1" colSpan={1}>4.-</td>
+                    <td className="border-black border p-1 text-start" colSpan={1}>Autodispensador</td>
+                    <td className="border-black border p-1" colSpan={1}><input type='radio' name='autodispensador'></input></td>
+                    <td className="border-black border p-1" colSpan={1}><input type='radio' name='autodispensador'></input></td>
+                  </tr>
+                  <tr>
+                    <td className="border-black border p-1 font-semibold" colSpan={4}>Reparación</td>
+                    <td className="border-black border p-1" colSpan={1}>5.-</td>
+                    <td className="border-black border p-1 text-start" colSpan={1}>Mainboard</td>
+                    <td className="border-black border p-1" colSpan={1}><input type='radio' name='mainboard'></input></td>
+                    <td className="border-black border p-1" colSpan={1}><input type='radio' name='mainboard'></input></td>
+                  </tr>
+                  <tr>
+                    <td className="border-black border p-1" colSpan={2}>Tipo de Reparación</td>
+                    <td className="border-black border p-1 text-start" colSpan={1}>Logica</td>
+                    <td className="border-black border p-1" colSpan={1}><input type='radio' name='reparacion'></input></td>
+                    <td className="border-black border p-1" colSpan={1}>6.-</td>
+                    <td className="border-black border p-1 text-start" colSpan={1}>Fuente de Poder</td>
+                    <td className="border-black border p-1" colSpan={1}><input type='radio' name='fuente'></input></td>
+                    <td className="border-black border p-1" colSpan={1}><input type='radio' name='fuente'></input></td>
+                  </tr>
+                  <tr>
+                    <td className="border-black border p-1" colSpan={1}>Cambios de Partes</td>
+                    <td className="border-black border p-1" colSpan={1}>SI <input type="radio" name='partes' /> / NO <input type="radio" name='partes' defaultChecked={true} /></td>
+                    <td className="border-black border p-1 text-start" colSpan={1}>Mecanica</td>
+                    <td className="border-black border p-1" colSpan={1}><input type='radio' name='reparacion'></input></td>
+                    <td className="border-black border p-1" colSpan={1}>7.-</td>
+                    <td className="border-black border p-1 text-start" colSpan={1}>Unidad Laser</td>
+                    <td className="border-black border p-1" colSpan={1}><input type='radio' name='laser'></input></td>
+                    <td className="border-black border p-1" colSpan={1}><input type='radio' name='laser'></input></td>
+                  </tr>
+                  <tr>
+                    <td className="border-black border p-1 font-semibold" colSpan={4}>Observaciones</td>
+                    <td className="border-black border p-1" colSpan={1}>8.-</td>
+                    <td className="border-black border p-1 text-start" colSpan={1}>Media ACM Drive ASSY</td>
+                    <td className="border-black border p-1" colSpan={1}><input type='radio' name='media'></input></td>
+                    <td className="border-black border p-1" colSpan={1}><input type='radio' name='media'></input></td>
+                  </tr>
+                  <tr>
+                    <td className="border-black border p-1" colSpan={4} rowSpan={2}>Atasco de hojas, Impresión con lineas blancas, enrollamiento de hojas en el fusor</td>
+                    <td className="border-black border p-1" colSpan={1}>9.-</td>
+                    <td className="border-black border p-1 text-start" colSpan={1}>Fotoconductor</td>
+                    <td className="border-black border p-1" colSpan={1}><input type='radio' name='fotoconductor'></input></td>
+                    <td className="border-black border p-1" colSpan={1}><input type='radio' name='fotoconductor'></input></td>
+                  </tr>
+                  <tr>
+                    <td className="border-black border p-1" colSpan={1}>10.-</td>
+                    <td className="border-black border p-1 text-start" colSpan={1}>Toner</td>
+                    <td className="border-black border p-1" colSpan={1}><input type='radio' name='toner' defaultChecked={true}></input></td>
+                    <td className="border-black border p-1" colSpan={1}><input type='radio' name='toner'></input></td>
+                  </tr>
+                  <tr>
+                    <td className="border-black border p-1" colSpan={4}></td>
+                    <td className="border-black border p-1" colSpan={1}>11.-</td>
+                    <td className="border-black border p-1 text-start" colSpan={1}>Otros</td>
+                    <td className="border-black border p-1" colSpan={1}><input type='radio' name='otros'></input></td>
+                    <td className="border-black border p-1" colSpan={1}><input type='radio' name='otros'></input></td>
+                  </tr>
+                </tbody>
+              </table>
+        </section>
 
-         {/* Espacio adicional */}
-        <section className="m-5 font-semibold">1</section>
+        <section className="p-4 text-xs">
+          <h2 className="font-bold mb-2">5.- ESTADO FINAL</h2>
+              <table className="w-full border-collapse border-black border text-center">
+                <tbody>
+                  <tr>
+                    <td className="border-black border p-1 text-start" colSpan={1}>Operativa</td>
+                    <td className="border-black border p-1" colSpan={1}><input type="radio" name='estado' /></td>
+                    <td className="border-black border p-1 text-start" colSpan={1}>Inoperativa</td>
+                    <td className="border-black border p-1" colSpan={1}><input type="radio" name='estado' /></td>
+                    <td className="border-black border p-1 text-start" colSpan={1}>Por repuesto</td>
+                    <td className="border-black border p-1" colSpan={1}><input type="radio" name='repuesto' defaultChecked={true}/></td>
+                    <td className="border-black border p-1 text-start" colSpan={1}>Por garantia</td>
+                    <td className="border-black border p-1" colSpan={1}><input type="radio" name='repuesto' /></td>
+                  </tr>
+                </tbody>
+              </table>
+        </section>
 
-        {/* FALLA REPORTADA IMPRESION TENUE*/}
-        <section>
-           <div className='border-black grid grid-cols-2 border-2 m-4'>
-            <p className='border-r-2 border-black px-4'>Falla reportada:</p>
-            <p className='px-4'>Impresion Tenue</p>
-           </div>
+        <section className="p-4 text-xs">
+          <h2 className="font-bold mb-2">6.- OBSERVACIONES</h2>
+              <table className="w-full border-collapse border-black border text-center">
+                <tbody>
+                  <tr>
+                    <td className="border-black border p-1" colSpan={8}>REQUIERE CAMBIO DE TONNER ---------</td>
+                  </tr>
+                </tbody>
+              </table>
+        </section>
 
+        <section className="p-4 text-xs">
+          <h2 className="font-bold mb-2">NOTA: Devolver ficha de atencion tecnica firmada a la brevedad posible, bajo responsabilidad.</h2>
+          <section className='grid grid-cols-2 gap-20 max-w-xl m-auto'>
+            <div className='h-[100px] text-center grid items-end'>
+              <p className='border-t-2 border-black'>Firma y sello - Soporte Tecnico</p>
+            </div>
+            <div className='h-[100px] text-center grid items-end'>
+              <p className='border-t-2 border-black'>Firma y Sello del Usuario</p>
+            </div>
           </section>
-
-         {/* -------------------------------------------------------------------------------------------------------------------- */}
-
-          {/* Espacio adicional */}
-        <section className="m-4 font-semibold">2 CONFIGURACIÓN ACTUAL DEL HARDWARE:</section>
-
-         {/* Configuracion actual del hardware*/}
-         {/* ----------------------------------------------------------1---------------------------------------------------------- */}
-          <section className='grid grid-cols-2 m-4'>
-          <div className='grid grid-cols-2 border-black border-2'>
-          <p className='border-r-2 border-black px-4'>Codigo-Inventario</p>
-          <p className='px-4'>-</p>
-          </div>
-
-          <div className='grid grid-cols-2 border-black border-2'>
-          <p className='border-r-2 border-black px-4'>Marca Monitor</p>
-          <p className='px-4'>-</p>
-          </div>
-         {/* ---------------------------------------------------------2----------------------------------------------------------- */}
-          <div className='grid grid-cols-2 border-black border-2'>
-          <p className='border-r-2 border-black px-4'>Modelo de CPU</p>
-          <p className='px-4'>-</p>
-          </div>
-
-          <div className='grid grid-cols-2 border-black border-2'>
-          <p className='border-r-2 border-black px-4'>Modelo</p>
-          <p className='px-4'>-</p>
-          </div>
-         {/* ----------------------------------------------------------3---------------------------------------------------------- */}
-          <div className='grid grid-cols-2 border-black border-2'>
-          <p className='border-r-2 border-black px-4'>Serie</p>
-          <p className='px-4'>-</p>
-          </div>
-
-          <div className='grid grid-cols-2 border-black border-2'>
-          <p className='border-r-2 border-black px-4'>Serie</p>
-          <p className='px-4'>-</p>
-          </div>
-         {/* ----------------------------------------------------------4---------------------------------------------------------- */}
-          <div className='grid grid-cols-[auto_1fr_1fr_1fr] border-black border-2'>
-          <p className='border-r-2 border-black px-4'>Procesador</p>
-          <p className='px-4 border-r-2 border-black'>-</p>
-          <p className='border-r-2 border-black px-4'>Velocidad</p>
-          <p className='px-4'>-</p>
-          </div>
-
-          <div className='grid grid-cols-2 border-black border-2'>
-          <p className='border-r-2 border-black px-4'>Teclado</p>
-          <p className='px-4'>-</p>
-          </div>
-         {/* -----------------------------------------------------------5--------------------------------------------------------- */}
-          <div className='grid grid-cols-[auto_1fr_1fr_1fr] border-black border-2'>
-          <p className='border-r-2 border-black px-4'>Memoria RAM</p>
-          <p className='px-4 border-r-2 border-black'>-</p>
-          <p className='border-r-2 border-black px-4'>Velocidad</p>
-          <p className='px-4'>-</p>
-          </div>
-
-          <div className='grid grid-cols-2 border-black border-2'>
-          <p className='border-r-2 border-black px-4'>Contometro</p>
-          <p className='px-4'>-</p>
-          </div>
-         {/* ---------------------------------------------------------6----------------------------------------------------------- */}
-          <div className='grid grid-cols-5 border-black border-2'>
-          <p className='px-4 border-black border-r-2'>Disco Duro/ Marca</p>
-          <p className='px-4 border-r-2 border-black'>Capaciadad</p>
-          <p className='px-4 border-r-2 border-black'>-</p>
-          <p className='px-4 border-r-2 border-black'>Tecnologia</p>
-          <p className='px-4'>-</p>
-          </div>
-
-          <div className='grid grid-cols-2 border-black border-2'>
-          <p className='px-4 border-black border-2'>Impresora/Multifuncional</p>
-          <p className='px-4'>LEXMARK</p>
-          </div>
-         {/* ---------------------------------------------------------7----------------------------------------------------------- */} 
-        <div className='grid grid-cols-2 border-black border-2'>
-          <p className='border-r-2 px-4 border-black'>Tarjeta de Video</p>
-          <p className='px-4'>-</p>
-        </div>
-        <div className='grid grid-cols-2 border-black border-2'>
-          <p className='px-4 border-r-2 border-black'>Modelo</p>
-          <p className='px-4 border-r-2'>-</p>
-        </div>
-         {/* ---------------------------------------------------------8----------------------------------------------------------- */}
-          <div className='grid grid-cols-2 border-black border-2'>
-          <p className='border-r-2 px-4 border-black'>CDROM</p>
-          <p className='px-4'>-</p>
-          </div>
-          <div className='grid grid-cols-2 border-black border-2'>
-          <p className='px-4 border-r-2 border-black'>Serie</p>
-          <p className='px-4 border-r-2'>-</p>
-          </div>
-         {/* CIERRA LA TABLA CONF. DEL HARDWARE*/}
-        </section>
-        
-         {/* Espacio adicional */}
-        <section className="m-4 font-semibold">3 CONFIGURACION DE LA RED:</section>
-
-
-        {/* TABLA DE LA CONFIGURACION DE LA RED-------------------------------- TERMINAR */}
-
-        <section className='grid-cols-2 grid m-4'>
-        <div className='grid-cols-3 grid  border-black border-2'>
-        <p className='px-4 border-r-2 border-black'>Modelo</p>
-        <p className='px-4 border-r-2 border-black'>En Red</p>
-        <p className='px-4'>Direccion IP</p>
-        </div>
-        
-        <div className='grid-cols-3 grid border-black border-2'>
-        <p className='px-4 border-r-2 border-black'>Direccion</p>
-        <p className='px-4 border-r-2 border-black'>Contador</p>
-        <p className='px-4'>Contador Firware</p>
-        </div>
         </section>
 
-        {/* Espacio adicional */}
-        <section className="m-4 font-semibold">4 TIPO DE SERVICIO</section>
-
-        {/* TABLA DE TIPO DE SERVICIO */}
-        <section className='grid grid-cols-2 border-black border-2 m-4'>
-          {/* -------------------------------------------------------------------------------------------------------------------- */}
-          <p className='px-4 font-semibold border-r-2 border-black text-center'>Mantenimiento</p>
-          <p className='px-4 font-semibold text-center'>Partes Instaladas</p>
-          {/* -------------------------------------------------------------------------------------------------------------------- */}
-          <div className='grid-cols-3 grid border-black border-2'>
-          <p className='px-4 border-r-2 border-black'>Tipo de mantenimiento</p>
-          <p className='px-4 border-r-2 border-black'>Preventivo</p>
-          <p className='px-4'>-</p>
-          </div>
-          <div className='grid-cols-[auto_1fr_1fr_1fr] grid border-black border-2'>
-          <p className='px-4 border-r-2 border-black p-2'>N°</p>
-          <p className='px-4 border-r-2 border-black'>-</p>
-          <p className='px-4 border-r-2 border-black'>Nuevo</p>
-          <p className='px-4'>Usado</p>
-          </div>
-          {/* -------------------------------------------------------------------------------------------------------------------- */}
-          <div className='grid grid-cols-3 border-black border-2'>
-          <p className='px-4 text-center'>Fecha(DD/MM/AA)</p>
-          <p className='px-4 text-center'>Correctivo</p>
-          <p className='px-4 text-center'>O</p>
-          </div>
-
-          <div className='grid-cols-[auto_1fr_1fr_1fr] grid border-black'>
-          <p className='px-4 border-r-2 p-2 border-black'>1.-</p>
-          <p className='border-r-2 border-black p-2'>Kit de mantenimiento</p>
-          <input className='w-[25px] h-[25px] m-auto' type="radio" id="kitMantenimiento" name="kitMantenimiento" value="nuevo"></input>
-          <input className='w-[25px] h-[25px] m-auto' type="radio" id="kitMantenimiento" name="kitMantenimiento" value="usado"></input>
-          </div>
-
-          {/* -------------------------------------------------------------------------------------------------------------------- */}
-          <div className='grid border-black border-2'>
-          <p className='px-4 text-center'>Observaciones</p>
-          </div>
-          <div className='grid-cols-[auto_1fr_1fr_1fr] grid border-black border-2'>
-          <p className='px-4 border-r-2 border-black p-2'>2</p>
-          <p className='border-r-2 border-black'>Fusor O</p>
-          </div>
-          {/* -------------------------------------------------------------------------------------------------------------------- */}
-          <div className='grid border-black border-2'>
-          <p className='px-4 text-center'></p>
-          </div>
-          <div className='grid-cols-[auto_1fr_1fr_1fr] grid border-black border-2'>
-          <p className='px-4 border-r-2 border-black p-2'>3</p>
-          <p className='border-r-2 border-black'>Roller O</p>
-          </div>
-          {/* -------------------------------------------------------------------------------------------------------------------- */}
-          <div className='grid border-black border-2'>
-          <p className='px-4 text-center'></p>
-          </div>
-          <div className='grid-cols-[auto_1fr_1fr_1fr] grid border-black border-2'>
-          <p className='px-4 border-r-2 border-black p-2'>4</p>
-          <p className='border-r-2 border-black'>Autodispensador O</p>
-          </div>
-          {/* -------------------------------------------------------------------------------------------------------------------- */}
-          <div className='grid border-black border-2'>
-          <p className='px-4 text-center'>Reparación</p>
-          </div>
-          <div className='grid-cols-[auto_1fr_1fr_1fr] grid border-black border-2'>
-          <p className='px-4 border-r-2 border-black p-2'>5</p>
-          <p className='border-r-2 border-black'>Mainboard O</p>
-          </div> 
-          {/* -------------------------------------------------------------------------------------------------------------------- */}
-          <div className='grid  grid-cols-2 border-black border-2'>
-          <p className='px-4 text-center border-black border-r-2'>Tipo de reparación lógica</p>
-          <p className='px-4 text-center'>O</p>
-          </div>
-          <div className='grid-cols-[auto_1fr_1fr_1fr] grid border-black border-2'>
-          <p className='px-4 border-r-2 border-black p-2'>6</p>
-          <p className='border-r-2 border-black'>Fuente de Poder O</p>
-          </div> 
-          {/* -------------------------------------------------------------------------------------------------------------------- */}
-          <div className='grid border-black border-2'>
-          <p className='px-4 text-center'></p>
-          </div>
-          <div className='grid-cols-[auto_1fr_1fr_1fr] grid border-black border-2'>
-          <p className='px-4 border-r-2 border-black p-2'>7</p>
-          <p className='border-r-2 border-black'>Unidad Laser O</p>
-          </div> 
-          {/* -------------------------------------------------------------------------------------------------------------------- */}
-          <div className='grid border-black border-2'>
-          <p className='px-4 text-center'>Observaciones</p>
-          </div>
-          <div className='grid-cols-[auto_1fr_1fr_1fr] grid border-black border-2'>
-          <p className='px-4 border-r-2 border-black p-2'>8</p>
-          <p className='border-r-2 border-black'>Media ACM Drive ASSY O</p>
-          </div> 
-          {/* -------------------------------------------------------------------------------------------------------------------- */}
-          <div className='grid border-black border-2'>
-          <p className='px-4 text-center'>Atasco de hojas, impresión con lineas blancas</p>
-          </div>
-          <div className='grid-cols-[auto_1fr_1fr_1fr] grid border-black border-2'>
-          <p className='px-4 border-r-2 border-black p-2'>9</p>
-          <p className='border-r-2 border-black'>Fotoconductor O</p>
-          </div> 
-          {/* -------------------------------------------------------------------------------------------------------------------- */}
-          <div className='grid border-black border-2'>
-          <p className='px-4 text-center'>Enrollamiento de hojas en el fusor</p>
-          </div>
-          <div className='grid-cols-[auto_1fr_1fr_1fr] grid border-black border-2'>
-          <p className='px-4 border-r-2 border-black p-2'>10</p>
-          <p className='border-r-2 border-black'>Toner O</p>
-          </div> 
-          {/* -------------------------------------------------------------------------------------------------------------------- */}
-          <div className='grid border-black border-2'>
-          <p className='px-4 text-center'></p>
-          </div>
-          <div className='grid-cols-[auto_1fr_1fr_1fr] grid border-black border-2'>
-          <p className='px-4 border-r-2 border-black p-2'>11</p>
-          <p className='border-r-2 border-black'>Otros O</p>
-          </div>    
-        </section>
-        {/* -----------------------------------------------5 ESTADO FINAL------------------------------------------------------- */}
-
-        {/* 5 ESTADO FINAL */}
-          <section className='grid grid-cols-2 px-4 font-semibold'>5 ESTADO FINAL</section>
-        {/* -------------------------------------------------------------------------------------------------------------------- */}
-        <section className='grid grid-cols-[auto_1fr_1fr_1fr] border-black border-2 m-4'>
-        <p>Operativa</p>
-        <p>Inoperativa</p>
-        <p>Por repuesto</p>
-        <p>Por garantia</p>
-        </section>
-        {/* -----------------------------------------------6 OBERVACIONES------------------------------------------------------- */}
-
-        {/* 6 OBSERVACIONES*/}
-          <section className='grid grid-cols-2 font-semibold m-4'>6 OBSERVACIONES</section>
-
-        {/* 2 LINEAS*/}
-          <section className='grid m-4'>
-          <p className='border-black border-2'>1.</p>
-          <p className='border-black border-2'>2.</p>
-          <p className='border-black border-2'>3.</p>
-          </section>
-        {/* -------------------------------------------------------------------------------------------------------------------- */}
-        <section className='grid text-center'>
-        <p>NOTA Devolver ficha de atención tecnica firmada a la brevedad posible, bajo responsabilidad.</p>
-        <p>Alinear constantemente las hojas al momento de colocarlas en bandejas.</p>
-        </section>
-        {/* -------------------------------------------------------------------------------------------------------------------- */}
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <p className='text-center'>Poder Judicial</p>
-      {/* cierra todo el div contenedor */}
+        <button onClick={exportToPdf}>Export to PDF</button>
     </div>
   )
 }

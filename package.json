@@ -10,11 +10,13 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@react-pdf/renderer": "^3.4.4",
     "@reduxjs/toolkit": "^2.2.1",
     "axios": "^1.6.8",
     "boxicons": "^2.1.4",
     "html2canvas": "^1.4.1",
     "jspdf": "^2.5.1",
+    "jspdf-autotable": "^3.8.2",
     "os": "^0.1.2",
     "react": "^18.2.0",
     "react-date-picker": "^10.6.0",

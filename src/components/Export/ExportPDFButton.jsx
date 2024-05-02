@@ -25,7 +25,7 @@ const ExportPDFButton = () => {
       .catch(err =>console.log(err))
   }, [])
 
-console.log(asignationsData)
+// console.log(asignationsData)
   const handleExportPDF = () => {
     const input = document.getElementById('component-to-export');
 

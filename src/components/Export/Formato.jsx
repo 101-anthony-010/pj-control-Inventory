@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { formatoNumberCode } from '../../utils/codeNumber';
 import { axiosPoderJudicial } from '../../utils/configAxios';
 import { formatDateDDMMYYYY } from '../../utils/date';
+import { lowerUpperCase } from '../../utils/lowerUpperCase';
 
 const Formato = ({ asignationsData }) => {
   const [userData, setUserData] = useState([])
@@ -10,60 +11,41 @@ const Formato = ({ asignationsData }) => {
   const [modelData, setModelData] = useState([])
 
   useEffect(() => {
-    const userPromises = asignationsData.map(asignation =>
-      axiosPoderJudicial
-        .get(`/user/${asignation.userId}`)
-        .then(res => res.data.user)
-    );
-  
-    const productPromises = asignationsData.map(asignation =>
-      axiosPoderJudicial
-        .get(`/product/${asignation.productId}`)
-        .then(res => res.data.product)
-    );
-  
-    Promise.all([Promise.all(userPromises), Promise.all(productPromises)])
-      .then(([userData, productData]) => {
-        setUserData(userData);
-        setProductData(productData);
-        
-        // Fetch brand and model data
-        const brandPromises = productData.map(product =>
-          axiosPoderJudicial
-            .get(`/marca/${product.marcaId}`)
-            .then(res => res.data.marca)
-        );
-        const modelPromises = productData.map(product =>
-          axiosPoderJudicial
-            .get(`/modelProduct/${product.modelId}`)
-            .then(res => res.data.modelProduct)
-        );
-        
-        Promise.all([Promise.all(brandPromises), Promise.all(modelPromises)])
-          .then(([brandData, modelData]) => {
-            setBrandData(brandData);
-            setModelData(modelData);
-          })
-          .catch(err => console.log(err));
-      })
-      .catch(err => console.log(err));
+    axiosPoderJudicial
+      .get('/user')
+      .then(res => setUserData(res.data.users))
+      .catch(res => console.log(res))
+    axiosPoderJudicial
+      .get('/product')
+      .then(res => setProductData(res.data.products))
+      .catch(res => console.log(res))
+    axiosPoderJudicial
+      .get('/marca')
+      .then(res => setBrandData(res.data.marcas))
+      .catch(res => console.log(res))
+    axiosPoderJudicial
+      .get('/modelProduct')
+      .then(res => setModelData(res.data.modelsProducts))
+      .catch(res => console.log(res))
   }, [asignationsData]);
 
   const handleNameUser = (id) => {
     const name = userData.find(item => item.id === id);
-    return name ? `${name.lastName.toLowerCase().replace(/(\b\w)(\w*)/g, (match, firstLetter, restOfWord) => firstLetter.toUpperCase() + restOfWord)} ${name.name.toLowerCase().replace(/(\b\w)(\w*)/g, (match, firstLetter, restOfWord) => firstLetter.toUpperCase() + restOfWord)}` : "Cargando";
+    return `${lowerUpperCase(name.lastName)} ${lowerUpperCase(name.name)}`
   }
 
   const handleNameProduct = (id) => {
-    const product = productData.find(item => item.id === id)
-    const brand = brandData.find(item => item.id === product.marcaId)
-    const model = modelData.find(item => item.id === product.modelId)
-    return product && brand && model ? `${brand.name} ${model.name.toUpperCase()}` : "Cargando";
-  }
+    const product = productData.find(item => item.id === id);
+    const brand = brandData.find(item => item.id === product.marcaId);
+    const model = modelData.find(item => item.id === product.modelId);
+    return `${brand.name.toUpperCase()} ${model.name.toUpperCase()}`
+  };
+  
+  
 
   const handleNameProductSerie = (id) => {
-    const name = productData.find(item => item.id === id)
-    return name ? `${name.numSerie.toUpperCase()}` : "Cargando";
+    const name = productData.find(item => item.id === id);
+    return `${name.numSerie.toUpperCase()}`
   }
 
   return (
