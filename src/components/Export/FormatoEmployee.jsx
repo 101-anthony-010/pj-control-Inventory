@@ -24,74 +24,6 @@ const FormatoEmployee = () => {
       .then(res => setDependencia(res.data.dependencia))  
   }, [])  
 
-  const exportToPdf = (ref) => {
-    const doc = new jsPDF();
-    doc.setTextColor('#000000'); // Set text color to black
-  
-    // Add header
-    doc.setFontSize(16);
-    doc.text('CORTE SUPERIOR DE JUSTICIA DE ICA', 105, 20, { align: 'center' });
-    doc.setFontSize(12);
-    doc.text('Area de Informatica y Sistemas', 105, 30, { align: 'center' });
-    doc.text('FICHA DE REQUERIMIENTOS', 105, 40, { align: 'center' });
-  
-    // Datos del Usuario
-    doc.setFontSize(12);
-    doc.text('DATOS DEL USUARIO', 20, 60);
-    doc.setFontSize(10);
-    doc.text(`NOMBRE: ${(user.name).toUpperCase()} ${(user.lastName).toUpperCase()}`, 20, 70);
-    doc.text(`SEDE: ${sede?.name.toUpperCase()}`, 20, 80);
-    doc.text(`DEPENDENCIA: ${dependencia?.name.toUpperCase()}`, 20, 90);
-    doc.text(`CARGO: ${cargo?.name.toUpperCase()}`, 20, 100);
-  
-    // Configuración Actual de Hardware
-    doc.addPage(); // Add a new page for hardware configuration
-    doc.setFontSize(12);
-    doc.text('CONFIGURACION ACTUAL DE HARDWARE', 105, 20, { align: 'center' });
-    // Add more hardware configuration details as needed...
-  
-    // Configuración de la Red
-    doc.addPage(); // Add a new page for network configuration
-    doc.setFontSize(12);
-    doc.text('CONFIGURACION DE LA RED', 105, 20, { align: 'center' });
-    // Add network configuration details as needed...
-  
-    // Tipo de Servicio
-    doc.addPage(); // Add a new page for service type
-    doc.setFontSize(12);
-    doc.text('TIPO DE SERVICIO', 105, 20, { align: 'center' });
-    // Add service type details as needed...
-  
-    // Estado Final
-    doc.addPage(); // Add a new page for final state
-    doc.setFontSize(12);
-    doc.text('ESTADO FINAL', 105, 20, { align: 'center' });
-    // Add final state details as needed...
-  
-    // Observaciones
-    doc.addPage(); // Add a new page for observations
-    doc.setFontSize(12);
-    doc.text('OBSERVACIONES', 105, 20, { align: 'center' });
-    doc.setFontSize(10);
-    doc.text('REQUIERE CAMBIO DE TONNER ---------', 20, 30);
-  
-    // Nota
-    doc.addPage(); // Add a new page for note
-    doc.setFontSize(12);
-    doc.text('NOTA: Devolver ficha de atencion tecnica firmada a la brevedad posible, bajo responsabilidad.', 20, 20);
-    doc.text('Firma y sello - Soporte Tecnico', 20, 50);
-    doc.text('Firma y Sello del Usuario', 105, 50);
-  
-    // Save the PDF
-    doc.save('formato_employee.pdf');
-  
-    // Convert the FormatoEmployee component to an image using html2canvas
-    html2canvas(ref.current).then((canvas) => {
-      const imgData = canvas.toDataURL('image/png');
-      doc.addImage(imgData, 'PNG', 15, 15, 180, 160); // Add the image to the PDF
-      doc.save('formato_employee.pdf');
-    });
-  };
 
   return (
     <div className='text-xs w-[21cm] h-[29.7cm] my-0 mx-auto'>
@@ -397,7 +329,7 @@ const FormatoEmployee = () => {
           </section>
         </section>
 
-        <button onClick={exportToPdf}>Export to PDF</button>
+        {/* <button onClick={exportToPdf}>Export to PDF</button> */}
     </div>
   )
 }

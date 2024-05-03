@@ -3,6 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   isShowCreateUser: false,
   isShowUpdatedUser: false,
+  isShowInfoUser: false,
 }
 
 const userSlice = createSlice({
@@ -15,6 +16,9 @@ const userSlice = createSlice({
     changeIsShowUpdatedUser: (state) => {
       state.isShowUpdatedUser = !state.isShowUpdatedUser
     },
+    changeIsShowInfoUser: (state) => {
+      state.isShowInfoUser = !state.isShowInfoUser
+    },
     setUser: (state, action) => {
       const newState = { ...state, ...action.payload }
       localStorage.setItem('userInfo', JSON.stringify(newState))
@@ -25,6 +29,7 @@ const userSlice = createSlice({
 export const {
     changeIsShowCreateUser,
     changeIsShowUpdatedUser,
+    changeIsShowInfoUser,
     setUser
 } = userSlice.actions
 
