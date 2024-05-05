@@ -2,6 +2,9 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
+
 // Components
 import AddInfoUser from '../components/addComponents/AddInfoUser';
 // import FormatoEmployee from '../components/Export/FormatoEmployee';
@@ -44,7 +47,48 @@ const PageEmployee = () => {
   };
 
   const handleExportPDF = () => {
-    console.log("Exportando el PDF")
+    const doc = new jsPDF({
+      orientation: 'landscape', // Cambia la orientación a apaisado
+      unit: 'mm',
+      format: 'a4',
+      putOnlyUsedFonts: true,
+      compress: true
+    });
+  
+    doc.autoTable({
+      head: [['Codigo', 'Fecha de solicitud', 'Apellidos y Nombres', 'Marca - Modelo', 'Numero de Serie', 'Area Solicitante', 'Firma recepción', 'Fecha devolución', 'Firma del personal de entrega', 'Sello y Firma del Administrador', 'Observaciones']],
+      body: asignationsData.map(data => {
+        return [
+          formatoNumberCode(data.id),
+          formatDateDDMMYYYY(data.dateInitial),
+          `${data.lastName} ${data.name}`
+        ]
+      }),
+      startY: 20,
+      theme: 'grid',
+      tableWidth: 'auto',
+      columnWidth: 'wrap',
+      styles: {
+        fontSize: 10,
+        cellPadding: 1,
+        lineWidth: 0.1,
+        lineColor: 0,
+      },
+      didParseCell: (data) => {
+        if (data.column.index === 0) {
+          data.cell.styles.fontStyle = 'bold';
+        }
+      },
+      margin: {
+        top: 20,
+        bottom: 20,
+        left: 20,
+        right: 20
+      },
+      scale: 0.8 // Ajusta la escala de la tabla
+    });
+  
+    doc.save('table.pdf');
   };
 
   return (

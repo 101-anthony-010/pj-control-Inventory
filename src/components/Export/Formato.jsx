@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
+
+// Utils
 import { formatoNumberCode } from '../../utils/codeNumber';
 import { axiosPoderJudicial } from '../../utils/configAxios';
 import { formatDateDDMMYYYY } from '../../utils/date';
 import { lowerUpperCase } from '../../utils/lowerUpperCase';
-import jsPDF from 'jspdf';
-import autoTable from 'jspdf-autotable';
 
 const Formato = ({ asignationsData }) => {
   const [userData, setUserData] = useState([])
@@ -40,13 +42,18 @@ const Formato = ({ asignationsData }) => {
     const product = productData.find(item => item.id === id);
     const brand = brandData.find(item => item.id === product.marcaId);
     const model = modelData.find(item => item.id === product.modelId);
-    return `${brand.name.toUpperCase()} ${model.name.toUpperCase()}`
+    return `${brand.name} ${model.name}`
   };
   
 
   const handleNameProductSerie = (id) => {
     const name = productData.find(item => item.id === id);
     return `${name.numSerie.toUpperCase()}`
+  }
+
+  const handleDataId = (data, id) => {
+    const item = data.find(item => item.id === id);
+    return item
   }
 
 console.log(asignationsData)
@@ -64,8 +71,10 @@ console.log(asignationsData)
       body: asignationsData.map(data => {
         return [
           formatoNumberCode(data.id),
-          formatDateDDMMYYYY(data.dateInitial),
-          `${data.lastName} ${data.name}`
+          formatDateDDMMYYYY(data.date),
+          `${handleDataId(userData, data.userId).lastName} ${handleDataId(userData, data.userId).name}`,
+          `${handleDataId(productData, data.productId).marcaId} ${handleDataId(productData, data.productId).modelId}`,
+          `${handleDataId(productData, data.productId).numSerie}`
         ]
       }),
       startY: 20,

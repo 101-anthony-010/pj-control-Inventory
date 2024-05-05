@@ -10,8 +10,11 @@ const AddModel = () => {
   const submit = (data) => {
     axiosPoderJudicial
       .post('/modelProduct',data)
-      .then(res => console.log(res.data))
+      .then(res => window.alert("Se creo el modelo con Exito"))
       .catch(err => console.log(err))
+
+    reset()
+  
   }
 
   const handleMarcaChange = async (event) => {
@@ -34,9 +37,9 @@ const AddModel = () => {
   return (
     <form onSubmit={handleSubmit(submit)} className='gap-2 grid-cols-2 grid' action="">
       <h4>MODELO MARCA</h4>
-      <input {...register('name')} className='bg-slate-200 rounded-md p-2' type="text" />
+      <input required {...register('name')} className='bg-slate-200 rounded-md p-2' type="text" />
       <h4>MARCA ID</h4>
-      <select className='rounded-md p-2 bg-slate-100' {...register("marcaId")} id="marcaId" onChange={handleMarcaChange}>
+      <select className='rounded-md p-2 bg-slate-100' required {...register("marcaId")} id="marcaId" onChange={handleMarcaChange}>
         <option value="">Selecione una marca</option>
         {marcas?.map(marca => <option key={marca.id} value={marca.id}>{marca.name}</option>)}
       </select>

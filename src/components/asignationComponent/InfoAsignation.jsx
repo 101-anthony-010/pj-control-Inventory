@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from 'react'
+
+// Utils
 import { axiosPoderJudicial } from '../../utils/configAxios'
 import { formatDateDDMMYYYY } from '../../utils/date'
 
@@ -54,7 +56,7 @@ const InfoAsignation = ({ handleClickChangeShowInfoAsignation, infoAsignation })
   const getItemName = (itemsArray, itemId) => {
     if (!itemsArray) return "Cargando...";
     const item = itemsArray.find(item => item.id === itemId);
-    return item ? item.name : "No encontrado";
+    return item ? (item.name) : "No encontrado";
   };
 
   return (
@@ -73,7 +75,7 @@ const InfoAsignation = ({ handleClickChangeShowInfoAsignation, infoAsignation })
             </tr>
             <tr>
               <th className="px-4 py-2 bg-gray-800 text-white border border-white">Apellido</th>
-              <td className="px-4 py-2 border border-gray-700">{ user?.lastName }</td>
+              <td className="px-4 py-2 border border-gray-700">{ (user?.lastName) }</td>
             </tr>
             <tr>
               <th className="px-4 py-2 bg-gray-800 text-white border border-white">DNI</th>

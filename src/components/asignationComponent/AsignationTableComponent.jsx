@@ -23,7 +23,7 @@ function AsignationTableComponent({ asignations, isInUseSelected }) {
     if (!users) return "Cargando...";
 
     const user = users.find(user => user.id === userId);
-    return user ? user.userName : "Usuario no encontrado";
+    return user ? `${(user.userName).toUpperCase()}` : "Usuario no encontrado";
   }
 
   useEffect(() => {

@@ -1,7 +1,7 @@
 import axios from "axios";
 
 export const axiosPoderJudicial = axios.create({
-    baseURL: "http://localhost:4001/api/v1"
+    baseURL: "http://localhost:4000/api/v1"
 })
 
 export const getConfig = () => {

@@ -18,8 +18,8 @@ const Navbar = () => {
       <Link to={'/product'}>Producto</Link>
       <Link to={'/user'}>Usuario</Link>
 
-      <div onClick={() => handleClickLogOut()} className='absolute w-10 h-10 bg-slate-200 rounded-full hover:cursor-pointer right-10 top-1/2 -translate-y-1/2 '>
-        
+      <div onClick={() => handleClickLogOut()} className='absolute w-8 h-8 bg-slate-200 rounded-full hover:cursor-pointer right-10 top-1/2 -translate-y-1/2 '>
+       <img src="/icons/log-out.png" className='w-full h-full object-contain' alt="" />        
       </div>
     </nav>
   )
