@@ -6,6 +6,7 @@ import { axiosPoderJudicial } from '../../utils/configAxios';
 
 //Slice
 import { changeIsShowUpdatedUser, setUser } from '../../store/slices/user.slice';
+import { lowerUpperCase } from '../../utils/lowerUpperCase';
 
 const UserTableComponent = () => {
   const [users, setUsers] = useState([]);
@@ -45,14 +46,23 @@ const UserTableComponent = () => {
   }, []);
 
   const handleClickDeletedUser = async (id) => {
-    try {
-      await axiosPoderJudicial.delete(`/user/${id}`);
-      const updatedUsers = users.filter(user => user.id !== id);
-      setUsers(updatedUsers);
-      console.log(`Usuario con ID ${id} eliminado exitosamente.`);
-    } catch (error) {
-      console.error(`Error al eliminar el usuario con ID ${id}:`, error);
+    if (window.confirm("¿Seguro que quieres eliminar este usuario?")) {
+      try {
+        try {
+          await axiosPoderJudicial.delete(`/user/${id}`);
+          const updatedUsers = users.filter(user => user.id !== id);
+          setUsers(updatedUsers);
+          console.log(`Usuario con ID ${id} eliminado exitosamente.`);
+        } catch (error) {
+          console.error(`Error al eliminar el usuario con ID ${id}:`, error);
+        }
+      } catch (error) {
+        console.error(`Error al eliminar el producto con ID ${id}:`, error);
+      }
+    } else {
+      console.log("Eliminación cancelada.");
     }
+
   };
 
   const getItemName = (itemsArray, itemId) => {
@@ -83,18 +93,18 @@ const UserTableComponent = () => {
         {users?.map((user) => (
           <tr key={user.id}>
             <td className="border border-black">{user.id}</td>
-            <td className="border border-black">{user.name}</td>
-            <td className="border border-black">{user.lastName}</td>
-            <td className="border border-black">{user.userName}</td>
+            <td className="border border-black">{lowerUpperCase(user.name)}</td>
+            <td className="border border-black">{lowerUpperCase(user.lastName)}</td>
+            <td className="border border-black">{user.userName.toUpperCase()}</td>
             <td className="border border-black">{getItemName(sedes, user.sedeId)}</td>
             <td className="border border-black">{getItemName(dependencias, user.dependenciaId)}</td>
             <td className="border border-black">{getItemName(cargos, user.cargoId)}</td>
             <td className="border m-auto border-black">
               <div className="grid grid-cols-2 justify-center items-center my-1 mx-4">
-                <div className='w-[25px] h-[25px] inline-block bg-yellow-500 p-[3px] rounded-md hover:bg-yellow-500/75 hover:cursor-pointer m-auto' onClick={() => handleChangeIsShowUpdatedUser(user)}>
+                <div className='w-[25px] h-[25px] inline-block p-[3px] rounded-md hover:cursor-pointer m-auto' onClick={() => handleChangeIsShowUpdatedUser(user)}>
                   <img className='w-full h-full object-contain' src="/icons/edit.png" alt="" />
                 </div>
-                <div className='w-[25px] h-[25px] inline-block text-center bg-blue-500 p-[3px] rounded-md hover:bg-blue-500/75 hover:cursor-pointer m-auto' onClick={() => handleClickDeletedUser(user.id)}>
+                <div className='w-[25px] h-[25px] inline-block text-center p-[3px] rounded-md hover:cursor-pointer m-auto' onClick={() => handleClickDeletedUser(user.id)}>
                   <img className='w-full h-full object-contain' src="/icons/trash.png" alt="" />
                 </div>
               </div>

@@ -8,16 +8,6 @@ import { axiosPoderJudicial } from '../../utils/configAxios'
 //Slices
 import { changeIsShowCreateProduct } from '../../store/slices/product.Slice';
 
-const DEFAULT_VALUES = {
-  marcaId: '',
-  modelId: '',
-  numSerie: '',
-  userId: '',
-  date: '',
-  description: '',
-  amount: '',
-}
-
 const CreateProduct = () => {
   const [marcas, setMarcas] = useState([])
   const [modelos, setModelos] = useState([])
@@ -35,7 +25,9 @@ const CreateProduct = () => {
       .then((res) => console.log(res))
       .catch((err) => console.log(err))    
 
-    reset(DEFAULT_VALUES)
+
+    window.confirm("Producto creado con exito")
+    reset()
   }
   
   useEffect(() => {
@@ -43,12 +35,10 @@ const CreateProduct = () => {
       .get('/marca')
       .then((res) => setMarcas(res.data.marcas))
       .catch((err) => console.log(err))
-
     axiosPoderJudicial
       .get('/modelProduct')
       .then((res) => setModelos(res.data.modelsProducts))
       .catch((err) => console.log(err))
-
     axiosPoderJudicial
       .get('/user')
       .then((res) => setUsers(res.data.users))

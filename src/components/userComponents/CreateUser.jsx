@@ -38,8 +38,8 @@ const CreateUser = ({ handleChangeIsShowCreateUser, setUsers }) => {
 
 
       // Resetear el formulario después de la creación exitosa
-      // reset();
-
+      reset();
+      window.confirm("Usuario creado con exito")
     } catch (error) {
       console.error('Error al crear usuario:', error);
     }
@@ -70,10 +70,10 @@ const CreateUser = ({ handleChangeIsShowCreateUser, setUsers }) => {
         <input className='rounded-md p-2 bg-slate-100' type="email"{...register("email")} id="email" name="email" required />
         
         <label htmlFor="name">Contraseña:</label>
-        <input className='rounded-md p-2 bg-slate-100' type="password"{...register("password")} id="password" name="password" required />
+        <input className='rounded-md p-2 bg-slate-100' defaultValue={''} type="password"{...register("password")} id="password" name="password" required />
         
         <label htmlFor="name">Usuario:</label>
-        <input className='rounded-md p-2 bg-slate-100' type="text"{...register("userName")} id="userName" name="userName" required />
+        <input className='rounded-md p-2 bg-slate-100' defaultValue={''} type="text"{...register("userName")} id="userName" name="userName" required />
         
         <label htmlFor="sedeId">Sede:</label>
         <select className='rounded-md bg-slate-100 p-2' name="sedeId" {...register("sedeId")} id="sedeId">

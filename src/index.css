@@ -5,3 +5,59 @@
 html {
   font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
 }
+
+/* Estilo para el contenedor del calendario */
+.custom-datepicker {
+  font-family: Arial, sans-serif; /* Fuente del texto */
+  border: 1px solid #ccc; /* Borde del calendario */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Sombra */
+  border-radius: 4px; /* Bordes redondeados */
+  background-color: #f7f7f7; /* Color de fondo */
+}
+
+/* Estilo para el día seleccionado */
+.react-datepicker__day--selected {
+  background-color: #007bff; /* Color del día seleccionado */
+  color: #fff; /* Color del texto del día seleccionado */
+}
+
+/* Estilo para el día seleccionable */
+.react-datepicker__day--selectable {
+  &:hover {
+    background-color: #f0f0f0; /* Color de fondo al pasar el cursor */
+  }
+}
+
+/* Estilo para el día actual */
+.react-datepicker__day--today {
+  color: #007bff; /* Color del día actual */
+  font-weight: bold; /* Texto en negrita para el día actual */
+}
+
+/* Estilo para el input */
+.react-datepicker__input-container input {
+  width: 100%; /* Ancho del input */
+  padding: 8px; /* Espaciado interno */
+  font-size: 14px; /* Tamaño de fuente */
+  border: 1px solid #ccc; /* Borde del input */
+  border-radius: 4px; /* Bordes redondeados */
+}
+
+
+/* HTML: <div class="loader"></div> */
+.loader {
+  width: 50px;
+  padding: 8px;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: #032a24;
+  --_m: 
+    conic-gradient(#0000 10%,#000),
+    linear-gradient(#000 0 0) content-box;
+  -webkit-mask: var(--_m);
+          mask: var(--_m);
+  -webkit-mask-composite: source-out;
+          mask-composite: subtract;
+  animation: l3 1s infinite linear;
+}
+@keyframes l3 {to{transform: rotate(1turn)}}

@@ -9,6 +9,8 @@ import autoTable from 'jspdf-autotable';
 import AddInfoUser from '../components/addComponents/AddInfoUser';
 // import FormatoEmployee from '../components/Export/FormatoEmployee';
 
+import PJImage from './../../public/img/logoPJ.png'
+
 // Slices
 import { logOut } from '../store/slices/auth.slice';
 import { changeIsShowInfoUser } from '../store/slices/user.slice';
@@ -16,6 +18,7 @@ import { changeIsShowInfoUser } from '../store/slices/user.slice';
 // Utils
 import { axiosPoderJudicial } from '../utils/configAxios';
 import { lowerUpperCase } from '../utils/lowerUpperCase';
+import Test from '../components/Export/TEST';
 
 const PageEmployee = () => {
   const [cargo, setCargo] = useState()
@@ -47,24 +50,71 @@ const PageEmployee = () => {
   };
 
   const handleExportPDF = () => {
-    const doc = new jsPDF({
-      orientation: 'landscape', // Cambia la orientación a apaisado
+    var doc = new jsPDF({
+      orientation: 'landscape', // Change the orientation to landscape
       unit: 'mm',
       format: 'a4',
       putOnlyUsedFonts: true,
       compress: true
     });
+    
+    // Add an image to the left side of the page
+    doc.addImage(PJImage, 'PNG', 230, 10, 45, 30);
   
+
+    // Add a title to the PDF
+    doc.setFont('helvetica','bold');
+    doc.setFontSize(18);
+    doc.text('CORTE SUPERIOR DE JUSTICIA', 140, 20, { align: 'center' });
+    doc.setFont('helvetica','normal');
+    doc.setFontSize(10);
+    doc.text('Area de Informatica y Sistemas', 140, 26, { align: 'center' });
+    doc.setFont('helvetica','bold');
+    doc.setFontSize(11);
+    doc.text('FICHA DE REQUERIMIENTOS', 140, 32, { align: 'center' });
+    
+    // Add the date to the right side of the page
     doc.autoTable({
-      head: [['Codigo', 'Fecha de solicitud', 'Apellidos y Nombres', 'Marca - Modelo', 'Numero de Serie', 'Area Solicitante', 'Firma recepción', 'Fecha devolución', 'Firma del personal de entrega', 'Sello y Firma del Administrador', 'Observaciones']],
-      body: asignationsData.map(data => {
-        return [
-          formatoNumberCode(data.id),
-          formatDateDDMMYYYY(data.dateInitial),
-          `${data.lastName} ${data.name}`
-        ]
-      }),
+      head: [['N°', '0000001']],
+      body: [
+        ['Fecha', '20/06/2024'],
+      ],
       startY: 20,
+      startX: 100,
+      theme: 'plain',
+      tableWidth: 'wrap',
+      columnWidth: '50px',
+      styles: {
+        fontSize: 10,
+        cellPadding: 1,
+        lineWidth: 0.1,
+        lineColor: 0,
+        fontStyle: 'bold',
+        font: 'helvetica'
+      },
+      didParseCell: (data) => {
+        if (data.column.index === 0) {
+          data.cell.styles.fontStyle = 'bold';
+        }
+      },
+      margin: {
+        top: 20,
+        bottom: 20,
+        left: 20,
+        right: 20
+      },
+      scale: 0.8 // Adjust the scale of the table
+    });
+
+    // Add a large table to the PDF
+    doc.autoTable({
+      head: [['Column 1', 'Column 2', 'Column 3', 'Column 4', 'Column 5', 'Column 6', 'Column 7', 'Column 8', 'Column 9', 'Column 10']],
+      body: [
+        ['Row 1, Col 1', 'Row 1, Col 2', 'Row 1, Col 3', 'Row 1, Col 4', 'Row 1, Col 5', 'Row 1, Col 6', 'Row 1, Col 7', 'Row 1, Col 8', 'Row 1, Col 9', 'Row 1, Col 10'],
+        ['Row 2, Col 1', 'Row 2, Col 2', 'Row 2, Col 3', 'Row 2, Col 4', 'Row 2, Col 5', 'Row 2, Col 6', 'Row 2, Col 7', 'Row 2, Col 8', 'Row 2, Col 9', 'Row 2, Col 10'],
+        // Add more rows as needed...
+      ],
+      startY: 100,
       theme: 'grid',
       tableWidth: 'auto',
       columnWidth: 'wrap',
@@ -85,8 +135,10 @@ const PageEmployee = () => {
         left: 20,
         right: 20
       },
-      scale: 0.8 // Ajusta la escala de la tabla
+      scale: 0.8 // Adjust the scale of the table
     });
+  
+  
   
     doc.save('table.pdf');
   };
@@ -114,14 +166,16 @@ const PageEmployee = () => {
           <h5>{cargo ? lowerUpperCase(cargo.name) : "cargando"}</h5>
         </section>
         <section className='grid gap-2'>
-          <button onClick={() => handleChangeIsShowInfoUser()} className='font-semibold p-2 rounded-md bg-yellow-300 shadow-md'>Información</button>
-          <button onClick={() => handleExportPDF()} className='font-semibold p-2 rounded-md bg-green-500 shadow-md'>Solicitar</button>
+          <button onClick={() => handleChangeIsShowInfoUser()} className='font-semibold p-2 rounded-md bg-yellow-400 hover:bg-yellow-400/70 shadow-md'>Información</button>
+          <button onClick={() => handleExportPDF()} className='font-semibold p-2 rounded-md bg-green-500 hover:bg-green-500/70 shadow-md'>Solicitar</button>
         </section>
       </section>
 
       <section className={`absolute -top-2 bg-black/15 w-full h-screen grid items-center justify-center ${isShowInfoUser ? "left-0" : "-left-full"}`}>
         <AddInfoUser handleChangeIsShowInfoUser={handleChangeIsShowInfoUser} user={user}/>
       </section>
+
+      {/* <Test/> */}
     </div>
   );
 };

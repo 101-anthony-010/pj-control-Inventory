@@ -31,16 +31,9 @@ const EditProduct = () => {
       .get('/modelProduct')
       .then((data) => setModelos(data.data.modelsProducts))
       .catch((err) => console.log(err));
-  }, []);
-
-  useEffect(() => {
     axiosPoderJudicial
       .get('/marca')
       .then((data) => setMarcas(data.data.marcas))
-      .catch((err) => console.log(err));
-  }, []);
-
-  useEffect(() => {
     axiosPoderJudicial
       .get('/user')
       .then((res) => setUsers(res.data.users))
@@ -48,7 +41,6 @@ const EditProduct = () => {
   }, []);
 
   const submit = (data) => {
-    console.log(id)
     axiosPoderJudicial
       .patch(`/product/${id}`, data)
       .then((res) => console.log(res))

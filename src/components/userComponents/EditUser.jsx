@@ -6,12 +6,14 @@ import { axiosPoderJudicial } from '../../utils/configAxios';
 
 //Slice
 import { setUser } from '../../store/slices/user.slice';
+import { useSelector } from 'react-redux';
 
 const EditUser = ({ handleChangeIsShowUpdatedUser }) => {
   const [sedes, setSedes] = useState([]);
   const [dependencias, setDependencias] = useState([]);
   const [cargos, setCargos] = useState([]);
   const { register, handleSubmit, reset } = useForm();
+  const { id, name, lastName, dni, email, phone, userName } = useSelector(store => store.userSlice);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -38,12 +40,9 @@ const EditUser = ({ handleChangeIsShowUpdatedUser }) => {
       .post(`/user/${data}`, data)
       .then(res => console.log(res))
       .catch(err => console.log(err))
-    
-  
+
     handleChangeIsShowUpdatedUser();
-
     reset();
-
   };
 
   return (
@@ -55,25 +54,25 @@ const EditUser = ({ handleChangeIsShowUpdatedUser }) => {
       <form className='grid grid-cols-2 gap-2' onSubmit={handleSubmit(submit)}>
 
         <label htmlFor="name">Nombre:</label>
-        <input className='rounded-md bg-slate-100 p-2' type="text" {...register("name")} name="name" required />
+        <input className='rounded-md bg-slate-100 p-2' defaultValue={name} type="text" {...register("name")} name="name" required />
 
         <label htmlFor="lastName">Apellidos:</label>
-        <input className='rounded-md bg-slate-100 p-2' type="text" {...register("lastName")}  name="lastName" required />
+        <input className='rounded-md bg-slate-100 p-2' defaultValue={lastName} type="text" {...register("lastName")}  name="lastName" required />
 
         <label htmlFor="dni">DNI:</label>
-        <input className='rounded-md bg-slate-100 p-2' type="text" {...register("dni")}  name="dni" required />
+        <input className='rounded-md bg-slate-100 p-2' defaultValue={dni} type="text" {...register("dni")}  name="dni" required />
 
         <label htmlFor="phone">Teléfono:</label>
-        <input className='rounded-md bg-slate-100 p-2' type="text" {...register("phone")} name="phone" required />
+        <input className='rounded-md bg-slate-100 p-2' defaultValue={phone} type="text" {...register("phone")} name="phone" required />
 
         <label htmlFor="email">Correo:</label>
-        <input className='rounded-md bg-slate-100 p-2' type="email" {...register("email")}  name="email" required />
+        <input className='rounded-md bg-slate-100 p-2' defaultValue={email} type="email" {...register("email")}  name="email" required />
 
         <label htmlFor="password">Contraseña:</label>
-        <input className='rounded-md bg-slate-100 p-2' type="password" {...register("password")}name="password" required />
+        <input className='rounded-md bg-slate-100 p-2' defaultValue={''} type="password" {...register("password")} name="password" required />
 
         <label htmlFor="userName">Usuario:</label>
-        <input className='rounded-md bg-slate-100 p-2' type="text" {...register("userName")}  name="userName" required />
+        <input className='rounded-md bg-slate-100 p-2' defaultValue={userName} type="text" {...register("userName")}  name="userName" required />
 
         <label htmlFor="sedeId">Sede:</label>
         <select className='rounded-md bg-slate-100 p-2' name="sedeId" {...register("sedeId")} >

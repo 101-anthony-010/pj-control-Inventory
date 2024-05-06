@@ -20,14 +20,23 @@ const ProductTableComponent = ({ products, showDateSalida }) => {
   };
 
   const handleClickDeletedProduct = async (id) => { 
-    try {
-      await axiosPoderJudicial.delete(`/product/${id}`);
-      const updatedProduct = products.filter(product => product.id !== id);
-      setProduct(updatedProduct);
-      console.log(`Producto con ID ${id} eliminado exitosamente.`);
+    if (window.confirm("¿Seguro que quieres eliminar este producto?")) {
+      try {
+        try {
+          await axiosPoderJudicial.delete(`/product/${id}`);
+          const updatedProduct = products.filter(product => product.id !== id);
+          setProduct(updatedProduct);
+          console.log(`Producto con ID ${id} eliminado exitosamente.`);
+        } catch (error) {
+          console.error(`Error al eliminar el producto con ID ${id}:`, error);
+        }
+        console.log("Eliminado")
     } catch (error) {
       console.error(`Error al eliminar el producto con ID ${id}:`, error);
     }
+  } else {
+    console.log("Eliminación cancelada.");
+  }
   }
 
   useEffect(() => {
@@ -35,12 +44,10 @@ const ProductTableComponent = ({ products, showDateSalida }) => {
       .get('/modelProduct')
       .then((data) => setModelProduct(data.data.modelsProducts))
       .catch((err) => console.log(err));
-    
     axiosPoderJudicial
       .get('/marca')
       .then((data) => setMarcas(data.data.marcas))
       .catch((err) => console.log(err));
-    
     axiosPoderJudicial
       .get('/user')
       .then((data) => setUsers(data.data.users))
@@ -95,10 +102,10 @@ const ProductTableComponent = ({ products, showDateSalida }) => {
             {!showDateSalida && (
               <td className="border m-auto border-black">
                 <div className="grid grid-cols-2 justify-center items-center my-1 mx-4">
-                  <div className='w-[25px] h-[25px] inline-block bg-yellow-500 p-[3px] rounded-md hover:bg-yellow-500/75 hover:cursor-pointer m-auto' onClick={() => handleClickUpdatedProduct(product)}>
+                  <div className='w-[25px] h-[25px] inline-block p-[3px] rounded-md hover:cursor-pointer m-auto' onClick={() => handleClickUpdatedProduct(product)}>
                     <img className='w-full h-full object-contain' src="/icons/edit.png" alt="" />
                   </div>
-                  <div className='w-[25px] h-[25px] inline-block text-center bg-blue-500 p-[3px] rounded-md hover:bg-blue-500/75 hover:cursor-pointer m-auto' onClick={() => handleClickDeletedProduct(product.id)}>
+                  <div className='w-[25px] h-[25px] inline-block text-center p-[3px] rounded-md hover:cursor-pointer m-auto' onClick={() => handleClickDeletedProduct(product.id)}>
                     <img className='w-full h-full object-contain' src="/icons/trash.png" alt="" />
                   </div>
                 </div>

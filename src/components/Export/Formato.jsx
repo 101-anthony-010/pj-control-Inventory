@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
+import PJImage from './../../../public/img/logoPJ.png'
 
 // Utils
 import { formatoNumberCode } from '../../utils/codeNumber';
@@ -8,7 +9,7 @@ import { axiosPoderJudicial } from '../../utils/configAxios';
 import { formatDateDDMMYYYY } from '../../utils/date';
 import { lowerUpperCase } from '../../utils/lowerUpperCase';
 
-const Formato = ({ asignationsData }) => {
+const Formato = ({ dataToShow }) => {
   const [userData, setUserData] = useState([])
   const [productData, setProductData] = useState([])
   const [brandData, setBrandData] = useState([])
@@ -31,7 +32,7 @@ const Formato = ({ asignationsData }) => {
       .get('/modelProduct')
       .then(res => setModelData(res.data.modelsProducts))
       .catch(res => console.log(res))
-  }, [asignationsData]);
+  }, [dataToShow]);
 
   const handleNameUser = (id) => {
     const name = userData.find(item => item.id === id);
@@ -42,10 +43,9 @@ const Formato = ({ asignationsData }) => {
     const product = productData.find(item => item.id === id);
     const brand = brandData.find(item => item.id === product.marcaId);
     const model = modelData.find(item => item.id === product.modelId);
-    return `${brand.name} ${model.name}`
+    return `${brand.name} - ${model.name}`
   };
   
-
   const handleNameProductSerie = (id) => {
     const name = productData.find(item => item.id === id);
     return `${name.numSerie.toUpperCase()}`
@@ -56,8 +56,14 @@ const Formato = ({ asignationsData }) => {
     return item
   }
 
-console.log(asignationsData)
+  const handleStateProduct = (id) => {
+    const state = productData.find(item => item.id === id)
+    return state.amountPages ? 'De baja' : 'En uso'
+  }
+
+// console.log(dataToShow)
   const generatePDF = () => {
+    
     const doc = new jsPDF({
       orientation: 'landscape', // Cambia la orientación a apaisado
       unit: 'mm',
@@ -65,29 +71,123 @@ console.log(asignationsData)
       putOnlyUsedFonts: true,
       compress: true
     });
-  
+
+    doc.addImage(PJImage, 'PNG', 230, 10, 45, 30);
+    
+    const currentDate = new Date();
+    const formattedCurrentDate = `${currentDate.getDate().toString().padStart(2, '0')}/${(currentDate.getMonth() + 1).toString().padStart(2, '0')}/${currentDate.getFullYear()}`;
+
     doc.autoTable({
-      head: [['Codigo', 'Fecha de solicitud', 'Apellidos y Nombres', 'Marca - Modelo', 'Numero de Serie', 'Area Solicitante', 'Firma recepción', 'Fecha devolución', 'Firma del personal de entrega', 'Sello y Firma del Administrador', 'Observaciones']],
-      body: asignationsData.map(data => {
+      head: [['N°', '0000001']],
+      body: [
+        ['Fecha', formattedCurrentDate],
+      ],  
+      startY: 20,
+      startX: 100,
+      theme: 'plain',
+      tableWidth: 'wrap',
+      columnWidth: '50px',
+      styles: {
+        fontSize: 10,
+        cellPadding: 1,
+        lineWidth: 0.1,
+        lineColor: 0,
+        fontStyle: 'bold',
+        font: 'helvetica'
+      },
+      didParseCell: (data) => {
+        if (data.column.index === 0) {
+          data.cell.styles.fontStyle = 'bold';
+        }
+      },
+      margin: {
+        top: 20,
+        bottom: 20,
+        left: 20,
+        right: 20
+      },
+      scale: 0.8 // Adjust the scale of the table
+    });
+
+    // Add a title to the PDF
+    doc.setFont('helvetica','bold');
+    doc.setFontSize(18);
+    doc.text('CORTE SUPERIOR DE JUSTICIA', 140, 20, { align: 'center' });
+    doc.setFont('helvetica','normal');
+    doc.setFontSize(10);
+    doc.text('Area de Informatica y Sistemas', 140, 26, { align: 'center' });
+    doc.setFont('helvetica','bold');
+    doc.setFontSize(11);
+    doc.text('REGISTRO DE CARTUCHOS DE TONER INGREZADOS Y DEVUELTOS', 140, 32, { align: 'center' });
+    
+    doc.autoTable({
+      head: [['SEDE', 'SEDE']],
+      body: [
+        ['DEPENDENCIA', 'DEPENDENCIA'],
+        ['CARGO', 'CARGO'],
+      ],
+      startY: 50,
+      theme: 'plain',
+      tableWidth: 200,
+      columnWidth: '50px',
+      styles: {
+        fontSize: 10,
+        cellPadding: 1,
+        lineWidth: 0.1,
+        lineColor: 0,
+        fontStyle: 'bold',
+        font: 'helvetica'
+      },
+      didParseCell: (data) => {
+        if (data.column.index === 0) {
+          data.cell.styles.fontStyle = 'bold';
+        }
+      },
+      margin: {
+        top: 20,
+        bottom: 20,
+        left: 20,
+        right: 20
+      },
+      scale: 0.8 // Adjust the scale of the table
+    });
+    
+    doc.autoTable({
+      head: [['Codigo', 'Fecha de solicitud', 'Apellidos y Nombres', 'Marca - Modelo', 'Numero de Serie', 'Area Solicitante', 'Fecha de  devolución', 'Estado']],
+      body: dataToShow?.map(data => {
         return [
-          formatoNumberCode(data.id),
+          `COD - ${formatoNumberCode(data.id)}`,
           formatDateDDMMYYYY(data.date),
           `${handleDataId(userData, data.userId).lastName} ${handleDataId(userData, data.userId).name}`,
-          `${handleDataId(productData, data.productId).marcaId} ${handleDataId(productData, data.productId).modelId}`,
-          `${handleDataId(productData, data.productId).numSerie}`
+          `${handleNameProduct(data.productId)}`,
+          `${handleDataId(productData, data.productId).numSerie}`,
+          'INFORMATICA',
+          formatDateDDMMYYYY(data.date),
+          handleStateProduct(data.productId)
         ]
       }),
-      startY: 20,
-      theme: 'grid',
+      startY: 80,
+      theme: 'plain',
       tableWidth: 'auto',
-      columnWidth: 'wrap',
       styles: {
         fontSize: 10,
         cellPadding: 1,
         lineWidth: 0.1,
         lineColor: 0,
       },
+      columnStyles: {
+        0: { cellWidth: 25 },
+        1: { cellWidth: 21 },
+        2: { cellWidth: 80 },
+        3: { cellWidth: 34 },
+        4: { cellWidth: 'auto' },
+        5: { cellWidth: 30 },
+        6: { cellWidth: 21 },
+        7: { cellWidth: 14 },
+      },
       didParseCell: (data) => {
+        data.cell.styles.valign = 'middle'; // Centra verticalmente
+        data.cell.styles.halign = 'center'; // Centra horizontalmente
         if (data.column.index === 0) {
           data.cell.styles.fontStyle = 'bold';
         }
@@ -108,72 +208,40 @@ console.log(asignationsData)
   return (
     <section className='my-table'>
 
-    <button onClick={generatePDF}>Generate PDF</button>
-      <section className='flex justify-around'>
-        <div className='flex items-center justify-center w-36 h-36'>
-          <img src="/img/logoPJ.png" className='object-contain w-full h-full' alt="" />
-        </div>
-
-        <div className='text-center grid gap-1'>
-          <h1 className='font-bold text-lg'>CORTE SUPERIOR DE JUSTICIA DE ICA</h1>
-          <h3 className='text-sm'>Area de Informatica y Sistemas</h3>
-          <h2 className='font-medium'>REGISTRO DE CARTUCHOS DE TONER ENGREDADOS Y DEVUELTOS</h2>
-        </div>
-
-        <div className='grid grid-cols-2 justify-center items-center'>
-          <p>Nº</p>
-          <p>CODATE0016</p>
-          <p>Fecha</p>
-          <p>27/03/2024</p>
-        </div>
-      </section>
-
-      <section className='grid grid-cols-2 m-4 border-2 border-black p-2'>
-        <p>SEDE:</p>
-        <p>SEDE:</p>
-        <p>DEPENDENCIA:</p>
-        <p>DEPENDENCIA:</p>
-        <p>CARGO:</p>
-        <p>CARGO:</p>
-      </section>
-
-      <section>
-      <table className='text-xs text-center'>
-        <thead>
+      
+      <section className=''>
+      <table className='m-auto text-xs text-center border-collapse border border-black'>
+        <thead className='bg-gray-200'>
           <tr>
-            <th className='border border-black w-[80px]'>Codigo</th>
-            <th className='border border-black'>Fecha de solicitud</th>
-            <th className='border border-black w-[250px]'>Apellidos y Nombres</th>
-            <th className='border border-black w-[120px]'>Marca Modelo</th>
-            <th className='border border-black'>Numero de Serie</th>
-            <th className='border border-black'>Area solicitante(*)</th>
-            <th className='border border-black'>Firma de recepción</th>
-            <th className='border border-black'>Fecha de devolución</th>
-            <th className='border border-black'>Firma del personal que entrega</th>
-            <th className='border border-black'>Sello y firma del Administrador/Observaciones</th>
-            <th className='border border-black'>Observaciones</th>
+            <th className='p-2 w-24'>Código</th>
+            <th className='p-2'>Fecha de solicitud</th>
+            <th className='p-2 w-40'>Apellidos y Nombres</th>
+            <th className='p-2 w-32'>Marca - Modelo</th>
+            <th className='p-2'>Número de Serie</th>
+            <th className='p-2'>Área Solicitante</th>
+            <th className='p-2'>Fecha de devolución</th>
+            <th className='p-2'>Estado</th>
           </tr>
         </thead>
         <tbody>
-            {
-              asignationsData?.map(asignation => (
-                <tr key={asignation.id}>
-                  <td className='border border-black'>COD-{formatoNumberCode(asignation.id)}</td>
-                  <td className='border border-black'>{formatDateDDMMYYYY(asignation.date)}</td>
-                  <td className='border border-black'>{handleNameUser(asignation.userId)}</td>
-                  <td className='border border-black'>{handleNameProduct(asignation.productId)}</td>
-                  <td className='border border-black'>{handleNameProductSerie(asignation.productId)}</td>
-                  <td className='border border-black'>INFORMATICA</td>
-                  <td className='border border-black'></td>
-                  <td className='border border-black'>{formatDateDDMMYYYY(asignation.date)}</td>
-                  <td className='border border-black'></td>
-                  <td className='border border-black'></td>
-                  <td className='border border-black'></td>
-                </tr>
-              ))
-            }
+          {dataToShow?.map(asignation => (
+            <tr key={asignation.id} className='bg-white'>
+              <td className='p-2 border border-black'>COD-{formatoNumberCode(asignation.id)}</td>
+              <td className='p-2 border border-black'>{formatDateDDMMYYYY(asignation.date)}</td>
+              <td className='p-2 border border-black'>{handleNameUser(asignation.userId)}</td>
+              <td className='p-2 border border-black'>{handleNameProduct(asignation.productId)}</td>
+              <td className='p-2 border border-black'>{handleNameProductSerie(asignation.productId)}</td>
+              <td className='p-2 border border-black'>INFORMATICA</td>
+              <td className='p-2 border border-black'>{formatDateDDMMYYYY(asignation.date)}</td>
+              <td className='p-2 border border-black'>{handleStateProduct(asignation.productId)}</td>
+            </tr>
+          ))}
         </tbody>
       </table>
+
+
+    <button className='shadow-md py-2 px-6 m-4 rounded-md text-white font-semibold bg-green-600/90 hover:bg-green-500' onClick={generatePDF}>Descargar Informe</button>
+
       </section>
     </section>
   );
