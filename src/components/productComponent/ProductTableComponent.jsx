@@ -9,6 +9,7 @@ import { formatDateDDMMYYYY } from '../../utils/date';
 import { changeIsShowUpdatedProduct, setProduct } from '../../store/slices/product.Slice';
 
 const ProductTableComponent = ({ products, showDateSalida }) => {
+  const [productEnable, setProductEnable] = useState([])
   const [modelProduct, setModelProduct] = useState();
   const [marcas, setMarcas] = useState();
   const [users, setUsers] = useState();
@@ -52,6 +53,7 @@ const ProductTableComponent = ({ products, showDateSalida }) => {
       .get('/user')
       .then((data) => setUsers(data.data.users))
       .catch((err) => console.log(err));
+
   }, []);
 
   const getModelName = (modelId) => {
@@ -65,7 +67,7 @@ const ProductTableComponent = ({ products, showDateSalida }) => {
     if (!users) return "Cargando...";
 
     const user = users.find(user => user.id === userId);
-    return user ? user.userName : "Usuario no encontrado"
+    return user ? user.userName.toUpperCase() : "Usuario no encontrado"
   };
 
   const getMarca = (marcaId) => {
@@ -76,21 +78,20 @@ const ProductTableComponent = ({ products, showDateSalida }) => {
   };
 
   return (
-    <table className="w-full text-center">
+    <table className="w-full text-center text-sm border-collapse borber border-black">
       <thead>
-        <tr className="bg-gray-800 text-white">
+        <tr className="bg-gray-200">
           <th className="px-4 py-2 border border-white">ID</th>
           <th className="px-4 py-2 border border-white">Marca</th>
           <th className="px-4 py-2 border border-white">Modelo</th>
           <th className="px-4 py-2 border border-white">Número de Serie</th>
           <th className="px-4 py-2 border border-white">Usuario</th>
           <th className="px-4 py-2 border border-white">Fecha de entrada</th>
-          {showDateSalida && <th className="px-4 py-2 border border-white">Fecha de salida</th>}
           {!showDateSalida && <th className="px-4 py-2 border border-white">Acciones</th>}
         </tr>
       </thead>
       <tbody>
-        {products?.map((product) => (
+        {(products.filter(item => item.state === 'enable'))?.map((product) => (
           <tr key={product.id}>
             <td className="border border-black">{product.id}</td>
             <td className="border border-black">{getMarca(product.marcaId)}</td>
@@ -98,19 +99,16 @@ const ProductTableComponent = ({ products, showDateSalida }) => {
             <td className="border border-black">{product.numSerie}</td>
             <td className="border border-black">{getUserName(product.userId)}</td>
             <td className="border border-black">{formatDateDDMMYYYY(product.dateInitial)}</td>
-            {showDateSalida && <td className="border border-black">{formatDateDDMMYYYY(product.dateFinal)}</td>}
-            {!showDateSalida && (
-              <td className="border m-auto border-black">
-                <div className="grid grid-cols-2 justify-center items-center my-1 mx-4">
-                  <div className='w-[25px] h-[25px] inline-block p-[3px] rounded-md hover:cursor-pointer m-auto' onClick={() => handleClickUpdatedProduct(product)}>
-                    <img className='w-full h-full object-contain' src="/icons/edit.png" alt="" />
-                  </div>
-                  <div className='w-[25px] h-[25px] inline-block text-center p-[3px] rounded-md hover:cursor-pointer m-auto' onClick={() => handleClickDeletedProduct(product.id)}>
-                    <img className='w-full h-full object-contain' src="/icons/trash.png" alt="" />
-                  </div>
+            <td className="border m-auto border-black">
+              <div className="grid grid-cols-2 justify-center items-center p-1 mx-4">
+                <div className='w-[20px] h-[20px] inline-block rounded-md hover:cursor-pointer m-auto' onClick={() => handleClickUpdatedProduct(product)}>
+                  <img className='w-full h-full object-contain' src="/icons/edit.png" alt="" />
                 </div>
-              </td>
-            )}
+                <div className='w-[20px] h-[20px] inline-block text-center rounded-md hover:cursor-pointer m-auto' onClick={() => handleClickDeletedProduct(product.id)}>
+                  <img className='w-full h-full object-contain' src="/icons/trash.png" alt="" />
+                </div>
+              </div>
+            </td>
           </tr>
         ))}
       </tbody>

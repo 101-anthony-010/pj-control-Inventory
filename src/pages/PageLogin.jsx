@@ -41,7 +41,7 @@ const PageLogin = () => {
   }
 
   if (token && (user.rol === 'admin')) {
-    return <Navigate to="/asignation" />;
+    return <Navigate to="/control" />;
   } else if (token && (user.rol === 'employee')) {
     return <Navigate to="/employee" />;
   } else {

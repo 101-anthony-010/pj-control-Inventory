@@ -4,6 +4,8 @@ const initialState = {
   isShowCreateUser: false,
   isShowUpdatedUser: false,
   isShowInfoUser: false,
+  isShowSede: false,
+  isShowDeleteUser: false,
 }
 
 const userSlice = createSlice({
@@ -19,6 +21,12 @@ const userSlice = createSlice({
     changeIsShowInfoUser: (state) => {
       state.isShowInfoUser = !state.isShowInfoUser
     },
+    changeIsShowSede: (state) => {
+      state.isShowSede = !state.isShowSede
+    },
+    changeIsShowDeleteUser: (state) => {
+      state.isShowDeleteUser = !state.isShowDeleteUser
+    },
     setUser: (state, action) => {
       const newState = { ...state, ...action.payload }
       localStorage.setItem('userInfo', JSON.stringify(newState))
@@ -30,6 +38,8 @@ export const {
     changeIsShowCreateUser,
     changeIsShowUpdatedUser,
     changeIsShowInfoUser,
+    changeIsShowSede,
+    changeIsShowDeleteUser,
     setUser
 } = userSlice.actions
 

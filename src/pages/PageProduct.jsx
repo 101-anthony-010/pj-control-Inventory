@@ -28,23 +28,19 @@ const PageProduct = () => {
   useEffect(() => {
     axiosPoderJudicial
       .get('/product')
-      .then((response) => {
-        const allProducts = response.data.products;
-        setProducts(allProducts);
-        setFilteredProducts(allProducts.filter(product => product.state === 'enable'));
-      })
-      .catch((err) => console.log(err));
+      .then(res => setProducts(res.data.products))
+      .catch(err => console.log(err));
   }, []);
 
-  const handleFilterByState = (state) => {
-    const filteredByState = products.filter(product => product.state === state);
-    setFilteredProducts(filteredByState);
-    if (state === 'enable') {
-      setIsEntradaSelected(true);
-    } else {
-      setIsEntradaSelected(false);
-    }
-  }
+  // const handleFilterByState = (state) => {
+  //   const filteredByState = products.filter(product => product.state === state);
+  //   setFilteredProducts(filteredByState);
+  //   if (state === 'enable') {
+  //     setIsEntradaSelected(true);
+  //   } else {
+  //     setIsEntradaSelected(false);
+  //   }
+  // }
 
   return (
     <>
@@ -58,29 +54,22 @@ const PageProduct = () => {
         <EditProduct/>
       </section>
 
-      <section className='m-2 flex justify-between'>
-        <div className='grid grid-cols-2 gap-4'>
-          <button onClick={() => handleFilterByState('enable')} className={`rounded-md ${isEntradaSelected ? 'bg-blue-500 text-white' : 'bg-slate-200'} px-4`}>Entrada</button>
-          <button onClick={() => handleFilterByState('disable')} className={`rounded-md ${!isEntradaSelected ? 'bg-blue-500 text-white' : 'bg-slate-200'} px-4`}>Salida</button>
-        </div>
-        
+      <section className='ml-[100px] px-10 mt-[80px] flex justify-between'>
+
+        <section className='text-center my-4'>
+          <h2 className='font-bold text-2xl'>Registro de Toner</h2>
+        </section>
+          
         <section className='grid grid-cols-[1fr_auto_auto] gap-2'>
-          {/* <input type="text" className='bg-gray-100 rounded-md p-2'/>
-          <button className='p-2 flex items-center justify-center bg-green-500 rounded-md'>
-            <box-icon color="white" name='search-alt-2' ></box-icon>
-          </button> */}
           <button onClick={handleClickChangeShowCreateProduct} className='w-[35px] h-[35px] bg-green-500 hover:bg-green-500/75 rounded-md p-2 shadow'>
             <img className='w-full h-full object-contain' src="/icons/add_user.png" alt="" />
           </button>
         </section>
       </section>
 
-      <section className='text-center my-4'>
-        <h2 className='font-bold text-2xl'>Tabla de productos</h2>
-      </section>
 
       <section className='w-[80%] m-auto'>
-        <ProductTableComponent products={filteredProducts} showDateSalida={!isEntradaSelected} />
+        <ProductTableComponent products={products} showDateSalida={!isEntradaSelected} />
       </section>
     </>
   );

@@ -8,7 +8,7 @@ import { axiosPoderJudicial } from '../../utils/configAxios';
 import { changeIsShowUpdatedUser, setUser } from '../../store/slices/user.slice';
 import { lowerUpperCase } from '../../utils/lowerUpperCase';
 
-const UserTableComponent = () => {
+const UserTableComponent = ({handleChangeIsShowDeleteUser}) => {
   const [users, setUsers] = useState([]);
   const [sedes, setSedes] = useState([]);
   const [dependencias, setDependencias] = useState([]);
@@ -68,7 +68,7 @@ const UserTableComponent = () => {
   const getItemName = (itemsArray, itemId) => {
     if (!itemsArray) return "Cargando...";
     const item = itemsArray.find(item => item.id === itemId);
-    return item ? item.name : "No encontrado";
+    return item ? lowerUpperCase(item.name) : "No encontrado";
   };
 
   if (loading) {
@@ -78,7 +78,7 @@ const UserTableComponent = () => {
   return (
     <table className="w-full text-center">
       <thead>
-        <tr className="bg-gray-800 text-white">
+        <tr className="bg-gray-200">
           <th className="px-4 py-2 border border-white">ID</th>
           <th className="px-4 py-2 border border-white">Nombre</th>
           <th className="px-4 py-2 border border-white">Apellido</th>

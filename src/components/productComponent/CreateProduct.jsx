@@ -22,10 +22,10 @@ const CreateProduct = () => {
   const submit = (data) => {
     axiosPoderJudicial
       .post('/product', data)
-      .then((res) => console.log(res))
+      .then((res) => console.log(res.data.product))
       .catch((err) => console.log(err))    
 
-
+    // console.log(data)
     window.confirm("Producto creado con exito")
     reset()
   }

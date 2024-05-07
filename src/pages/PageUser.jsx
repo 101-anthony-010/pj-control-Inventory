@@ -5,53 +5,58 @@ import { useDispatch, useSelector } from 'react-redux'
 import UserTableComponent from '../components/userComponents/UserTableComponent'
 import CreateUser from '../components/userComponents/CreateUser'
 import EditUser from '../components/userComponents/EditUser'
+import DeleteUser from '../components/userComponents/DeleteUser'
 import Navbar from '../components/layout/Navbar'
 
 //Slices
-import userSlice, { changeIsShowCreateUser, changeIsShowUpdatedUser } from '../store/slices/user.slice'
+import { changeIsShowCreateUser, changeIsShowDeleteUser, changeIsShowUpdatedUser } from '../store/slices/user.slice'
 
 const PageUser = () => {
-  const [users, setUsers] = useState();
-  const { isShowCreateUser, isShowUpdatedUser } = useSelector(store => store.userSlice);
+  const { isShowCreateUser, isShowUpdatedUser, isShowDeleteUser } = useSelector(store => store.userSlice);
   const dispatch = useDispatch();
 
   const handleChangeIsShowCreateUser = () => {
     dispatch(changeIsShowCreateUser());
   };
-
   const handleChangeIsShowUpdatedUser = () => {
     dispatch(changeIsShowUpdatedUser());
   };
+  const handleChangeIsShowDeleteUser = () => {
+    console.log(isShowDeleteUser)
+    dispatch(changeIsShowDeleteUser());
+  }
 
   return (
     <>
       <Navbar/>
-      <section className={`bg-black/20 fixed w-full h-full flex items-center justify-center ${isShowCreateUser ? "top-0" : "-top-full"}`}>
-        <CreateUser handleChangeIsShowCreateUser={handleChangeIsShowCreateUser} setUsers={setUsers} />
+      <section className={`bg-black/20 z-50 fixed w-full h-full flex items-center justify-center ${isShowCreateUser ? "top-0" : "-top-full"}`}>
+        <CreateUser handleChangeIsShowCreateUser={handleChangeIsShowCreateUser} />
       </section>
 
-      <section className={`bg-black/20 fixed w-full h-full flex items-center justify-center ${isShowUpdatedUser ? "top-0" : "-top-full"}`}>
+      <section className={`bg-black/20 z-50 fixed w-full h-full flex items-center justify-center ${isShowUpdatedUser ? "top-0" : "-top-full"}`}>
         <EditUser handleChangeIsShowUpdatedUser={handleChangeIsShowUpdatedUser} />
       </section>
 
-      <section className='m-2 flex justify-end'>
-        <section className='grid grid-cols-[1fr_auto_auto] gap-2'>
-          {/* <input type="text" className='bg-gray-100 rounded-md p-2'/>
-          <button className='p-2 flex items-center justify-center bg-green-500 rounded-md'>
-            <box-icon color="white" name='search-alt-2' ></box-icon>
-          </button> */}
-          <button onClick={handleChangeIsShowCreateUser} className='w-[35px] h-[35px] bg-green-500 rounded-md p-2 hover:bg-green-500/75 shadow'>
-            <img className='w-full h-full object-contain' src="/icons/add_user.png" alt="" />
-          </button>
+      <section className={`bg-black/20 z-50 fixed w-full h-full flex items-center justify-center ${isShowDeleteUser ? "top-0" : "-top-full"}`}>
+        <DeleteUser handleChangeIsShowDeleteUser={handleChangeIsShowDeleteUser} />
+      </section>
+
+      <section className='l-[100px] px-10 mt-[80px]'>
+        <section className='mx-16 max-w-5xl'>
+          <section className='flex justify-between items-center gap-2'>
+            <section className='m-4'>
+              <h1 className='text-center text-2xl font-bold'>Tabla de Usuarios</h1>
+            </section>
+
+            <button onClick={handleChangeIsShowCreateUser} className='w-[45px] h-[45px] bg-green-500 rounded-md p-2 hover:bg-green-500/75 shadow'>
+              <img className='w-full h-full object-contain' src="/icons/add.png" alt="" />
+            </button>
+          </section>
         </section>
-      </section>
 
-      <section className='m-4'>
-        <h1 className='text-center text-2xl font-bold'>Tablas de Usuarios</h1>
-      </section>
-
-      <section className='w-[80%] m-auto'>
-        <UserTableComponent users={users} setUsers={setUsers} handleChangeIsShowUpdatedUser={handleChangeIsShowUpdatedUser} />
+        <section className='w-[80%] m-auto'>
+          <UserTableComponent handleChangeIsShowDeleteUser={handleChangeIsShowDeleteUser} />
+        </section>
       </section>
     </>
   )

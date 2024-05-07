@@ -64,7 +64,7 @@ const PageAsignation = () => {
         <ExportPDFButton handleClickChangeShowExportPdf={handleClickChangeShowExportPdf} asignations={asignations} />
       </section> */}
 
-      <section className='flex gap-4 justify-between p-2'>
+      <section className='flex gap-4 justify-between p-2 mt-[150px] ml-[100px]'>
         <div className='flex gap-4'>
           <button onClick={() => setIsInUseSelected(true)} className={`rounded-md ${isInUseSelected ? 'bg-blue-500 text-white' : 'bg-slate-200'} px-4`}>En uso</button>
           <button onClick={() => setIsInUseSelected(false)} className={`rounded-md ${!isInUseSelected ? 'bg-blue-500 text-white' : 'bg-slate-200'} px-4`}>De baja</button>
