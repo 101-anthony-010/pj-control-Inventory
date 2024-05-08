@@ -23,7 +23,7 @@ import PageMarca from './pages/PageMarca';
 
 function App() {
   return (
-    <>
+    <div className='text-slate-700'>
       {/* <Navbar/> */}
       <Routes>
         
@@ -47,7 +47,7 @@ function App() {
         <Route path='/' element={<PageLogin/>}/>
         <Route path='/*' element={<PageNotFound/>}/>
       </Routes>
-    </>
+    </div>
   )
 }
 
