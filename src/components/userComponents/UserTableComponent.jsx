@@ -7,6 +7,7 @@ import { axiosPoderJudicial } from '../../utils/configAxios';
 //Slice
 import { changeIsShowUpdatedUser, setUser } from '../../store/slices/user.slice';
 import { lowerUpperCase } from '../../utils/lowerUpperCase';
+import axios from 'axios';
 
 const UserTableComponent = ({handleChangeIsShowDeleteUser}) => {
   const [users, setUsers] = useState([]);
@@ -62,7 +63,6 @@ const UserTableComponent = ({handleChangeIsShowDeleteUser}) => {
     } else {
       console.log("Eliminación cancelada.");
     }
-
   };
 
   const getItemName = (itemsArray, itemId) => {
@@ -75,10 +75,12 @@ const UserTableComponent = ({handleChangeIsShowDeleteUser}) => {
     return <p>Cargando...</p>;
   }
 
+  const sortedUsers = users.sort((a, b) => b.id - a.id)
+
   return (
-    <table className="w-full text-center">
+    <table className="w-full text-center my-10">
       <thead>
-        <tr className="bg-gray-200">
+        <tr className="bg-gray-200 uppercase text-base">
           <th className="px-4 py-2 border border-white">ID</th>
           <th className="px-4 py-2 border border-white">Nombre</th>
           <th className="px-4 py-2 border border-white">Apellido</th>
@@ -92,13 +94,13 @@ const UserTableComponent = ({handleChangeIsShowDeleteUser}) => {
       <tbody>
         {users?.map((user) => (
           <tr key={user.id}>
-            <td className="border border-slate-700">{user.id}</td>
-            <td className="border border-slate-700">{lowerUpperCase(user.name)}</td>
-            <td className="border border-slate-700">{lowerUpperCase(user.lastName)}</td>
-            <td className="border border-slate-700">{user.userName.toUpperCase()}</td>
-            <td className="border border-slate-700">{getItemName(sedes, user.sedeId)}</td>
-            <td className="border border-slate-700">{getItemName(dependencias, user.dependenciaId)}</td>
-            <td className="border border-slate-700">{getItemName(cargos, user.cargoId)}</td>
+            <td className="font-normal text-xs border border-slate-700">{user.id}</td>
+            <td className="font-normal text-xs border border-slate-700">{lowerUpperCase(user.name)}</td>
+            <td className="font-normal text-xs border border-slate-700">{lowerUpperCase(user.lastName)}</td>
+            <td className="font-normal text-xs border border-slate-700">{user.userName.toUpperCase()}</td>
+            <td className="font-normal text-xs border border-slate-700 uppercase">{getItemName(sedes, user.sedeId)}</td>
+            <td className="font-normal text-xs border border-slate-700 uppercase">{getItemName(dependencias, user.dependenciaId)}</td>
+            <td className="font-normal text-xs border border-slate-700 uppercase">{getItemName(cargos, user.cargoId)}</td>
             <td className="border m-auto border-slate-700">
               <div className="grid grid-cols-2 justify-center items-center my-1 mx-4">
                 <div className='w-[25px] h-[25px] inline-block p-[3px] rounded-md hover:cursor-pointer m-auto' onClick={() => handleChangeIsShowUpdatedUser(user)}>

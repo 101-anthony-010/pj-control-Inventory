@@ -121,14 +121,14 @@ const Formato = ({ dataToShow }) => {
     doc.text('REGISTRO DE CARTUCHOS DE TONER INGREZADOS Y DEVUELTOS', 140, 32, { align: 'center' });
     
     doc.autoTable({
-      head: [['SEDE', 'SEDE']],
+      head: [['SEDE', '                                                       ']],
       body: [
-        ['DEPENDENCIA', 'DEPENDENCIA'],
-        ['CARGO', 'CARGO'],
+        ['DEPENDENCIA', '                                                                  '],
+        ['CARGO', '                                                                              '],
       ],
       startY: 50,
       theme: 'plain',
-      tableWidth: 200,
+      tableWidth: 'auto',
       columnWidth: '50px',
       styles: {
         fontSize: 10,
@@ -206,13 +206,13 @@ const Formato = ({ dataToShow }) => {
 
 
   return (
-    <section className='my-table'>
+    <section className='h-full w-full my-10'>
 
       
-      <section className=''>
-      <table className='m-auto text-xs text-center border-collapse border border-black'>
+      <section className='w-full h-full'>
+      <table className='m-auto w-full h-full text-xs text-center border-collapse border border-slate-700'>
         <thead className='bg-gray-200'>
-          <tr>
+          <tr className='uppercase'>
             <th className='p-2 w-24'>Código</th>
             <th className='p-2'>Fecha de solicitud</th>
             <th className='p-2 w-40'>Apellidos y Nombres</th>
@@ -226,14 +226,14 @@ const Formato = ({ dataToShow }) => {
         <tbody>
           {dataToShow?.map(asignation => (
             <tr key={asignation.id} className='bg-white'>
-              <td className='p-2 border border-black'>COD-{formatoNumberCode(asignation.id)}</td>
-              <td className='p-2 border border-black'>{formatDateDDMMYYYY(asignation.date)}</td>
-              <td className='p-2 border border-black'>{handleNameUser(asignation.userId)}</td>
-              <td className='p-2 border border-black'>{handleNameProduct(asignation.productId)}</td>
-              <td className='p-2 border border-black'>{handleNameProductSerie(asignation.productId)}</td>
-              <td className='p-2 border border-black'>INFORMATICA</td>
-              <td className='p-2 border border-black'>{formatDateDDMMYYYY(asignation.date)}</td>
-              <td className='p-2 border border-black'>{handleStateProduct(asignation.productId)}</td>
+              <td className='p-2 border border-slate-700'>COD-{formatoNumberCode(asignation.id)}</td>
+              <td className='p-2 border border-slate-700'>{formatDateDDMMYYYY(asignation.date)}</td>
+              <td className='p-2 border border-slate-700'>{handleNameUser(asignation.userId)}</td>
+              <td className='p-2 border border-slate-700 uppercase'>{handleNameProduct(asignation.productId)}</td>
+              <td className='p-2 border border-slate-700 uppercase'>{handleNameProductSerie(asignation.productId)}</td>
+              <td className='p-2 border border-slate-700'>INFORMATICA</td>
+              <td className='p-2 border border-slate-700'>{formatDateDDMMYYYY(asignation.date)}</td>
+              <td className='p-2 border border-slate-700'>{handleStateProduct(asignation.productId)}</td>
             </tr>
           ))}
         </tbody>

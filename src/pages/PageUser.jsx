@@ -10,10 +10,20 @@ import Navbar from '../components/layout/Navbar'
 
 //Slices
 import { changeIsShowCreateUser, changeIsShowDeleteUser, changeIsShowUpdatedUser } from '../store/slices/user.slice'
+import { axiosPoderJudicial } from '../utils/configAxios'
 
 const PageUser = () => {
+  const [users, setUsers] = useState([]);
   const { isShowCreateUser, isShowUpdatedUser, isShowDeleteUser } = useSelector(store => store.userSlice);
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    axiosPoderJudicial
+      .get('/user')
+      .then(res => setUsers(res.data.users))
+      .catch(err => console.log(err))
+  }, [])
+  
 
   const handleChangeIsShowCreateUser = () => {
     dispatch(changeIsShowCreateUser());
@@ -29,6 +39,7 @@ const PageUser = () => {
   return (
     <>
       <Navbar/>
+
       <section className={`bg-black/20 z-50 fixed w-full h-full flex items-center justify-center ${isShowCreateUser ? "top-0" : "-top-full"}`}>
         <CreateUser handleChangeIsShowCreateUser={handleChangeIsShowCreateUser} />
       </section>
@@ -41,22 +52,24 @@ const PageUser = () => {
         <DeleteUser handleChangeIsShowDeleteUser={handleChangeIsShowDeleteUser} />
       </section>
 
-      <section className='l-[100px] px-10 mt-[80px]'>
-        <section className='mx-16 max-w-5xl'>
-          <section className='flex justify-between items-center gap-2'>
-            <section className='m-4'>
-              <h1 className='text-center text-2xl font-bold'>Tabla de Usuarios</h1>
-            </section>
+      <section className='ml-[80px] px-10 mt-[80px]'>
 
-            <button onClick={handleChangeIsShowCreateUser} className='w-[45px] h-[45px] bg-green-500 rounded-md p-2 hover:bg-green-500/75 shadow'>
-              <img className='w-full h-full object-contain' src="/icons/add.png" alt="" />
-            </button>
+        <section className='text-center my-4 flex justify-between items-center'>
+          <section className='shadow-md bg-slate-100 flex w-[440px] items-center justify-center'>
+            <div className='w-[140px] h-[100px] bg-orange-200'>
+              <img className='p-4 w-full h-full object-contain' src="/icons/team.png" alt="" />
+            </div>
+            <div className='w-[300px] h-[100px] font-semibold m-auto py-5 text-center items-center justify-center grid'>
+              <p className='text-xl text-center uppercase'>Registro de Usuarios</p>
+              <p className='font-semibold text-xl'>{users.length}</p>
+            </div>
           </section>
+          <div className='w-[35px] h-[35px] hover:cursor-pointer hover:bg-green-400 rounded-full shadow-md' onClick={handleChangeIsShowCreateUser}>
+            <img className='w-full h-full object-contain' src="/icons/add_user.png" alt="" />
+          </div>
         </section>
 
-        <section className='w-[80%] m-auto'>
-          <UserTableComponent handleChangeIsShowDeleteUser={handleChangeIsShowDeleteUser} />
-        </section>
+        <UserTableComponent handleChangeIsShowDeleteUser={handleChangeIsShowDeleteUser} />
       </section>
     </>
   )

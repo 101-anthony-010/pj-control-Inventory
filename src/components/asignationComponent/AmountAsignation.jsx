@@ -1,21 +1,22 @@
 import React from 'react'
 import { useEffect } from 'react'
+import { useForm } from 'react-hook-form';
 
 //Utils
 import { axiosPoderJudicial } from '../../utils/configAxios';
-import { useForm } from 'react-hook-form';
 
-const AmountAsignation = ({ handleClickChangeShowAmountAsignation, infoAsignation }) => {
-  const { register, handleSubmit, reset, setValue } = useForm()
-  
+const AmountAsignation = ({ handleClickChangeShowAmountAsignation, amountId }) => {
+  const { register, handleSubmit, reset } = useForm()
+
   const submit = (data) => {
     axiosPoderJudicial
-      .patch(`/asignation/amountPages/${infoAsignation.productId}`,data)
+      .patch(`/asignation/amountPages/${amountId.productId}`,data)
       .then(res => console.log(res.data))
       .catch(err => console.log(err))
     
     reset()
-    handleClickChangeShowAmountAsignation({})
+    window.location.reload();
+    // handleClickChangeShowAmountAsignation({})
   }
 
   return (
@@ -28,7 +29,7 @@ const AmountAsignation = ({ handleClickChangeShowAmountAsignation, infoAsignatio
         <label htmlFor="">Cantidad de Hojas de Toner</label>
         <input type="number" {...register('amountPages')} id='amountPages' name='amountPages' className='p-2 bg-slate-100 rounded-md' />
 
-        <button className='bg-green-500 text-white font-bold p-2 rounded-md'>Agregar</button>
+        <button className='hover:bg-green-400 text-base bg-green-500 text-white font-bold p-2 rounded-md'>Agregar</button>
       </form>
      
     </section>

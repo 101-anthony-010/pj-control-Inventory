@@ -12,8 +12,20 @@ const EditUser = ({ handleChangeIsShowUpdatedUser }) => {
   const [sedes, setSedes] = useState([]);
   const [dependencias, setDependencias] = useState([]);
   const [cargos, setCargos] = useState([]);
-  const { register, handleSubmit, reset } = useForm();
-  const { id, name, lastName, dni, email, phone, userName } = useSelector(store => store.userSlice);
+  const { id, name, lastName, dni, email, phone, userName, sedeId, dependenciaId, cargoId } = useSelector(store => store.userSlice);
+  const { register, handleSubmit, reset, setValue, getValues } = useForm({
+    defaultValues: {
+      name: name,
+      lastName: lastName,
+      dni: dni,
+      phone: phone,
+      email: email,
+      userName: userName,
+      sedeId: sedeId,
+      dependenciaId: dependenciaId,
+      cargoId: cargoId,
+    }
+  });
 
   useEffect(() => {
     const fetchData = async () => {
@@ -27,22 +39,35 @@ const EditUser = ({ handleChangeIsShowUpdatedUser }) => {
         setSedes(sedesResponse.data.sedes);
         setDependencias(dependenciasResponse.data.dependencias);
         setCargos(cargosResponse.data.cargos);
+
+        // Establecer valores por defecto en los campos del formulario
+        setValue('name', name);
+        setValue('lastName', lastName);
+        setValue('dni', dni);
+        setValue('phone', phone);
+        // setValue('email', email);
+        setValue('userName', userName);
+        setValue('sedeId', sedeId);
+        setValue('dependenciaId', dependenciaId);
+        setValue('cargoId', cargoId);
       } catch (error) {
         console.error('Error fetching data:', error);
       }
     };
 
     fetchData();
-  }, []);
+  }, [name, lastName, dni, phone, email, userName, sedeId, dependenciaId, cargoId, setValue]);
 
-  const submit = async (data) => {
+  const submit = (data) => {
     axiosPoderJudicial
-      .post(`/user/${data}`, data)
+      .patch(`/user/${id}`, data)
       .then(res => console.log(res))
-      .catch(err => console.log(err))
+      .catch(err => console.log(err));
 
-    handleChangeIsShowUpdatedUser();
+    // handleChangeIsShowUpdatedUser();
     reset();
+    window.location.reload();
+
   };
 
   return (
@@ -51,28 +76,28 @@ const EditUser = ({ handleChangeIsShowUpdatedUser }) => {
         <img className='w-full h-full object-contain' src="/icons/close.png" alt="" />
       </button>
 
-      <form className='grid grid-cols-2 gap-2' onSubmit={handleSubmit(submit)}>
+      <form className='grid grid-cols-2 gap-2 items-center justify-center' onSubmit={handleSubmit(submit)}>
 
         <label htmlFor="name">Nombre:</label>
-        <input className='rounded-md bg-slate-100 p-2' defaultValue={name} type="text" {...register("name")} name="name" required />
+        <input className='rounded-md bg-slate-100 p-2' type="text" {...register("name")} name="name" required />
 
         <label htmlFor="lastName">Apellidos:</label>
-        <input className='rounded-md bg-slate-100 p-2' defaultValue={lastName} type="text" {...register("lastName")}  name="lastName" required />
+        <input className='rounded-md bg-slate-100 p-2' type="text" {...register("lastName")}  name="lastName" required />
 
         <label htmlFor="dni">DNI:</label>
-        <input className='rounded-md bg-slate-100 p-2' defaultValue={dni} type="text" {...register("dni")}  name="dni" required />
+        <input className='rounded-md bg-slate-100 p-2' type="number" {...register("dni")}  name="dni" required />
 
         <label htmlFor="phone">Teléfono:</label>
-        <input className='rounded-md bg-slate-100 p-2' defaultValue={phone} type="text" {...register("phone")} name="phone" required />
-
+        <input className='rounded-md bg-slate-100 p-2' type="number" {...register("phone")} name="phone" required />
+{/* 
         <label htmlFor="email">Correo:</label>
-        <input className='rounded-md bg-slate-100 p-2' defaultValue={email} type="email" {...register("email")}  name="email" required />
-
+        <input className='rounded-md bg-slate-100 p-2' type="email" {...register("email")}  name="email" required /> */}
+{/* 
         <label htmlFor="password">Contraseña:</label>
-        <input className='rounded-md bg-slate-100 p-2' defaultValue={''} type="password" {...register("password")} name="password" required />
+        <input className='rounded-md bg-slate-100 p-2' type="password" {...register("password")} name="password" required /> */}
 
         <label htmlFor="userName">Usuario:</label>
-        <input className='rounded-md bg-slate-100 p-2' defaultValue={userName} type="text" {...register("userName")}  name="userName" required />
+        <input className='rounded-md bg-slate-100 p-2' type="text" {...register("userName")}  name="userName" required />
 
         <label htmlFor="sedeId">Sede:</label>
         <select className='rounded-md bg-slate-100 p-2' name="sedeId" {...register("sedeId")} >
@@ -92,7 +117,7 @@ const EditUser = ({ handleChangeIsShowUpdatedUser }) => {
           {cargos?.map(cargo => <option key={cargo.id} value={cargo.id}>{cargo.name}</option>)}
         </select>
 
-        <button type="submit" className='bg-yellow-500 text-white rounded-md col-span-2 p-2 font-bold'>Guardar Cambios</button>
+        <button type="submit" className='bg-yellow-500 hover:bg-yellow-400 shadow text-white rounded-md col-span-2 p-2 font-bold'>Guardar Cambios</button>
       </form>
 
     </section>

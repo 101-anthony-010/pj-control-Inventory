@@ -24,17 +24,15 @@ const CreateUser = ({ handleChangeIsShowCreateUser }) => {
   }, []);
 
   const submit = (data) => {
-    console.log(data)
     axiosPoderJudicial
       .post('/user', data)
       .then(res => console.log(res.data.user))
       .catch(err => console.log(err))
 
-    handleChangeIsShowCreateUser()
+    // handleChangeIsShowCreateUser()
     window.confirm("Usuario creado con exito")
     window.location.reload();
-    
-    }
+  }
 
   return (
     <section className='bg-white max-w-2xl rounded-md p-12 relative'>
@@ -42,7 +40,7 @@ const CreateUser = ({ handleChangeIsShowCreateUser }) => {
         <img className='w-full h-full object-contain' src="/icons/close.png" alt="" />
       </button>
 
-      <form className='grid grid-cols-2 gap-2' onSubmit={handleSubmit(submit)}>
+      <form className='grid grid-cols-2 gap-2 justify-center items-center' onSubmit={handleSubmit(submit)}>
         
         <label htmlFor="name">Nombre:</label>
         <input className='rounded-md p-2 bg-slate-100' type="text"{...register("name")} required />
@@ -83,7 +81,7 @@ const CreateUser = ({ handleChangeIsShowCreateUser }) => {
           {cargos?.map(cargo => <option key={cargo.id} value={cargo.id}>{cargo.name}</option>)}
         </select>
 
-        <button className='bg-green-500 text-white rounded-md col-span-2 p-2 font-bold'>Crear Usuario</button>
+        <button className='bg-green-500 shadow hover:bg-green-400 text-base text-white rounded-md col-span-2 p-2 font-bold'>Crear Usuario</button>
       </form>
     </section>
   )

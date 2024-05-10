@@ -40,7 +40,8 @@ const PageControlPanel = () => {
   return (
     <>
       <Navbar/>
-      <section className='ml-[100px] mt-[90px]'>
+      
+      <section className='ml-[80px] mt-[90px]'>
         <section className='grid grid-cols-3 gap-6 w-[1000px] m-auto'>
           <Link to={'/user'} className='shadow-md grid-cols-2 bg-slate-100 cursor-pointer grid w-[280px] items-center justify-center'>
             <div className='w-[140px] h-[100px] bg-green-400'>

@@ -15,12 +15,12 @@ const authSlice = createSlice({
       const newState = {...state, ...action.payload}
       localStorage.setItem("authInfo", JSON.stringify(newState))
       return newState
-  },
-  logOut: (state) => {
-      const newState = {...state, ...initialState}
-      localStorage.setItem("authInfo", JSON.stringify(newState))
-      return newState
-  },
+    },
+    logOut: (state) => {
+        const newState = {...state, ...initialState}
+        localStorage.setItem("authInfo", JSON.stringify(newState))
+        return newState
+    },
   }
 })
 export const { 

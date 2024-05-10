@@ -12,42 +12,50 @@ import Navbar from '../components/layout/Navbar';
 
 
 // Slices
-import { logOut } from '../store/slices/auth.slice';
-import { changeIsShowInfoUser } from '../store/slices/user.slice';
+import { changeIsShowInfoUser, changeIsShowInfoUserUpdated } from '../store/slices/user.slice';
 
 // Utils
 import { axiosPoderJudicial } from '../utils/configAxios';
 import { lowerUpperCase } from '../utils/lowerUpperCase';
 import PJImage from './../../public/img/logoPJ.png'
+import EditInfo from '../components/editComponents/EditInfo';
 
 const PageEmployee = () => {
   const [cargo, setCargo] = useState()
   const [dependencia, setDependencia] = useState()
   const [sede, setSede] = useState()
+  const [info, setInfo] = useState()
 
   const { user } = useSelector(store => store.authSlice)
-  const { isShowInfoUser } = useSelector(store => store.userSlice);
+  const { isShowInfoUser, isShowInfoUserUpdated } = useSelector(store => store.userSlice);
   const dispatch = useDispatch();
-  
+
   useEffect(() => {
     axiosPoderJudicial
       .get(`/sede/${user.sedeId}`)
       .then(res => setSede(res.data.sede))
     axiosPoderJudicial
+      .get(`/info`)
+      .then(res => setInfo(res.data.infos))
+    axiosPoderJudicial
       .get(`/cargo/${user.cargoId}`)
       .then(res => setCargo(res.data.cargo))
     axiosPoderJudicial
       .get(`/dependencia/${user.dependenciaId}`)
-      .then(res => setDependencia(res.data.dependencia))  
-  }, []) 
+      .then(res => setDependencia(res.data.dependencia))
+  }, [isShowInfoUserUpdated])
 
-  const handleClickLogOut = () => {
-    dispatch(logOut());
-    history.push('/')
-  };
+// console.log(info)
+  // const handleClickLogOut = () => {
+  //   dispatch(logOut());
+  //   history.push('/')
+  // };
 
   const handleChangeIsShowInfoUser = () => {
     dispatch(changeIsShowInfoUser());
+  };
+  const handleChangeIsShowInfoUserUpdated = () => {
+    dispatch(changeIsShowInfoUserUpdated());
   };
 
   const handleExportPDF = () => {
@@ -58,10 +66,10 @@ const PageEmployee = () => {
       putOnlyUsedFonts: true,
       compress: true
     });
-    
+
     // Add an image to the left side of the page
     doc.addImage(PJImage, 'PNG', 230, 10, 45, 30);
-  
+
 
     // Add a title to the PDF
     doc.setFont('helvetica','bold');
@@ -73,7 +81,7 @@ const PageEmployee = () => {
     doc.setFont('helvetica','bold');
     doc.setFontSize(11);
     doc.text('FICHA DE REQUERIMIENTOS', 140, 32, { align: 'center' });
-    
+
     // Add the date to the right side of the page
     doc.autoTable({
       head: [['N°', '0000001']],
@@ -138,27 +146,35 @@ const PageEmployee = () => {
       },
       scale: 0.8 // Adjust the scale of the table
     });
-  
-  
-  
+
+
+
     doc.save('table.pdf');
   };
-
+  console.log(info)
   return (
     <>
       <Navbar/>
-      <section>
-        <div className='relative'>
-        <section className='flex mx-10 my-2 justify-between'>
-          <div className='w-[120px] h-[120px]'>
+      <div className="bg-[url('/public/img/PJ.jpg')] bg-center bg-cover w-full h-full absolute top-0 left-0 z-10"></div>
+      <section className={`absolute z-50 -top-2 bg-black/15 w-full h-screen grid items-center justify-center ${isShowInfoUser ? "left-0" : "-left-full"}`}>
+        <AddInfoUser handleChangeIsShowInfoUser={handleChangeIsShowInfoUser} user={user}/>
+      </section>
+
+      <section className={`absolute z-50 -top-2 bg-black/15 w-full h-screen grid items-center justify-center ${isShowInfoUserUpdated ? "left-0" : "-left-full"}`}>
+        <EditInfo info={info} handleChangeIsShowInfoUserUpdated={handleChangeIsShowInfoUserUpdated} user={user}/>
+      </section>
+      <section className="mt-[80px] ml-[80p] grid items-center justify-center gap-4">
+        {/* <div className='relative'> */}
+        {/* <div className='absolute w-full h-full z-10'>
+          <img className='w-full h-full object-contain' src="/img/PJ.jpg" alt="" />
+        </div> */}
+        {/* <section className='flex mx-10 my-2 justify-between items-center relative'>
+          <div className='w-[120px] h-[120px] absolute'>
             <img className='w-full h-full object-contain' src="/img/logoPJ.png" alt="" />
           </div>
-          <Link className='bg-red-500 hover:bg-red-500/75 rounded-md shadow grid items-center justify-center w-[80px] h-[30px]' to={'/'} onClick={() => handleClickLogOut()}>
-            <p className='font-semibold text-white'>Salir</p>
-          </Link>
-        </section>
+        </section> */}
 
-        <section className='grid gap-4 items-center justify-center rounded-md shadow-lg max-w-xs bg-blue-100 m-auto p-4'>
+        <section className='grid gap-4 items-center justify-center w-[450px] rounded-md shadow max-w-xs bg-slate-100 m-auto p-4 z-30'>
           <h2 className='text-2xl font-bold m-auto'>Solicitud de Tonner</h2>
           <div className='w-[100px] h-[100px] m-auto'>
             <img className='rounded-full w-full h-full object-contain' src="/img/user.png" alt="" />
@@ -170,17 +186,28 @@ const PageEmployee = () => {
             <h5>{cargo ? lowerUpperCase(cargo.name) : "cargando"}</h5>
           </section>
           <section className='grid gap-2'>
-            <button onClick={() => handleChangeIsShowInfoUser()} className='font-semibold p-2 rounded-md bg-yellow-400 hover:bg-yellow-400/70 shadow-md'>Información</button>
+            {
+              info?.filter(item => item.userId === user.id) ? (
+                <button onClick={() => handleChangeIsShowInfoUserUpdated()} className='font-semibold p-2 rounded-md bg-yellow-400 hover:bg-yellow-400/70 shadow-md'>Editar</button>
+              ) : (
+                <button onClick={() => handleChangeIsShowInfoUser()} className='font-semibold p-2 rounded-md bg-yellow-400 hover:bg-yellow-400/70 shadow-md'>Información</button>
+              )
+            }
+            
             <button onClick={() => handleExportPDF()} className='font-semibold p-2 rounded-md bg-green-500 hover:bg-green-500/70 shadow-md'>Solicitar</button>
           </section>
         </section>
-
-        <section className={`absolute -top-2 bg-black/15 w-full h-screen grid items-center justify-center ${isShowInfoUser ? "left-0" : "-left-full"}`}>
-          <AddInfoUser handleChangeIsShowInfoUser={handleChangeIsShowInfoUser} user={user}/>
-        </section>
-
+        {
+          info?.filter(item => item.userId === user.id) ? (
+            <section className='grid grid-cols-3 gap-4 rounded-md bg-slate-100 z-40 items-center justify-center p-2 text-center'>
+                <p className='uppercase'>{info[0].marcaPrinter}</p>
+                <p className='uppercase'>{info[0].modelPrinter}</p>
+                <p className='uppercase'>{info[0].ip}</p>
+            </section>
+          ) : (<></>)
+        }
         {/* <Test/> */}
-      </div>
+      {/* </div> */}
       </section>
     </>
   );

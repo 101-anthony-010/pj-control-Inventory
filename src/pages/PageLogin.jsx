@@ -16,31 +16,14 @@ const PageLogin = () => {
   const [loading, setLoading] = useState(false);
 
   const submit = (data) => {
-    setLoading(true);
-    console.log(loading)
-    try {
-      dispatch(loginAuth(data));
-    } catch (error) {
-      console.error('Error during login:', error);
-    } finally {
-      // Después de 2 segundos, cambiar el estado de loading a false
-      setTimeout(() => {
-        setLoading(false);
-        console.log(loading)
-      }, 1000); // Cambia 2000 a la cantidad de tiempo en milisegundos que desees esperar
-    }
+    dispatch(loginAuth(data));
+
   };
 
-  const handleLoading = () => {
-    // setLoading(true)
-    console.log("first")
-  }
 
   if (loading) {
-    return <Loader />;
-  }
-
-  if (token && (user.rol === 'admin')) {
+    return <Loader/>;
+  } else if (token && (user.rol === 'admin')) {
     return <Navigate to="/control" />;
   } else if (token && (user.rol === 'employee')) {
     return <Navigate to="/employee" />;
@@ -61,7 +44,7 @@ const PageLogin = () => {
           <label htmlFor="password">Contraseña: </label>
           <input className='bg-slate-100 p-2 rounded-md' type="password" {...register("password")} id="password" name='password' required />
 
-          <button onClick={() => handleLoading()} className='m-2 rounded-md p-2 bg-blue-500 hover:bg-blue-500/85 text-white font-bold'>Ingresar</button>
+          <button className='m-2 rounded-md p-2 bg-blue-500 hover:bg-blue-500/85 text-white font-bold'>Ingresar</button>
         </form>
       </section>
     );
